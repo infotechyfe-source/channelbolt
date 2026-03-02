@@ -7,20 +7,48 @@ import {
   CreditCard,
   HelpCircle,
 } from "lucide-react";
-import { allListings } from "../data/listings";
+import { databases, DATABASE_ID, COLLECTION_ID } from "../lib/appwrite";
+import { useEffect } from "react";
 
 export default function Checkout() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState("upi");
 
-  const listing = useMemo(() => {
-    return allListings.find((l) => l.id === Number(id));
+  const [listing, setListing] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchListing = async () => {
+      try {
+        const response = await databases.getDocument(
+          DATABASE_ID,
+          COLLECTION_ID,
+          id   // 🔥 this is Appwrite $id
+        );
+        setListing(response);
+      } catch (error) {
+        console.error("Error fetching listing:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchListing();
   }, [id]);
+  if (loading) {
+    return (
+      <div className="text-center py-20 text-gray-500">
+        Loading checkout...
+      </div>
+    );
+  }
 
   if (!listing) {
     return (
-      <div className="text-center py-20 text-gray-500">
+      <div className="text-center py-20 text-red-500">
         Listing not found
       </div>
     );
@@ -39,7 +67,7 @@ export default function Checkout() {
 
   return (
     <div className="bg-gray-50 min-h-screen py-10">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
         {/* Breadcrumb */}
         <div className="text-sm mb-6 flex items-center gap-2 flex-wrap">
@@ -54,7 +82,9 @@ export default function Checkout() {
           <span className="text-gray-400">›</span>
 
           <button
-            onClick={() => navigate("/marketplace")}
+           onClick={() =>
+  navigate("/marketplace", { state: { resetFilters: true } })
+}
             className="text-gray-500 hover:text-blue-600 transition cursor-pointer"
           >
             Marketplace
@@ -65,13 +95,13 @@ export default function Checkout() {
           <button
             onClick={() =>
               navigate(
-                `/account/${listing.id}/${listing.handle
+                `/account/${listing.$id}/${listing.handle
                   .replace("@", "")
                   .replace(/\s+/g, "_")
                   .toLowerCase()}`
               )
             }
-            className="text-gray-500 hover:text-blue-600 transition cursor-pointer" 
+            className="text-gray-500 hover:text-blue-600 transition cursor-pointer"
           >
             Account Details
           </button>
@@ -129,7 +159,7 @@ export default function Checkout() {
                     {listing.niche}
                   </p>
 
-                  <div className="flex gap-8 mt-4 text-sm">
+                  <div className="grid grid-cols-3 gap-4 mt-4 text-sm">
                     <div>
                       <p className="text-gray-400">Followers</p>
                       <p className="font-semibold">
@@ -164,7 +194,7 @@ export default function Checkout() {
             {/* Buyer Protection Boxes */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
               <h3 className="font-bold text-gray-800 mb-4">Buyer Protection</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {[
                   { icon: <Lock className="text-blue-500" size={18} />, title: "Escrow Secured", desc: "Funds held safely until you confirm full access." },
                   { icon: <Shield className="text-purple-500" size={18} />, title: "Verified Owner", desc: "Identity and ownership verified by our team." },
@@ -179,23 +209,8 @@ export default function Checkout() {
               </div>
             </div>
 
-            {/* Secure Transfer Process (Horizontal Small) */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-              <h3 className="font-bold text-gray-800 mb-1">Secure Transfer Process</h3>
-              <p className="text-[11px] text-gray-400 mb-4">4-step process to ensure safe and secure account transfer</p>
-              <div className="grid grid-cols-4 gap-3">
-                {["Payment Escrow", "Seller Transfer", "Verification", "Ownership Release"].map((step, i) => (
-                  <div key={i} className="border border-gray-100 rounded-xl p-3 relative">
-                    <span className="absolute -top-2 -left-1 bg-black text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">{i + 1}</span>
-                    <p className="font-bold text-[11px] mt-2">{step}</p>
-                    <p className="text-[9px] text-gray-400 mt-1">Process step details...</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
             {/* Vertical Transfer Process Timeline */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
               <h3 className="font-bold text-gray-800 mb-8 text-lg">Transfer Process</h3>
               <div className="space-y-8 relative">
                 <div className="absolute left-[19px] top-2 bottom-2 w-0.5 bg-gray-100"></div>
@@ -303,20 +318,20 @@ export default function Checkout() {
                 </div>
 
                 {/* Need Help Box */}
-            <div className="bg-blue-50/50 border border-blue-100 rounded-2xl p-4 flex items-center gap-4">
-              <div className="bg-white p-2 rounded-xl shadow-sm text-blue-600">
-                <HelpCircle size={20} />
-              </div>
-              <div>
-                <p className="font-bold text-xs text-blue-900">Need Help?</p>
-                <p className="text-[10px] text-blue-700">Our support team is available 24/7</p>
-                <button className="text-[10px] font-bold text-blue-600 underline mt-1">Contact Support →</button>
-              </div>
-            </div>
+                <div className="bg-blue-50/50 border border-blue-100 rounded-2xl p-4 flex items-center gap-4">
+                  <div className="bg-white p-2 rounded-xl shadow-sm text-blue-600">
+                    <HelpCircle size={20} />
+                  </div>
+                  <div>
+                    <p className="font-bold text-xs text-blue-900">Need Help?</p>
+                    <p className="text-[10px] text-blue-700">Our support team is available 24/7</p>
+                    <button className="text-[10px] font-bold text-blue-600 underline mt-1">Contact Support →</button>
+                  </div>
+                </div>
               </div>
 
             </div>
-          
+
           </div>
 
         </div>

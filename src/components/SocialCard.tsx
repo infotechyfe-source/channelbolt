@@ -1,24 +1,28 @@
-import { useState } from "react"
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Instagram, Facebook, Youtube, Mail, BadgeCheck, Users, TrendingUp, MapPin, ChartNoAxesCombined } from "lucide-react"
+import {Instagram,Facebook,Youtube,Mail,BadgeCheck,Users,TrendingUp,MapPin,ChartNoAxesCombined,
+} from "lucide-react";
+import { storage, BUCKET_ID } from "../lib/appwrite";
+
+type Platform = "Instagram" | "Facebook" | "YouTube";
 
 type SocialCardProps = {
-  id: number
-  handle: string
-  platform: "Instagram" | "Facebook" | "YouTube"
-  niche: string
-  followers: number
-  engagement: number
-  revenue: number
-  price: number
-  coverImage: string
-  avatar: string
-  includeEmail?: boolean
+  $id: string; // use $id from database
+  handle: string;
+  platform: Platform;
+  niche: string;
+  followers: number;
+  engagement: number;
+  revenue: number;
+  price: number;
+  coverImage: string;
+  avatar: string;
+  includeEmail?: boolean | null; // can be null
   variant?: "default" | "trending";
-}
+};
 
 export default function SocialCard({
-  id,
+  $id,
   handle,
   platform,
   niche,
@@ -28,31 +32,40 @@ export default function SocialCard({
   price,
   coverImage,
   avatar,
-  includeEmail = true,
+  includeEmail = false,
   variant,
 }: SocialCardProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
+  const getImageUrl = (image: string) => {
+  if (!image) return "";
+
+  // If already full URL (unsplash case)
+  if (image.startsWith("http")) return image;
+
+  // If Appwrite file ID
+  return storage.getFilePreview(BUCKET_ID, image).href;
+};
+
+const coverUrl = getImageUrl(coverImage);
+const avatarUrl = getImageUrl(avatar);
+
+  // ================= TRENDING VARIANT =================
   if (variant === "trending") {
     return (
       <div className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition min-w-[420px]">
-
         {/* Top Row */}
         <div className="flex items-center justify-between p-5">
-
           {/* Left */}
           <div className="flex items-center gap-4">
             <img
-              src={avatar}
+              src={avatarUrl}
               alt={handle}
               className="w-14 h-14 rounded-full object-cover"
             />
-
             <div>
-              <h4 className="font-semibold text-lg text-gray-900">
-                {handle}
-              </h4>
+              <h4 className="font-semibold text-lg text-gray-900">{handle}</h4>
               <p className="text-sm text-gray-500">
                 {platform} · {niche}
               </p>
@@ -63,14 +76,13 @@ export default function SocialCard({
           <div className="text-right">
             <p className="text-sm text-gray-400">Price</p>
             <p className="text-xl font-bold text-gray-900">
-              ${price.toLocaleString()}
+              ₹{price.toLocaleString()}
             </p>
           </div>
         </div>
 
         {/* Stats Row */}
         <div className="border-t border-gray-200 grid grid-cols-3 text-center py-4 px-6 bg-gray-50">
-
           <div>
             <p className="text-xs text-gray-400 uppercase">Followers</p>
             <p className="font-semibold text-gray-800">
@@ -80,15 +92,13 @@ export default function SocialCard({
 
           <div>
             <p className="text-xs text-gray-400 uppercase">Eng. Rate</p>
-            <p className="font-semibold text-gray-800">
-              {engagement}%
-            </p>
+            <p className="font-semibold text-gray-800">{engagement}%</p>
           </div>
 
           <div>
             <p className="text-xs text-gray-400 uppercase">Rev/Mo</p>
             <p className="font-semibold text-green-600">
-              +${revenue.toLocaleString()}
+              +₹{revenue.toLocaleString()}
             </p>
           </div>
         </div>
@@ -97,7 +107,7 @@ export default function SocialCard({
         <div className="px-6 pb-5">
           <button
             onClick={() =>
-              navigate(`/account/${id}/${handle.replace("@", "")}`)
+              navigate(`/account/${$id}/${handle.replace("@", "")}`)
             }
             className="w-full mt-3 bg-blue-600 text-white py-2 rounded-xl text-sm font-medium hover:bg-blue-700 transition cursor-pointer"
           >
@@ -108,18 +118,23 @@ export default function SocialCard({
     );
   }
 
+  // ================= DEFAULT CARD =================
   return (
     <>
-      {/* CARD */}
       <div className="bg-white text-black rounded-2xl overflow-hidden shadow-lg flex flex-col hover:shadow-2xl transition-all relative">
-
         {/* COVER IMAGE */}
         <div className="relative h-30 w-full">
-          <img src={coverImage} alt="Cover" className="w-full h-full object-cover" />
+          <img
+            src={coverUrl}
+            alt="Cover"
+            className="w-full h-full object-cover"
+          />
           {/* Monetized Badge */}
           <div className="absolute top-4 right-4 bg-white px-3 py-1.5 rounded-full flex items-center gap-2 shadow-sm">
-            <div className="flex items-center justify-center w-5 h-5 text-white font-bold rounded-full 
-                  bg-linear-to-tr from-yellow-400 via-red-500 to-purple-500">
+            <div
+              className="flex items-center justify-center w-5 h-5 text-white font-bold rounded-full 
+                  bg-linear-to-tr from-yellow-400 via-red-500 to-purple-500"
+            >
               {platform === "Instagram" && <Instagram className="w-3.5 h-3.5" />}
               {platform === "YouTube" && <Youtube className="w-3.5 h-3.5" />}
               {platform === "Facebook" && <Facebook className="w-3.5 h-3.5" />}
@@ -132,12 +147,11 @@ export default function SocialCard({
 
         {/* AVATAR */}
         <div className="absolute top-20 left-6 w-16 h-16 rounded-full border-4 border-white overflow-hidden shadow-md">
-          <img src={avatar} alt="Avatar" className="w-full h-full object-cover rounded-full" />
+          <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover rounded-full" />
         </div>
 
         {/* CONTENT */}
-        <div className="p-6 pt-6 flex flex-col grow ">
-
+        <div className="p-6 pt-6 flex flex-col grow">
           {/* Name + Verified */}
           <div className="flex items-center gap-2 mb-1">
             <h3 className="text-xl font-bold">{handle}</h3>
@@ -163,7 +177,13 @@ export default function SocialCard({
               <p className="flex items-center gap-1.5 text-gray-400 mb-1">
                 <MapPin className="w-4 h-4" /> Location
               </p>
-              <p className="font-bold text-gray-900">{platform === "Instagram" ? "USA" : platform === "YouTube" ? "UK" : "Canada"}</p>
+              <p className="font-bold text-gray-900">
+                {platform === "Instagram"
+                  ? "USA"
+                  : platform === "YouTube"
+                  ? "UK"
+                  : "Canada"}
+              </p>
             </div>
             <div>
               <p className="flex items-center gap-1.5 text-gray-400 mb-1">
@@ -191,14 +211,13 @@ export default function SocialCard({
           {/* BUTTONS */}
           <div className="flex gap-3">
             <button
-              onClick={() =>
-                navigate(`/account/${id}/${handle.replace("@", "")}`)}
+              onClick={() => navigate(`/account/${$id}/${handle.replace("@", "")}`)}
               className="flex-1 border border-gray-300 py-2 rounded-xl hover:bg-gray-100 transition flex items-center justify-center gap-2 font-semibold cursor-pointer"
             >
               View Details
             </button>
             <button
-              onClick={() => alert(`Purchased ${handle} account for ₹${price.toLocaleString()}!`)}
+              onClick={() => navigate(`/checkout/${$id}`)}
               className="flex-1 bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition cursor-pointer"
             >
               Buy Now
@@ -206,39 +225,6 @@ export default function SocialCard({
           </div>
         </div>
       </div>
-
-      {/* MODAL */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl shadow-2xl p-6 w-96 relative animate-scaleIn">
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-3 right-3 text-gray-400 hover:text-gray-700"
-            >
-              ✕
-            </button>
-            <h2 className="font-bold text-2xl mb-4">{handle} - {niche}</h2>
-            <div className="space-y-2 text-gray-600">
-              <p><strong>Followers:</strong> {followers.toLocaleString()}</p>
-              <p><strong>Engagement:</strong> {engagement}%</p>
-              <p><strong>Revenue:</strong> ₹{revenue.toLocaleString()}</p>
-            </div>
-            <div className="mt-6 bg-gray-100 p-4 rounded-xl text-center">
-              <p className="text-sm text-gray-500">Final Price</p>
-              <p className="font-bold text-2xl text-blue-600">₹{price.toLocaleString()}</p>
-            </div>
-            <button
-              onClick={() => {
-                alert(`Purchased ${handle} account for ₹${price.toLocaleString()}!`)
-                setIsModalOpen(false)
-              }}
-              className="mt-4 w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition"
-            >
-              Confirm Purchase
-            </button>
-          </div>
-        </div>
-      )}
     </>
-  )
+  );
 }

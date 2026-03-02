@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Instagram,
   Youtube,
@@ -7,16 +7,100 @@ import {
   Upload,
   CheckCircle,
 } from "lucide-react";
+import {
+  databases,
+  storage,
+  DATABASE_ID,
+  COLLECTION_ID,
+  BUCKET_ID,
+} from "../lib/appwrite";
 
 type Platform = "Instagram" | "YouTube" | "Facebook";
 
 export default function SellAccount() {
   const [platform, setPlatform] = useState<Platform>("Instagram");
+  const [username, setUsername] = useState("");
+  const [followers, setFollowers] = useState<number>(0);
+  const [engagement, setEngagement] = useState<number>(0);
+  const [revenue, setRevenue] = useState<number>(0);
   const [price, setPrice] = useState<number>(25000);
+  const [description, setDescription] = useState("");
+
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [coverPreview, setCoverPreview] = useState<string | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+
+  const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const fee = Math.round(price * 0.05);
   const receive = price - fee;
+
+  // Generate image previews
+  useEffect(() => {
+    if (coverFile) setCoverPreview(URL.createObjectURL(coverFile));
+    if (avatarFile) setAvatarPreview(URL.createObjectURL(avatarFile));
+  }, [coverFile, avatarFile]);
+
+  const handleSubmit = async () => {
+    if (
+      !username ||
+      followers <= 0 ||
+      engagement <= 0 ||
+      price <= 0 ||
+      !coverFile ||
+      !avatarFile
+    ) {
+      alert("Please complete all required fields (*) and upload images.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      // Upload images
+      const coverUpload = await storage.createFile(
+        BUCKET_ID,
+        "unique()",
+        coverFile
+      );
+
+      const avatarUpload = await storage.createFile(
+        BUCKET_ID,
+        "unique()",
+        avatarFile
+      );
+
+      // Match EXACT SocialCard structure
+      const listingData = {
+        handle: username.startsWith("@") ? username : "@" + username,
+        platform,
+        niche: description || "General",
+        followers,
+        engagement,
+        revenue,
+        price,
+        coverImage: coverUpload.$id,
+        avatar: avatarUpload.$id,
+        includeEmail: true,
+      };
+
+      await databases.createDocument(
+        DATABASE_ID,
+        COLLECTION_ID,
+        "unique()",
+        listingData
+      );
+
+      setSubmitted(true);
+    } catch (err) {
+      console.error("Submission error:", err);
+      alert("Failed to submit listing.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (submitted) {
     return (
@@ -27,7 +111,7 @@ export default function SellAccount() {
             Listing Submitted 🎉
           </h2>
           <p className="text-gray-600">
-            Your listing will be reviewed within 24-48 hours.
+            Your listing will appear in Marketplace shortly.
           </p>
         </div>
       </div>
@@ -36,20 +120,16 @@ export default function SellAccount() {
 
   return (
     <div className="bg-gray-50 min-h-screen py-12 px-6">
-      <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-8">
+      <div className="max-w-6xl mx-auto grid lg:grid-cols-3 gap-8">
 
-        {/* ================= LEFT SIDE ================= */}
-        <div className="lg:col-span-2 bg-white p-8 rounded-2xl shadow border space-y-10">
+        {/* LEFT SIDE */}
+        <div className="lg:col-span-2 bg-white p-8 rounded-2xl shadow border space-y-8">
 
-          {/* STEP 1 */}
+          {/* Platform */}
           <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-7 h-7 rounded-full bg-blue-600 text-white text-sm flex items-center justify-center">
-                1
-              </div>
-              <h3 className="font-semibold text-lg">Select Platform</h3>
-            </div>
-
+            <h3 className="font-semibold text-lg mb-4">
+              Select Platform *
+            </h3>
             <div className="grid md:grid-cols-3 gap-4">
               {[
                 { name: "Instagram", icon: Instagram },
@@ -70,189 +150,121 @@ export default function SellAccount() {
                   >
                     <Icon className="mx-auto mb-2" size={24} />
                     <p className="font-medium">{item.name}</p>
-                    <p className="text-xs text-gray-500">
-                      {item.name === "YouTube"
-                        ? "Monetized Channels"
-                        : "Pages & Accounts"}
-                    </p>
                   </button>
                 );
               })}
             </div>
           </div>
 
-          {/* STEP 2 */}
-          <div>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-7 h-7 rounded-full bg-blue-600 text-white text-sm flex items-center justify-center">
-                2
-              </div>
-              <h3 className="font-semibold text-lg">Account Details</h3>
-            </div>
+          {/* Account Details */}
+          <div className="space-y-6">
+            <h3 className="font-semibold text-xl">Account Details *</h3>
 
             <div className="grid md:grid-cols-2 gap-6">
-              <input
-                placeholder="Username / Channel Name"
-                className="border rounded-xl px-4 py-3"
+
+              <Input label="Username *"
+                placeholder="@daily_motivation"
+                value={username}
+                onChange={setUsername}
               />
-              <input
+
+              <Input label="Followers *"
                 type="number"
-                placeholder="Followers Count"
-                className="border rounded-xl px-4 py-3"
+                placeholder="510000"
+                value={followers}
+                onChange={(v) => setFollowers(Number(v))}
               />
-              <input
+
+              <Input label="Engagement Rate (%) *"
                 type="number"
-                placeholder="Engagement Rate (%)"
-                className="border rounded-xl px-4 py-3"
+                placeholder="5.2"
+                value={engagement}
+                onChange={(v) => setEngagement(Number(v))}
               />
-              <input
+
+              <Input label="Monthly Revenue ($)"
                 type="number"
-                placeholder="Monthly Revenue ($)"
-                className="border rounded-xl px-4 py-3"
+                placeholder="4600"
+                value={revenue}
+                onChange={(v) => setRevenue(Number(v))}
               />
-              <input
-                placeholder="Country"
-                className="border rounded-xl px-4 py-3"
+
+              <div className="md:col-span-2">
+                <label className="font-medium block mb-1">
+                  Account Description / Niche
+                </label>
+                <textarea
+                  placeholder="Describe your account niche and audience..."
+                  className="border rounded-xl px-4 py-3 w-full h-28 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Upload Section */}
+          <div>
+            <h3 className="font-semibold text-lg mb-4">
+              Upload Images *
+            </h3>
+
+            <div className="grid md:grid-cols-2 gap-6">
+
+              <ImageUpload
+                label="Cover Image *"
+                preview={coverPreview}
+                onChange={(file) => setCoverFile(file)}
+                id="cover-upload"
               />
-              <input
-                type="number"
-                placeholder="Account Age (Years)"
-                className="border rounded-xl px-4 py-3"
+
+              <ImageUpload
+                label="Avatar Image *"
+                preview={avatarPreview}
+                onChange={(file) => setAvatarFile(file)}
+                id="avatar-upload"
               />
             </div>
           </div>
 
-          {/* STEP 3 */}
+          {/* Price */}
           <div>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-7 h-7 rounded-full bg-blue-600 text-white text-sm flex items-center justify-center">
-                3
-              </div>
-              <h3 className="font-semibold text-lg">Upload Verification</h3>
-            </div>
-
-            <div className="border-2 border-dashed rounded-xl p-10 text-center bg-gray-50">
-              <Upload className="mx-auto text-gray-400 mb-4" size={32} />
-              <p className="font-medium mb-1">
-                Upload Analytics Screenshots
-              </p>
-              <p className="text-xs text-gray-500 mb-4">
-                Drag & drop files or click below
-              </p>
-              <input type="file" multiple className="hidden" id="upload" />
-              <label
-                htmlFor="upload"
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg cursor-pointer text-sm"
-              >
-                Choose Files
-              </label>
-            </div>
-
-            <div className="flex gap-6 text-xs text-green-600 mt-4">
-              <span>✔ Recent analytics screenshots</span>
-              <span>✔ Ownership verification</span>
-            </div>
-          </div>
-
-          {/* STEP 4 */}
-          <div>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-7 h-7 rounded-full bg-blue-600 text-white text-sm flex items-center justify-center">
-                4
-              </div>
-              <h3 className="font-semibold text-lg">Set Your Price</h3>
-            </div>
-
+            <h3 className="font-semibold text-lg mb-4">
+              Set Price *
+            </h3>
             <input
               type="number"
               value={price}
               onChange={(e) => setPrice(Number(e.target.value))}
-              className="w-full border rounded-xl px-4 py-3 mb-6"
-            />
-
-            <textarea
-              placeholder="Describe your account, audience demographics, and what makes it valuable..."
-              className="w-full border rounded-xl px-4 py-3 h-32"
+              className="w-full border rounded-xl px-4 py-3 mb-4"
             />
 
             <button
-              onClick={() => setSubmitted(true)}
-              className="mt-6 w-full py-4 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition"
+              onClick={handleSubmit}
+              disabled={loading}
+              className="w-full py-4 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition disabled:opacity-50"
             >
-              Submit Listing For Review
+              {loading ? "Submitting..." : "Submit Listing"}
             </button>
-
-            <p className="text-xs text-gray-500 text-center mt-3">
-              Your listing will be reviewed within 24-48 hours
-            </p>
           </div>
         </div>
 
-        {/* ================= RIGHT SIDE ================= */}
+        {/* RIGHT SIDE */}
         <div className="space-y-6">
 
-          {/* Why Sell With Us */}
           <div className="bg-white p-6 rounded-2xl shadow border">
-            <h3 className="font-semibold mb-4">Why Sell With Us</h3>
-
-            <div className="space-y-4 text-sm">
-              <div className="flex gap-3">
-                <ShieldCheck className="text-green-600" size={18} />
-                <div>
-                  <p className="font-medium">Escrow Protection</p>
-                  <p className="text-gray-500 text-xs">
-                    Funds held securely until transfer complete
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <ShieldCheck className="text-blue-600" size={18} />
-                <div>
-                  <p className="font-medium">Verified Buyers</p>
-                  <p className="text-gray-500 text-xs">
-                    All buyers go through identity verification
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <ShieldCheck className="text-purple-600" size={18} />
-                <div>
-                  <p className="font-medium">Fast Transfer</p>
-                  <p className="text-gray-500 text-xs">
-                    Average completion time under 3 days
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <ShieldCheck className="text-orange-500" size={18} />
-                <div>
-                  <p className="font-medium">24/7 Support</p>
-                  <p className="text-gray-500 text-xs">
-                    Expert assistance throughout process
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Earnings Card */}
-          <div className="bg-white p-6 rounded-2xl shadow border">
-            <h3 className="font-semibold mb-4">Estimated Earnings</h3>
-
+            <h3 className="font-semibold mb-4">
+              Estimated Earnings
+            </h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span>Your Price:</span>
                 <span>${price.toLocaleString()}</span>
               </div>
-
               <div className="flex justify-between text-red-500">
                 <span>Platform Fee (5%):</span>
                 <span>-${fee.toLocaleString()}</span>
               </div>
-
               <div className="border-t pt-3 flex justify-between font-bold text-green-600">
                 <span>You Receive:</span>
                 <span>${receive.toLocaleString()}</span>
@@ -262,6 +274,54 @@ export default function SellAccount() {
 
         </div>
       </div>
+    </div>
+  );
+}
+
+/* ---------- Reusable Components ---------- */
+
+function Input({ label, placeholder, value, onChange, type = "text" }: any) {
+  return (
+    <div>
+      <label className="font-medium block mb-1">{label}</label>
+      <input
+        type={type}
+        placeholder={placeholder}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="border rounded-xl px-4 py-3 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
+      />
+    </div>
+  );
+}
+
+function ImageUpload({ label, preview, onChange, id }: any) {
+  return (
+    <div className="border-2 border-dashed rounded-xl p-4 text-center bg-gray-50">
+      {preview && (
+        <img
+          src={preview}
+          alt="Preview"
+          className="w-full h-40 object-cover rounded-lg mb-3"
+        />
+      )}
+      <Upload className="mx-auto text-gray-400 mb-2" size={28} />
+      <p className="font-medium mb-2">{label}</p>
+      <input
+        type="file"
+        accept="image/*"
+        id={id}
+        className="hidden"
+        onChange={(e) =>
+          e.target.files && onChange(e.target.files[0])
+        }
+      />
+      <label
+        htmlFor={id}
+        className="bg-blue-600 text-white px-4 py-2 rounded-lg cursor-pointer text-sm"
+      >
+        Choose File
+      </label>
     </div>
   );
 }

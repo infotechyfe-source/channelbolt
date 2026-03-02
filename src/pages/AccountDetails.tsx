@@ -1,27 +1,48 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useMemo } from "react";
 import { ArrowUpRight, CalendarDays, CheckCircle, Clock, DollarSign, Globe2, Heart, Mail, ShieldCheck, ShoppingCart, Sparkles, Target, TrendingUp, Users, Users2 } from "lucide-react";
-import { Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, } from "recharts";
 import SecureTransfer from "../components/SecureTransfer";
 import SimilarAccounts from "../components/SimilarAccounts";
-import { allListings } from "../data/listings";
 import AccountAnalytics from "../components/AccountAnalytics";
+import { databases, DATABASE_ID, COLLECTION_ID } from "../lib/appwrite";
+import { useEffect, useState } from "react";
 
 export default function AccountDetails() {
     const { id, handle } = useParams();
     const navigate = useNavigate();
 
-    const listing = useMemo(() => {
-        return allListings.find((l) => l.id === Number(id));
-    }, [id]);
+  const [listing, setListing] = useState<any>(null);
+const [loading, setLoading] = useState(true);
 
-    if (!listing) {
-        return (
-            <div className="text-center py-20 text-gray-500">
-                Account not found.
-            </div>
-        );
-    }
+useEffect(() => {
+    const fetchListing = async () => {
+        if (!id) return;
+
+        try {
+            const response = await databases.getDocument(
+                DATABASE_ID,
+                COLLECTION_ID,
+                id // this is Appwrite $id
+            );
+
+            setListing(response);
+        } catch (error) {
+            console.error("Error fetching listing:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    fetchListing();
+}, [id]);
+
+   if (loading) {
+    return (
+        <div className="text-center py-20 text-gray-500">
+            Loading account...
+        </div>
+    );
+}
 
     const followerData = [
         { month: "Jan", followers: 120000 },
@@ -374,7 +395,7 @@ export default function AccountDetails() {
                                     </div>
 
                                     <button
-                                        onClick={() => navigate(`/checkout/${listing.id}`)}
+                                        onClick={() => navigate(`/checkout/${listing.$id}`)}
                                         className="w-full bg-linear-to-r from-blue-600 to-indigo-600 text-white py-3 sm:py-4 rounded-2xl font-semibold text-lg hover:opacity-90 transition flex items-center justify-center gap-2 shadow-lg cursor-pointer"
                                     >
                                         <ShoppingCart size={20} />

@@ -1,36 +1,68 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ChevronDown, ChevronLeft, ChevronRight, Filter, Flame } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, Filter, Flame, X } from "lucide-react";
 import SocialCard from "../components/SocialCard";
 import heromarketImg from "../assets/hero-market.jpg"
-import { allListings } from "../data/listings";
-import type { Listing } from "../data/listings";
-type Platform = "Instagram" | "YouTube" | "Facebook";
+import FilterPanel from "../components/FilterPanel";
 
-// ================= PAGE =================
+import { databases, DATABASE_ID, COLLECTION_ID } from "../lib/appwrite";
+
+type Platform = "Instagram" | "YouTube" | "Facebook";
+type Listing = {
+  $id: string;
+  niche: string;
+  platform: Platform;
+  followers: number;
+  engagement: number;
+  price?: number;
+};
+
 export default function Marketplace() {
   const { t } = useTranslation();
+  const location = useLocation();
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const searchTerm = "";
   const [sortBy, setSortBy] = useState<"price" | "followers" | "engagement">("price");
+  const [listings, setListings] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [activePlatform, setActivePlatform] = useState<
     "All" | "Instagram" | "Facebook" | "YouTube"
   >("All");
   const [platforms, setPlatforms] = useState<Platform[]>([]);
   const [followersRange, setFollowersRange] = useState<string | null>(null);
-  const [price, setPrice] = useState(50000);
+  const [price, setPrice] = useState(Infinity);
   const [engagement, setEngagement] = useState<string[]>([]);
 
   const calculatePrice = (listing: Listing) =>
     listing.price ?? Math.round(listing.followers / 10);
 
+  useEffect(() => {
+    const fetchListings = async () => {
+      try {
+        const response = await databases.listDocuments(
+          DATABASE_ID,
+          COLLECTION_ID
+        );
+        setListings(response.documents);
+      } catch (error) {
+        console.error("Error fetching listings:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchListings();
+  }, []);
+
+
   // ================= FILTER + SORT =================
   const filteredListings = useMemo(() => {
-    return allListings
-      .filter((l) => {
+    return listings
+      .filter((l: Listing) => {
         const matchesSearch =
-          l.niche.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          l.platform.toLowerCase().includes(searchTerm.toLowerCase());
+          l.niche?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          l.platform?.toLowerCase().includes(searchTerm.toLowerCase());
 
         const matchesActivePlatform =
           activePlatform === "All" || l.platform === activePlatform;
@@ -38,7 +70,8 @@ export default function Marketplace() {
         const matchesSidebarPlatform =
           platforms.length === 0 || platforms.includes(l.platform);
 
-        const matchesPrice = calculatePrice(l) <= price;
+        const matchesPrice =
+          price === Infinity || calculatePrice(l) <= price;
 
         const matchesEngagement =
           engagement.length === 0 ||
@@ -49,6 +82,7 @@ export default function Marketplace() {
                 ? l.engagement >= 2 && l.engagement <= 5
                 : l.engagement < 2
           );
+
         const matchesFollowers =
           !followersRange ||
           (followersRange === "Under 10K" && l.followers < 10000) ||
@@ -72,59 +106,47 @@ export default function Marketplace() {
           matchesFollowers
         );
       })
-      .sort((a, b) => {
+      .sort((a: Listing, b: Listing) => {
         if (sortBy === "price")
           return calculatePrice(a) - calculatePrice(b);
-        if (sortBy === "followers") return a.followers - b.followers;
+
+        if (sortBy === "followers")
+          return b.followers - a.followers; // descending better UX
+
         return b.engagement - a.engagement;
       });
-  }, [searchTerm, activePlatform, platforms, price, engagement, sortBy, followersRange,]);
+  }, [
+    listings,   // ✅ ADD THIS (very important)
+    searchTerm,
+    activePlatform,
+    platforms,
+    price,
+    engagement,
+    sortBy,
+    followersRange,
+  ]);
 
-  const SidebarContent = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h3 className="font-bold text-lg">Filters</h3>
-        <button
-          onClick={() => { setPlatforms([]); setFollowersRange(null); setPrice(50000); setEngagement([]); }}
-          className="text-sm text-blue-600 hover:text-blue-700 font-medium transition cursor-pointer"
-        >
-          Clear All
-        </button>
-      </div>
+  useEffect(() => {
+    setPlatforms([]);
+    setFollowersRange(null);
+    setPrice(Infinity);
+    setEngagement([]);
+    setActivePlatform("All");
+  }, []);
 
-      <FilterSection title="Platform">
-        {(["Instagram", "YouTube", "Facebook"] as Platform[]).map((p) => (
-          <Checkbox key={p} label={p} checked={platforms.includes(p)} onChange={() => setPlatforms((prev) => prev.includes(p) ? prev.filter((x) => x !== p) : [...prev, p])} />
-        ))}
-      </FilterSection>
+  if (loading) {
+    return (
+      <p className="text-center py-20 text-lg font-semibold">
+        Loading listings...
+      </p>
+    );
+  }
 
-      <FilterSection title="Followers">
-        {["Under 10K", "10K – 50K", "50K – 100K", "100K – 500K", "500K+"].map((f) => (
-          <Radio key={f} label={f} checked={followersRange === f} onChange={(value: string | null) => setFollowersRange(value)} />
-        ))}
-      </FilterSection>
 
-      <FilterSection title="Price Range">
-        <div className="flex justify-between text-sm mb-2">
-          <span>$0</span>
-          <span className="text-blue-600 font-semibold">${price.toLocaleString()}</span>
-        </div>
-        <input type="range" min={0} max={50000} step={500} value={price} onChange={(e) => setPrice(Number(e.target.value))} className="w-full accent-blue-600" aria-label="Price Range Slider" />
-      </FilterSection>
-
-      <FilterSection title="Engagement Rate">
-        <Checkbox label="High (> 5%)" checked={engagement.includes("high")} onChange={() => toggleValue(engagement, "high", setEngagement)} color="text-green-600" />
-        <Checkbox label="Medium (2% – 5%)" checked={engagement.includes("medium")} onChange={() => toggleValue(engagement, "medium", setEngagement)} color="text-orange-500" />
-        <Checkbox label="Low (< 2%)" checked={engagement.includes("low")} onChange={() => toggleValue(engagement, "low", setEngagement)} color="text-gray-500" />
-      </FilterSection>
-    </div>
-  );
-
-  // ================= UI =================
   return (
     <>
       {/* =================HERO ================= */}
-      <div className="relative w-full h-[272px] md:h-[272px] overflow-hidden mb-12">
+      <div className="relative w-full h-68 overflow-hidden mb-12">
 
         {/* Background Image */}
         <img src={heromarketImg} alt="Marketplace"
@@ -150,10 +172,20 @@ export default function Marketplace() {
 
       <div className="max-w-7xl mx-auto px-4 md:px-6 pb-8">
         <div className="grid grid-cols-12 gap-6">
+
           {/* ========== DESKTOP ASIDE ========== */}
           <aside className="hidden lg:block lg:col-span-3 xl:col-span-2">
             <div className="bg-white text-[#4A5565] rounded-2xl shadow-sm p-5 sticky top-24">
-              <SidebarContent />
+              <FilterPanel
+                platforms={platforms}
+                setPlatforms={setPlatforms}
+                followersRange={followersRange}
+                setFollowersRange={setFollowersRange}
+                price={price}
+                setPrice={setPrice}
+                engagement={engagement}
+                setEngagement={setEngagement}
+              />
             </div>
           </aside>
 
@@ -183,7 +215,7 @@ export default function Marketplace() {
                     <button
                       key={label}
                       onClick={() => setActivePlatform(label as any)}
-                      className={`px-5 py-2 rounded-lg text-sm font-medium transition-all ${activePlatform === label ? "text-white bg-blue-600 shadow-sm" : "text-gray-500 hover:text-gray-800"}`}
+                      className={`px-5 py-2 rounded-lg text-sm font-medium transition-all ${activePlatform === label ? "text-white bg-blue-600 shadow-sm" : "text-gray-500 hover:text-gray-800 cursor-pointer"}`}
                     >
                       {label}
                     </button>
@@ -195,6 +227,7 @@ export default function Marketplace() {
                 <span className="text-sm text-gray-500 hidden xl:block">Sort by:</span>
                 <div className="relative w-full sm:w-auto">
                   <select
+                    title="sort"
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value as any)}
                     className="w-full appearance-none bg-white border border-gray-200 rounded-xl px-4 py-2.5 pr-10 text-sm font-medium focus:ring-2 focus:ring-blue-500 outline-none"
@@ -213,8 +246,8 @@ export default function Marketplace() {
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {filteredListings.map((listing) => (
                 <SocialCard
-                  key={listing.id}
-                  id={listing.id}
+                  key={listing.$id}
+                  $id={listing.$id}
                   handle={listing.handle}
                   platform={listing.platform}
                   niche={listing.niche}
@@ -261,6 +294,7 @@ export default function Marketplace() {
                   {/* Arrows */}
                   <div className="hidden md:flex items-center gap-2">
                     <button
+                      title="left"
                       onClick={() =>
                         document
                           .getElementById("trending-scroll")
@@ -272,6 +306,7 @@ export default function Marketplace() {
                     </button>
 
                     <button
+                      title="right"
                       onClick={() =>
                         document
                           .getElementById("trending-scroll")
@@ -289,13 +324,13 @@ export default function Marketplace() {
                   id="trending-scroll"
                   className="flex flex-nowrap gap-6 overflow-x-auto scroll-smooth pb-2 no-scrollbar"
                 >
-                  {allListings.slice(0, 6).map((listing) => (
+                  {listings.slice(0, 6).map((listing) => (
                     <div
-                      key={listing.id}
-                      className="flex-none w-[450px]"
+                      key={listing.$id}
+                      className="flex-none w-112.5"
                     >
                       <SocialCard
-                        id={listing.id}
+                        $id={listing.$id}
                         handle={listing.handle}
                         platform={listing.platform as any}
                         niche={listing.niche}
@@ -318,103 +353,39 @@ export default function Marketplace() {
         </div>
       </div>
 
- {/* ========== MOBILE FILTER DRAWER ========== */}
-       {showMobileFilters && (
-         <div className="fixed inset-0 z-[100] lg:hidden">
-           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowMobileFilters(false)} />
-           <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-[32px] p-6 max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom duration-300">
-             <div className="flex items-center justify-between mb-6 border-b pb-4">
-               <h2 className="text-xl font-bold">Filters</h2>
-               <button onClick={() => setShowMobileFilters(false)} className="p-2 bg-gray-100 rounded-full"><X size={20}/></button>
-             </div>
-             <SidebarContent />
-             <button 
-               onClick={() => setShowMobileFilters(false)}
-               className="w-full mt-8 bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-200"
-             >
-               Show {filteredListings.length} Results
-             </button>
-           </div>
-         </div>
-       )}
+      {/* ========== MOBILE FILTER DRAWER ========== */}
+      {showMobileFilters && (
+        <div className="fixed inset-0 z-100 lg:hidden">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowMobileFilters(false)} />
+          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-4xl p-6 max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom duration-300">
+            <div className="flex items-center justify-between mb-6 border-b pb-4">
+              <h2 className="text-xl font-bold">Filters</h2>
+              <button
+                title="close"
+                onClick={() => setShowMobileFilters(false)}
+                className="p-2 bg-gray-100 rounded-full"><X size={20} /></button>
+            </div>
+            <FilterPanel
+              platforms={platforms}
+              setPlatforms={setPlatforms}
+              followersRange={followersRange}
+              setFollowersRange={setFollowersRange}
+              price={price}
+              setPrice={setPrice}
+              engagement={engagement}
+              setEngagement={setEngagement}
+            />
+            <button
+              onClick={() => setShowMobileFilters(false)}
+              className="w-full mt-8 bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-200"
+            >
+              Show {filteredListings.length} Results
+            </button>
+          </div>
+        </div>
+      )}
     </>
 
   );
 }
 
-/* ================= HELPERS ================= */
-
-function toggleValue<T>(
-  arr: T[],
-  value: T,
-  setter: (v: T[]) => void
-) {
-  setter(arr.includes(value) ? arr.filter((x) => x !== value) : [...arr, value]);
-}
-
-function FilterSection({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="relative pt-6 space-y-4">
-
-      {/* Soft Fade Divider */}
-      <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-gray-200 to-transparent" />
-
-      {/* Section Header */}
-      <div className="flex justify-between items-center">
-        <p className="text-xs font-semibold tracking-wider text-gray-500 uppercase">
-          {title}
-        </p>
-        <ChevronDown size={14} className="text-gray-400" />
-      </div>
-
-      {/* Content */}
-      <div className="space-y-3">
-        {children}
-      </div>
-    </div>
-  );
-}
-
-function Checkbox({
-  label,
-  checked,
-  onChange,
-  color = "",
-}: any) {
-  return (
-    <label className="flex items-center gap-3 text-sm cursor-pointer">
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={onChange}
-        className="w-4 h-4"
-      />
-      <span className={color}>{label}</span>
-    </label>
-  );
-}
-
-function Radio({ label, checked, onChange }: any) {
-  return (
-    <label className="flex items-center gap-3 text-sm cursor-pointer">
-      <input
-        type="radio"
-        checked={checked}
-        onChange={() => {
-          if (checked) {
-            onChange(null); // deselect
-          } else {
-            onChange(label);
-          }
-        }}
-      />
-      {label}
-    </label>
-  );
-}
