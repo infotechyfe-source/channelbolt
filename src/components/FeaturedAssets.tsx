@@ -84,7 +84,7 @@ const justSold = listings?.slice(2, 5) || [];
           </div>
           <button
             onClick={() => navigate("/marketplace")}
-            className="flex items-center gap-2 text-sm border border-blue-700 rounded-2xl px-3 sm:px-4 py-2 hover:bg-gray-800 transition w-full sm:w-auto justify-center"
+            className="flex items-center gap-2 text-sm border border-blue-700 rounded-2xl px-3 sm:px-4 py-2 hover:bg-gray-800 transition w-full sm:w-auto justify-center cursor-pointer"
           >
             View All Listing <ArrowRight size={16} />
           </button>

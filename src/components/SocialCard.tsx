@@ -54,6 +54,11 @@ export default function SocialCard({
 
   const coverUrl = getImageUrl(coverImage);
   const avatarUrl = getImageUrl(avatar);
+  const slug = handle
+  .toLowerCase()
+  .replace(/@/g, "")
+  .trim()
+  .replace(/\s+/g, "_");
 
   // ================= TRENDING VARIANT =================
   if (variant === "trending") {
@@ -97,7 +102,7 @@ export default function SocialCard({
         {/* View Button */}
         <div className="px-6 pb-5">
           <button
-            onClick={() => navigate(`/account/${$id}/${handle.replace("@", "")}`)}
+            onClick={() => navigate(`/account/${$id}/${slug}`)}
             className="w-full mt-3 bg-blue-600 text-white py-2 rounded-xl text-sm font-medium hover:bg-blue-700 transition"
           >
             View Details

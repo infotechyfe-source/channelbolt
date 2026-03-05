@@ -5,7 +5,7 @@ import { ChevronDown, ChevronLeft, ChevronRight, Filter, Flame, X } from "lucide
 import SocialCard from "../components/SocialCard";
 import heromarketImg from "../assets/hero-market.jpg"
 import FilterPanel from "../components/FilterPanel";
-
+import { Query } from "appwrite";
 import { databases, DATABASE_ID, COLLECTION_ID } from "../lib/appwrite";
 
 type Platform = "Instagram" | "YouTube" | "Facebook";
@@ -16,6 +16,7 @@ type Listing = {
   followers: number;
   engagement: number;
   price?: number;
+  status: "active" | "sold" | "draft" | "paused";
 };
 
 export default function Marketplace() {
@@ -41,7 +42,8 @@ export default function Marketplace() {
       try {
         const response = await databases.listDocuments(
           DATABASE_ID,
-          COLLECTION_ID
+          COLLECTION_ID,
+          [Query.equal("status", "active")]
         );
         setListings(response.documents);
       } catch (error) {
@@ -133,55 +135,54 @@ export default function Marketplace() {
     setActivePlatform("All");
   }, []);
 
- if (loading) {
-  return (
-    <section className="min-h-screen bg-gray-50 py-16 px-6">
-      <div className="max-w-7xl mx-auto">
+  if (loading) {
+    return (
+      <section className="min-h-screen bg-gray-50 py-16 px-6">
+        <div className="max-w-7xl mx-auto">
 
-        {/* PAGE TITLE SKELETON */}
-        <div className="mb-10 animate-pulse">
-          <div className="h-8 w-64 bg-gray-300 rounded mb-3" />
-          <div className="h-4 w-96 bg-gray-200 rounded" />
-        </div>
+          {/* PAGE TITLE SKELETON */}
+          <div className="mb-10 animate-pulse">
+            <div className="h-8 w-64 bg-gray-300 rounded mb-3" />
+            <div className="h-4 w-96 bg-gray-200 rounded" />
+          </div>
 
-        {/* FILTER BAR SKELETON (if you have filters) */}
-        <div className="flex gap-4 mb-8 animate-pulse">
-          <div className="h-10 w-40 bg-gray-200 rounded-lg" />
-          <div className="h-10 w-32 bg-gray-200 rounded-lg" />
-          <div className="h-10 w-36 bg-gray-200 rounded-lg" />
-        </div>
+          {/* FILTER BAR SKELETON */}
+          <div className="flex gap-4 mb-8 animate-pulse">
+            <div className="h-10 w-40 bg-gray-200 rounded-lg" />
+            <div className="h-10 w-32 bg-gray-200 rounded-lg" />
+            <div className="h-10 w-36 bg-gray-200 rounded-lg" />
+          </div>
 
-        {/* CARD GRID SKELETON */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[...Array(6)].map((_, i) => (
-            <div
-              key={i}
-              className="bg-white rounded-2xl shadow-md overflow-hidden animate-pulse"
-            >
-              {/* Cover Image */}
-              <div className="h-40 bg-gray-200" />
+          {/* CARD GRID SKELETON */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                className="bg-white rounded-2xl shadow-md overflow-hidden animate-pulse"
+              >
+                {/* Cover Image */}
+                <div className="h-40 bg-gray-200" />
 
-              {/* Content */}
-              <div className="p-5 space-y-4">
-                <div className="h-4 w-32 bg-gray-300 rounded" />
-                <div className="h-4 w-24 bg-gray-200 rounded" />
-                <div className="h-4 w-full bg-gray-200 rounded" />
-                <div className="h-4 w-3/4 bg-gray-200 rounded" />
+                {/* Content */}
+                <div className="p-5 space-y-4">
+                  <div className="h-4 w-32 bg-gray-300 rounded" />
+                  <div className="h-4 w-24 bg-gray-200 rounded" />
+                  <div className="h-4 w-full bg-gray-200 rounded" />
+                  <div className="h-4 w-3/4 bg-gray-200 rounded" />
 
-                <div className="flex justify-between items-center pt-4">
-                  <div className="h-6 w-20 bg-gray-300 rounded" />
-                  <div className="h-8 w-24 bg-gray-300 rounded-lg" />
+                  <div className="flex justify-between items-center pt-4">
+                    <div className="h-6 w-20 bg-gray-300 rounded" />
+                    <div className="h-8 w-24 bg-gray-300 rounded-lg" />
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+
         </div>
-
-      </div>
-    </section>
-  );
-}
-
+      </section>
+    );
+  }
 
   return (
     <>
@@ -215,7 +216,7 @@ export default function Marketplace() {
 
           {/* ========== DESKTOP ASIDE ========== */}
           <aside className="hidden lg:block lg:col-span-3 xl:col-span-2">
-            <div className="bg-white text-[#4A5565] rounded-2xl shadow-sm p-5 sticky top-24">
+            <div className="bg-white text-[#4A5565] rounded-2xl shadow-sm p-5 sticky top-2">
               <FilterPanel
                 platforms={platforms}
                 setPlatforms={setPlatforms}
@@ -251,7 +252,7 @@ export default function Marketplace() {
               {/* Platform Tabs - Scrollable on Mobile */}
               <div className="overflow-x-auto no-scrollbar -mx-4 px-4 lg:mx-0 lg:px-0">
                 <div className="inline-flex bg-gray-200/50 p-1 rounded-xl whitespace-nowrap">
-                  {["All", "Instagram", "Facebook", "YouTube"].map((label) => (
+                  {["All", "Instagram", "Facebook", "YouTube", "Facebook NonMonetized"].map((label) => (
                     <button
                       key={label}
                       onClick={() => setActivePlatform(label as any)}
@@ -298,6 +299,7 @@ export default function Marketplace() {
                   coverImage={listing.coverImage}
                   avatar={listing.avatar}
                   includeEmail={listing.includeEmail}
+                  status={listing.status}
                 />
               ))}
 
@@ -425,7 +427,6 @@ export default function Marketplace() {
         </div>
       )}
     </>
-
   );
 }
 

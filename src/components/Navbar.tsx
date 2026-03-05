@@ -25,7 +25,7 @@ export default function Navbar() {
       await logoutUser();
       await refreshUser();
       navigate("/login");
-    } catch (err) {
+    } catch {
       alert("Logout failed");
     }
   };
@@ -172,14 +172,6 @@ export default function Navbar() {
                   </div>
                 )}
               </div>
-
-              {/* Buy Now CTA */}
-              <Link
-                to="/marketplace"
-                className="hidden md:inline-block bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-md font-medium transition shadow-md hover:shadow-blue-500/30"
-              >
-                {t("buyNow")}
-              </Link>
 
               {/* Login/Logout button based on state */}
               {!loading && !user && (
