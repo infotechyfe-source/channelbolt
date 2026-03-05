@@ -6,14 +6,54 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import featureImg from "../assets/feature.png";
-import { allListings } from "../data/listings";
+import { useEffect, useState } from "react";
+import { databases } from "../lib/appwrite";
+import { Query } from "appwrite";
+
+type Listing = {
+  $id: string;
+  handle: string;
+  platform: string;
+  niche: string;
+  followers: number;
+  revenue: number;
+  price: number;
+  avatar: string;
+  coverImage: string;
+  verified?: boolean;
+};
 
 const FeaturedAssets = () => {
   const navigate = useNavigate();
+  const [listings, setListings] = useState<Listing[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const featuredMain = allListings[0];
-  const featuredSmall = allListings[1];
-  const justSold = allListings.slice(2, 5);
+useEffect(() => {
+  const fetchListings = async () => {
+    try {
+      const res = await databases.listDocuments(
+        "69a55aa1001ac4d8ba49",
+        "listings",
+        [
+          Query.limit(10),
+          Query.orderDesc("$createdAt")
+        ]
+      );
+
+      setListings(res.documents as unknown as Listing[]);
+    } catch (error) {
+      console.error("Error fetching listings:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchListings();
+}, []);
+  
+const featuredMain = listings?.[0];
+const featuredSmall = listings?.[1];
+const justSold = listings?.slice(2, 5) || [];
 
   const formatFollowers = (num: number) => {
     if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
@@ -22,6 +62,13 @@ const FeaturedAssets = () => {
   };
 
   const formatPrice = (price?: number) => (price ? `₹${price.toLocaleString()}` : "N/A");
+  if (loading || !featuredMain) {
+  return (
+    <section className="bg-[#0B0F19] text-white py-20 text-center">
+      <p className="text-gray-400">Loading featured assets...</p>
+    </section>
+  );
+}
 
   return (
     <section className="bg-[#0B0F19] text-white py-10 sm:py-16 px-4 sm:px-6 lg:px-16 font-sans">
@@ -48,7 +95,7 @@ const FeaturedAssets = () => {
 
           {/* Main Featured */}
           <div
-            onClick={() => navigate(`/account/${featuredMain.id}/${featuredMain.handle}`)}
+            onClick={() => navigate(`/account/${featuredMain.$id}/${featuredMain.handle}`)}
             className="lg:col-span-2 relative rounded-3xl overflow-hidden h-80 sm:h-96 lg:h-124 group cursor-pointer"
           >
             <img
@@ -91,7 +138,7 @@ const FeaturedAssets = () => {
               <h4 className="text-xs sm:text-sm text-gray-400 mb-3 flex items-center gap-2"><Clock size={14} /> Just Sold</h4>
               <ul className="space-y-3 sm:space-y-4">
                 {justSold.map(item => (
-                  <li key={item.id} className="flex justify-between items-center">
+                  <li key={item.$id} className="flex justify-between items-center">
                     <div className="flex items-center gap-2 sm:gap-3">
                       <img src={item.avatar} alt={item.handle} className="w-6 sm:w-8 h-6 sm:h-8 rounded-lg object-cover" />
                       <div>
@@ -127,7 +174,7 @@ const FeaturedAssets = () => {
                   </div>
                 </div>
                 <button
-                  onClick={() => navigate(`/account/${featuredSmall.id}/${featuredSmall.handle.replace("@", "")}`)}
+                  onClick={() => navigate(`/account/${featuredSmall.$id}/${featuredSmall.handle.replace("@", "")}`)}
                   className="w-full py-2 bg-blue-600 hover:bg-blue-700 rounded-xl font-medium transition text-sm sm:text-base cursor-pointer"
                 >
                   View Listing

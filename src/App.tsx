@@ -8,14 +8,23 @@ import Checkout from './pages/Checkout';
 import ScrollToTop from './components/ScrollToTop';
 import SellAccount from './pages/SellAccount';
 import Contact from './pages/ContactPage';
+import AboutPage from './pages/AboutPage';
+import HowItWorks from './pages/HowItWorks';
+import Terms from './pages/Terms';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import Register from './pages/Register';
+import Login from './pages/Login';
+import VerificationProcess from "../src/components/VerificationProcess";
+import SellerGuide from "../src/components/SellerGuide";
+import BuyerProtection from "../src/components/BuyerProtection";
 
 export default function App() {
   return (
     <Router>
 
-       <ScrollToTop />
+      <ScrollToTop />
       <div className="min-h-screen flex flex-col">
-       <Navbar />
+        <Navbar />
 
         {/* Pages */}
         <div className="flex-1">
@@ -26,12 +35,19 @@ export default function App() {
             <Route path="/checkout/:id" element={<Checkout />} />
             <Route path="/sell" element={<SellAccount />} />
             <Route path="/contact" element={<Contact />} />
-            {/* Sell page route */}
-            {/* <Route path="/sell" element={<SellPage />} /> */}
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/how-it-works" element={<HowItWorks />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/verification" element={<VerificationProcess />} />
+            <Route path="/seller-guide" element={<SellerGuide />} />
+            <Route path="/buyer-protection" element={<BuyerProtection />} />
           </Routes>
         </div>
 
-         <Footer />
+        <Footer />
       </div>
     </Router>
   )

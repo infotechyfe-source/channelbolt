@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useMemo, useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, ChevronLeft, ChevronRight, Filter, Flame, X } from "lucide-react";
 import SocialCard from "../components/SocialCard";
@@ -20,7 +20,6 @@ type Listing = {
 
 export default function Marketplace() {
   const { t } = useTranslation();
-  const location = useLocation();
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const searchTerm = "";
   const [sortBy, setSortBy] = useState<"price" | "followers" | "engagement">("price");
@@ -116,7 +115,7 @@ export default function Marketplace() {
         return b.engagement - a.engagement;
       });
   }, [
-    listings,   // ✅ ADD THIS (very important)
+    listings,   // (very important)
     searchTerm,
     activePlatform,
     platforms,
@@ -134,13 +133,54 @@ export default function Marketplace() {
     setActivePlatform("All");
   }, []);
 
-  if (loading) {
-    return (
-      <p className="text-center py-20 text-lg font-semibold">
-        Loading listings...
-      </p>
-    );
-  }
+ if (loading) {
+  return (
+    <section className="min-h-screen bg-gray-50 py-16 px-6">
+      <div className="max-w-7xl mx-auto">
+
+        {/* PAGE TITLE SKELETON */}
+        <div className="mb-10 animate-pulse">
+          <div className="h-8 w-64 bg-gray-300 rounded mb-3" />
+          <div className="h-4 w-96 bg-gray-200 rounded" />
+        </div>
+
+        {/* FILTER BAR SKELETON (if you have filters) */}
+        <div className="flex gap-4 mb-8 animate-pulse">
+          <div className="h-10 w-40 bg-gray-200 rounded-lg" />
+          <div className="h-10 w-32 bg-gray-200 rounded-lg" />
+          <div className="h-10 w-36 bg-gray-200 rounded-lg" />
+        </div>
+
+        {/* CARD GRID SKELETON */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {[...Array(6)].map((_, i) => (
+            <div
+              key={i}
+              className="bg-white rounded-2xl shadow-md overflow-hidden animate-pulse"
+            >
+              {/* Cover Image */}
+              <div className="h-40 bg-gray-200" />
+
+              {/* Content */}
+              <div className="p-5 space-y-4">
+                <div className="h-4 w-32 bg-gray-300 rounded" />
+                <div className="h-4 w-24 bg-gray-200 rounded" />
+                <div className="h-4 w-full bg-gray-200 rounded" />
+                <div className="h-4 w-3/4 bg-gray-200 rounded" />
+
+                <div className="flex justify-between items-center pt-4">
+                  <div className="h-6 w-20 bg-gray-300 rounded" />
+                  <div className="h-8 w-24 bg-gray-300 rounded-lg" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+      </div>
+    </section>
+  );
+}
 
 
   return (

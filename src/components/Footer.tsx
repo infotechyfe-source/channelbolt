@@ -14,7 +14,7 @@ export default function Footer() {
           {/* COLUMN 1 — BRAND */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold text-lg">
+              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-linear-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold text-lg">
                 S
               </div>
               <h2 className="text-lg sm:text-xl font-bold text-gray-900">
@@ -55,10 +55,9 @@ export default function Footer() {
             <h3 className="font-semibold text-gray-900 mb-3 sm:mb-5">Resources</h3>
             <ul className="space-y-2 sm:space-y-3 text-sm">
               <li><Link to="/how-it-works">How It Works</Link></li>
-              <li><Link to="/pricing">Pricing</Link></li>
               <li><Link to="/verification">Verification Process</Link></li>
               <li><Link to="/seller-guide">Seller Guide</Link></li>
-              <li><Link to="/buyer-protection">Buyer Protection</Link></li>
+             
             </ul>
           </div>
 
@@ -67,6 +66,8 @@ export default function Footer() {
             <h3 className="font-semibold text-gray-900 mb-3 sm:mb-5">Company</h3>
             <ul className="space-y-2 sm:space-y-3 text-sm">
               <li><Link to="/about">About Us</Link></li>
+               <li><Link to="/contact">Contact</Link></li>
+                <li><Link to="/buyer-protection">Buyer Protection</Link></li>
             </ul>
           </div>
 
@@ -76,16 +77,15 @@ export default function Footer() {
             <ul className="space-y-2 sm:space-y-3 text-sm">
               <li><Link to="/terms">Terms of Service</Link></li>
               <li><Link to="/privacy">Privacy Policy</Link></li>
-              <li><Link to="/cookies">Cookie Policy</Link></li>
               <li><Link to="/refund">Refund Policy</Link></li>
-              <li><Link to="/disputes">Dispute Resolution</Link></li>
+              
             </ul>
           </div>
 
         </div>
 
         {/* ================= NEWSLETTER SECTION ================= */}
-        <div className="rounded-3xl bg-gradient-to-r from-purple-600 to-indigo-600 p-6 sm:p-10 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
+        <div className="rounded-3xl bg-linear-to-r from-purple-600 to-indigo-600 p-6 sm:p-10 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
 
           <div className="text-center sm:text-left">
             <h3 className="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2">

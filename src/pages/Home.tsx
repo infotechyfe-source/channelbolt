@@ -16,8 +16,8 @@ export default function Home() {
   return (
     <div className="flex flex-col bg-white w-full overflow-x-hidden">
       <section className="w-full px-4 sm:px-6 lg:px-8">
-        <HeroSection />
       </section>
+        <HeroSection />
       <MarketplaceSection />
       <CategorySection />
       <TrendingSection />

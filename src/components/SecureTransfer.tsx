@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { CreditCard, ArrowLeftRight, CheckCircle2, Key } from 'lucide-react';
 
 const steps = [

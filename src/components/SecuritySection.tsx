@@ -1,4 +1,3 @@
-import React from 'react';
 import { ShieldCheck, Lock, BadgeCheck, Award } from 'lucide-react';
 
 const SecuritySection = () => {

@@ -3,34 +3,32 @@
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect, useRef } from "react";
+import { useAuth } from "../context/AuthContext";
 import {
-  Instagram,
-  Facebook,
-  Youtube,
-  ShieldCheck,
-  Star,
-  Users,
-  DollarSign,
-  Clock,
-  BadgeCheck,
-  TrendingUp,
-  Menu,
-  X,
+  Instagram, Facebook, Youtube, ShieldCheck, Star, Users, DollarSign, Clock, BadgeCheck, TrendingUp,
+  Menu, X,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../lib/auth";
 
 export default function Navbar() {
+  const navigate = useNavigate();
   const location = useLocation();
   const { t, i18n } = useTranslation();
   const [openLang, setOpenLang] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { user, loading, refreshUser } = useAuth();
 
-  useEffect(() => {
-    const savedLang = localStorage.getItem("language");
-    if (savedLang) {
-      i18n.changeLanguage(savedLang);
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      await refreshUser();
+      navigate("/login");
+    } catch (err) {
+      alert("Logout failed");
     }
-  }, [i18n]);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -43,10 +41,9 @@ export default function Navbar() {
   }, []);
 
   const linkClass = (path: string) =>
-    `relative px-2 py-1 transition ${
-      location.pathname === path
-        ? "text-white font-semibold after:absolute after:left-0 after:-bottom-1 after:w-full after:h-[2px] after:bg-blue-500"
-        : "text-gray-300 hover:text-white"
+    `relative px-2 py-1 transition ${location.pathname === path
+      ? "text-white font-semibold after:absolute after:left-0 after:-bottom-1 after:w-full after:h-[2px] after:bg-blue-500"
+      : "text-gray-300 hover:text-white"
     }`;
 
   const changeLanguage = (lang: string) => {
@@ -58,7 +55,7 @@ export default function Navbar() {
   return (
     <>
       {/* TOP STRIP */}
-      <div className="bg-gradient-to-r from-blue-600 via-slate-700 to-indigo-600 text-gray-200 text-xs sm:text-sm border-b border-gray-800 overflow-hidden">
+      <div className="bg-linear-to-r from-blue-600 via-slate-700 to-indigo-600 text-gray-200 text-xs sm:text-sm border-b border-gray-800 overflow-hidden">
         <div className="relative w-full overflow-hidden">
           <div className="flex w-max animate-marquee hover:[animation-play-state:paused]">
             {[...Array(2)].map((_, index) => (
@@ -183,6 +180,22 @@ export default function Navbar() {
               >
                 {t("buyNow")}
               </Link>
+
+              {/* Login/Logout button based on state */}
+              {!loading && !user && (
+                <Link to="/login" className="bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-md font-medium transition shadow-md hover:shadow-blue-500/30 cursor-pointer">
+                  Login
+                </Link>
+              )}
+
+              {!loading && user && (
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-600 px-5 py-2 rounded-md font-medium transition shadow-md hover:shadow-blue-500/30 cursor-pointer"
+                >
+                  Logout
+                </button>
+              )}
 
               {/* Hamburger for Mobile */}
               <button

@@ -1,14 +1,14 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useMemo, useState } from "react";
-import {
-  Shield,
-  Lock,
-  CheckCircle,
-  CreditCard,
-  HelpCircle,
-} from "lucide-react";
-import { databases, DATABASE_ID, COLLECTION_ID } from "../lib/appwrite";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Shield, Lock, CheckCircle, CreditCard, HelpCircle } from "lucide-react";
+import { databases, DATABASE_ID, COLLECTION_ID, storage, BUCKET_ID } from "../lib/appwrite";
+
+// Utility to get a viewable file URL from Appwrite fileId
+const getFileUrl = (fileId?: string) => {
+  if (!fileId) return "/placeholder.jpg"; // fallback
+  if (fileId.startsWith("http")) return fileId;
+  return storage.getFileView(BUCKET_ID, fileId); // returns public URL for the file
+};
 
 export default function Checkout() {
   const { id } = useParams();
@@ -23,12 +23,16 @@ export default function Checkout() {
 
     const fetchListing = async () => {
       try {
-        const response = await databases.getDocument(
-          DATABASE_ID,
-          COLLECTION_ID,
-          id   // 🔥 this is Appwrite $id
-        );
-        setListing(response);
+        const response = await databases.getDocument(DATABASE_ID, COLLECTION_ID, id);
+
+        // Resolve cover and avatar URLs once
+        const listingWithUrls = {
+          ...response,
+          coverImageUrl: getFileUrl(response.coverImage),
+          avatarUrl: getFileUrl(response.avatar),
+        };
+
+        setListing(listingWithUrls);
       } catch (error) {
         console.error("Error fetching listing:", error);
       } finally {
@@ -38,20 +42,13 @@ export default function Checkout() {
 
     fetchListing();
   }, [id]);
+
   if (loading) {
-    return (
-      <div className="text-center py-20 text-gray-500">
-        Loading checkout...
-      </div>
-    );
+    return <div className="text-center py-20 text-gray-500">Loading checkout...</div>;
   }
 
   if (!listing) {
-    return (
-      <div className="text-center py-20 text-red-500">
-        Listing not found
-      </div>
-    );
+    return <div className="text-center py-20 text-red-500">Listing not found</div>;
   }
 
   const price = listing.price ?? 0;
@@ -64,6 +61,7 @@ export default function Checkout() {
     { title: "Verification", desc: "We verify full access, change recovery info, and secure the account for you." },
     { title: "Ownership Release", desc: "You receive the account details. Funds are released to seller only after you confirm." },
   ];
+
 
   return (
     <div className="bg-gray-50 min-h-screen py-10">
@@ -127,7 +125,7 @@ export default function Checkout() {
 
               {/* Cover Image */}
               <img
-                src={listing.coverImage}
+                src={listing.coverImageUrl}
                 alt={`${listing.handle} account cover`}
                 title={`${listing.handle} account cover`}
                 className="w-full h-48 object-cover"
@@ -136,7 +134,7 @@ export default function Checkout() {
               {/* Account Info */}
               <div className="p-6 flex gap-4">
                 <img
-                  src={listing.avatar}
+                  src={listing.avatarUrl}
                   alt={`${listing.handle} avatar`}
                   title={`${listing.handle} avatar`}
                   className="w-20 h-20 rounded-xl object-cover"

@@ -102,7 +102,7 @@ export default function RecommendedListings() {
 
             <button
               onClick={() => navigate("/marketplace")}
-              className="bg-blue-500 px-4 sm:px-5 py-2 rounded-2xl font-semibold hover:bg-blue-600 flex items-center gap-2 w-full sm:w-auto justify-center"
+              className="bg-blue-500 px-4 sm:px-5 py-2 rounded-2xl font-semibold hover:bg-blue-600 flex items-center gap-2 w-full sm:w-auto justify-center cursor-pointer"
             >
               View All
               <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -115,7 +115,7 @@ export default function RecommendedListings() {
           {filteredListings.map(account => (
             <div key={account.id} className="sm:min-h-[300px] md:min-h-[320px] lg:min-h-[350px]">
               <SocialCard
-                id={account.id}
+                $id={account.id.toString()}
                 handle={account.handle}
                 platform={account.platform}
                 niche={account.niche}

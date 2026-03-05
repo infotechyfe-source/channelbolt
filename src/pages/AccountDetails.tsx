@@ -1,48 +1,70 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useMemo } from "react";
-import { ArrowUpRight, CalendarDays, CheckCircle, Clock, DollarSign, Globe2, Heart, Mail, ShieldCheck, ShoppingCart, Sparkles, Target, TrendingUp, Users, Users2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+    ArrowUpRight,
+    CalendarDays,
+    CheckCircle,
+    Clock,
+    DollarSign,
+    Mail,
+    ShieldCheck,
+    ShoppingCart,
+    Sparkles,
+    Target,
+    TrendingUp,
+    Users,
+} from "lucide-react";
 import SecureTransfer from "../components/SecureTransfer";
 import SimilarAccounts from "../components/SimilarAccounts";
 import AccountAnalytics from "../components/AccountAnalytics";
-import { databases, DATABASE_ID, COLLECTION_ID } from "../lib/appwrite";
-import { useEffect, useState } from "react";
+import { databases, DATABASE_ID, COLLECTION_ID, storage, BUCKET_ID } from "../lib/appwrite";
+
+// Utility to get a usable file URL
+const getFileUrl = (fileId?: string) => {
+    if (!fileId) return "/placeholder.jpg";
+    if (fileId.startsWith("http")) return fileId;
+    return storage.getFileView(BUCKET_ID, fileId); // returns URL for Appwrite file
+};
 
 export default function AccountDetails() {
     const { id, handle } = useParams();
     const navigate = useNavigate();
 
-  const [listing, setListing] = useState<any>(null);
-const [loading, setLoading] = useState(true);
+    const [listing, setListing] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
 
-useEffect(() => {
-    const fetchListing = async () => {
-        if (!id) return;
+    useEffect(() => {
+        const fetchListing = async () => {
+            if (!id) return;
 
-        try {
-            const response = await databases.getDocument(
-                DATABASE_ID,
-                COLLECTION_ID,
-                id // this is Appwrite $id
-            );
+            try {
+                const response = await databases.getDocument(DATABASE_ID, COLLECTION_ID, id);
 
-            setListing(response);
-        } catch (error) {
-            console.error("Error fetching listing:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
+                // Resolve cover & avatar URLs once
+                const listingWithUrls = {
+                    ...response,
+                    coverImageUrl: getFileUrl(response.coverImage),
+                    avatarUrl: getFileUrl(response.avatar),
+                };
 
-    fetchListing();
-}, [id]);
+                setListing(listingWithUrls);
+            } catch (error) {
+                console.error("Error fetching listing:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-   if (loading) {
-    return (
-        <div className="text-center py-20 text-gray-500">
-            Loading account...
-        </div>
-    );
-}
+        fetchListing();
+    }, [id]);
+
+    if (loading) {
+        return <div className="text-center py-20 text-gray-500">Loading account...</div>;
+    }
+
+    if (!listing) {
+        return <div className="text-center py-20 text-red-500">Listing not found.</div>;
+    }
 
     const followerData = [
         { month: "Jan", followers: 120000 },
@@ -100,13 +122,13 @@ useEffect(() => {
 
                     {/* Cover Image */}
                     <img
-                        src={listing.coverImage}
+                        src={listing.coverImageUrl}
                         alt="cover"
                         className="w-full h-56 sm:h-72 md:h-80 lg:h-[340px] object-cover group-hover:scale-105 transition duration-500"
                     />
 
                     {/* Dark Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/40 to-transparent" />
 
                     {/* Bottom Content */}
                     <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
@@ -115,7 +137,7 @@ useEffect(() => {
                         <div className="flex items-center gap-5">
                             <div className="relative">
                                 <img
-                                    src={listing.avatar}
+                                    src={listing.avatarUrl}
                                     alt="avatar"
                                     className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl border-4 border-white shadow-lg object-cover"
                                 />

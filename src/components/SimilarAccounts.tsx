@@ -32,7 +32,7 @@ const SimilarAccounts = () => {
                 {allListings.slice(0, 3).map((account) => (
                     <SocialCard
                         key={account.id}
-                        id={account.id}
+                       $id={account.id.toString()}
                         handle={account.handle}
                         platform={account.platform}
                         niche={account.niche}
