@@ -16,7 +16,7 @@ type Listing = {
   followers: number;
   engagement: number;
   price?: number;
-  status: "active" | "sold" | "draft" | "paused";
+  status: "approved" | "sold" | "pending" | "rejected";
 };
 
 export default function Marketplace() {
@@ -43,7 +43,7 @@ export default function Marketplace() {
         const response = await databases.listDocuments(
           DATABASE_ID,
           COLLECTION_ID,
-          [Query.equal("status", "active")]
+          [Query.equal("status", "approved")]
         );
         setListings(response.documents);
       } catch (error) {
@@ -299,6 +299,7 @@ export default function Marketplace() {
                   coverImage={listing.coverImage}
                   avatar={listing.avatar}
                   includeEmail={listing.includeEmail}
+                  payoutAvailable= {listing.payoutAvailable}
                   status={listing.status}
                 />
               ))}

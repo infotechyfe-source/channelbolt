@@ -31,6 +31,8 @@ type SocialCardProps = {
   coverImage: string;
   avatar: string;
   includeEmail?: boolean | null;
+  payoutAvailable?: boolean | null;
+  strikes?: number | null;
   variant?: "default" | "trending";
   status?: "active" | "pending" | "sold";
 };
@@ -47,6 +49,8 @@ export default function SocialCard({
   coverImage,
   avatar,
   includeEmail = false,
+  payoutAvailable = false,
+  strikes = 0,
   variant,
 }: SocialCardProps) {
   const navigate = useNavigate();
@@ -55,6 +59,12 @@ export default function SocialCard({
     platform === "Instagram" ||
     platform === "YouTube" ||
     platform === "Facebook";
+
+  const supportsStrikes =
+    platform === "YouTube" ||
+    platform === "YouTube NonMonetised" ||
+    platform === "Facebook" ||
+    platform === "Facebook NonMonetised";
 
   const basePlatform =
     platform === "Youtube NonMonetised"
@@ -77,6 +87,11 @@ export default function SocialCard({
     .replace(/@/g, "")
     .trim()
     .replace(/\s+/g, "_");
+
+  const audienceLabel =
+    platform === "YouTube" || platform === "YouTube NonMonetised"
+      ? "Subscribers"
+      : "Followers";
 
   // ================= TRENDING VARIANT =================
   if (variant === "trending") {
@@ -104,7 +119,9 @@ export default function SocialCard({
         {/* Stats Row */}
         <div className="border-t border-gray-200 grid grid-cols-3 text-center py-4 px-6 bg-gray-50">
           <div>
-            <p className="text-xs text-gray-400 uppercase">Followers</p>
+            <p className="text-xs text-gray-400 uppercase">
+              {audienceLabel}
+            </p>
             <p className="font-semibold text-gray-800">{(followers / 1000).toFixed(1)}K</p>
           </div>
           <div>
@@ -184,7 +201,7 @@ export default function SocialCard({
       </div>
 
       {/* CONTENT */}
-      <div className="p-6 pt-10 flex flex-col grow">
+      <div className="p-6 pt-4 flex flex-col grow">
         <div className="flex items-center gap-2 mb-1">
           <h3 className="text-xl font-bold">{handle}</h3>
           <BadgeCheck className="w-5 h-5 text-blue-500" />
@@ -195,7 +212,7 @@ export default function SocialCard({
         <div className="grid grid-cols-2 gap-y-4 gap-x-4 mb-3 text-sm">
           <div>
             <p className="flex items-center gap-1.5 text-gray-400 mb-1">
-              <Users className="w-4 h-4" /> Followers
+              <Users className="w-4 h-4" /> {audienceLabel}
             </p>
             <p className="font-bold text-gray-900">{followers.toLocaleString()}</p>
           </div>
@@ -225,14 +242,46 @@ export default function SocialCard({
           </div>
         </div>
 
-        {/* Email Badge */}
-        {includeEmail && (
-          <div className="mb-2">
-            <span className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg text-xs font-semibold">
-              <Mail className="w-4 h-4" /> OG Email Included
+        {/* ACCOUNT BADGES */}
+        <div className="flex flex-wrap gap-2 mb-4">
+
+          {/* OG Email */}
+          {includeEmail && (
+            <span className="flex items-center gap-1.5 bg-blue-50 text-blue-700 px-3 py-2 rounded-lg text-xs font-semibold border border-blue-100">
+              <Mail className="w-4 h-4" />
+              OG Email
             </span>
-          </div>
-        )}
+          )}
+
+          {/* Strike Badge */}
+          {supportsStrikes && (
+            strikes === 0 ? (
+              <span className="flex items-center gap-1.5 bg-green-50 text-green-700 px-3 py-2 rounded-lg text-xs font-semibold border border-green-100">
+                🛡 No Strikes
+              </span>
+            ) : strikes === 1 ? (
+              <span className="flex items-center gap-1.5 bg-yellow-50 text-yellow-700 px-3 py-2 rounded-lg text-xs font-semibold border border-yellow-100">
+                ⚠ 1 Strike
+              </span>
+            ) : (
+              <span className="flex items-center gap-1.5 bg-red-50 text-red-700 px-3 py-2 rounded-lg text-xs font-semibold border border-red-100">
+                🚨 {strikes} Strikes
+              </span>
+            )
+          )}
+
+          {/* Payout Badge */}
+          {payoutAvailable ? (
+            <span className="flex items-center gap-1.5 bg-green-50 text-green-700 px-3 py-2 rounded-lg text-xs font-semibold border border-green-100">
+              💰 Payout Available
+            </span>
+          ) : (
+            <span className="flex items-center gap-1.5 bg-gray-100 text-gray-700 px-3 py-2 rounded-lg text-xs font-semibold border border-gray-200">
+              💰 No Payout
+            </span>
+          )}
+
+        </div>
 
         {/* PRICE */}
         <div className="text-start mb-4">

@@ -150,14 +150,79 @@ export default function SellAccount() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-green-50 to-white px-6">
-        <div className="bg-white p-12 rounded-3xl shadow-2xl text-center max-w-lg">
-          <CheckCircle className="mx-auto text-green-600 mb-6" size={60} />
-          <h2 className="text-3xl font-bold mb-3">Listing Submitted 🎉</h2>
-          <p className="text-gray-600 mb-6">Your listing is under review and will appear shortly.</p>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-6 py-12">
+        <div className="bg-white p-10 md:p-14 rounded-[40px] shadow-sm border border-gray-100 text-center max-w-2xl w-full">
+
+          {/* Success Icon */}
+          <div className="flex justify-center mb-8">
+            <div className="bg-green-100 p-4 rounded-full">
+              <CheckCircle className="text-green-600" size={40} />
+            </div>
+          </div>
+
+          {/* Header */}
+          <h2 className="text-4xl font-bold text-slate-900 mb-4">Listing Submitted</h2>
+          <p className="text-gray-500 text-lg leading-relaxed mb-10 max-w-md mx-auto">
+            Your listing has been successfully submitted and is currently under review.
+            It will appear in the marketplace once approved.
+          </p>
+
+          {/* Status Banner */}
+          <div className="bg-gray-50 rounded-2xl p-6 flex flex-wrap justify-between items-center mb-12 border border-gray-50">
+            <div className="flex items-center gap-4">
+              <span className="text-gray-600 font-medium">Status:</span>
+              <div className="flex items-center gap-2 bg-orange-50 text-orange-700 px-4 py-1.5 rounded-full text-sm font-semibold border border-orange-100">
+                <Clock size={16} />
+                Under Review
+              </div>
+            </div>
+            <div className="flex items-center gap-3 mt-4 sm:mt-0">
+              <span className="text-gray-500 font-medium">Estimated Review Time:</span>
+              <span className="font-bold text-slate-900">24 hours</span>
+            </div>
+          </div>
+
+          {/* Next Steps Progress Bar */}
+          <div className="text-left mb-12">
+            <h3 className="text-xl font-bold text-slate-900 mb-8">Next Steps</h3>
+
+            <div className="relative flex justify-between items-start">
+              {/* The Connecting Line */}
+              <div className="absolute top-5 left-0 w-full h-[2px] bg-gray-200 -z-0"></div>
+
+              {/* Step 1 */}
+              <div className="relative z-10 flex flex-col items-center flex-1">
+                <div className="bg-green-500 text-white p-2 rounded-full mb-3 ring-8 ring-white">
+                  <CheckCircle size={24} />
+                </div>
+                <span className="text-xs font-bold text-gray-400 uppercase">Step 1</span>
+                <span className="text-sm font-semibold text-slate-700">Listing Submitted</span>
+              </div>
+
+              {/* Step 2 */}
+              <div className="relative z-10 flex flex-col items-center flex-1">
+                <div className="bg-gray-100 text-gray-400 w-10 h-10 flex items-center justify-center rounded-full mb-3 ring-8 ring-white border-2 border-gray-200">
+                  <span className="font-bold">2</span>
+                </div>
+                <span className="text-xs font-bold text-gray-400 uppercase">Step 2</span>
+                <span className="text-sm font-semibold text-slate-400">Review in Progress</span>
+              </div>
+
+              {/* Step 3 */}
+              <div className="relative z-10 flex flex-col items-center flex-1">
+                <div className="bg-gray-100 text-gray-400 w-10 h-10 flex items-center justify-center rounded-full mb-3 ring-8 ring-white border-2 border-gray-200">
+                  <span className="font-bold">3</span>
+                </div>
+                <span className="text-xs font-bold text-gray-400 uppercase">Step 3</span>
+                <span className="text-sm font-semibold text-slate-400">Listing Goes Live</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Action Button */}
           <button
             onClick={() => (window.location.href = "/marketplace")}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl transition"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-5 rounded-2xl font-bold text-lg transition-all shadow-lg shadow-blue-200"
           >
             Go to Marketplace
           </button>

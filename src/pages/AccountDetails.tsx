@@ -5,7 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import SimilarAccounts from "../components/SimilarAccounts";
 import AccountAnalytics from "../components/AccountAnalytics";
 import { databases, DATABASE_ID, COLLECTION_ID, storage, BUCKET_ID } from "../lib/appwrite";
-import { ArrowUpRight, CalendarDays, CheckCircle, Clock, DollarSign, Mail, ShieldCheck, ShoppingCart, Sparkles, Target,TrendingUp, Users,} from "lucide-react";
+import { ArrowUpRight, CalendarDays, CheckCircle, Clock, DollarSign, Mail, ShieldCheck, ShoppingCart, Sparkles, Target, TrendingUp, Users, } from "lucide-react";
 
 // Utility to get a usable file URL
 const getFileUrl = (fileId?: string) => {
@@ -79,7 +79,7 @@ export default function AccountDetails() {
         <div className="bg-gray-50 min-h-screen pb-20">
 
             {/* Breadcrumb */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2 sm:mt-14 relative z-10">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 relative z-10">
                 <div className="text-sm flex items-center gap-2 flex-wrap">
 
                     <button
@@ -108,7 +108,7 @@ export default function AccountDetails() {
             </div>
 
             {/* Cover Section */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 mt-10 sm:mt-14 relative z-10">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 mt-2 sm:mt-6 relative z-10">
                 <div className="relative rounded-3xl overflow-hidden shadow-xl group">
 
                     {/* Cover Image */}
@@ -140,7 +140,7 @@ export default function AccountDetails() {
                                 </h2>
 
                                 <div className="flex items-center gap-3 mt-2">
-                                    <span className="px-3 py-1 text-xs rounded-full bg-white/20 backdrop-blur text-white font-medium">
+                                    <span className="px-4 py-1.5 text-xs rounded-full bg-white/20 backdrop-blur text-white font-semibold tracking-wide uppercase">
                                         {listing.platform}
                                     </span>
 
@@ -184,7 +184,58 @@ export default function AccountDetails() {
             </div>
 
             {/* Main Container */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 mt-10 sm:mt-14 relative z-10">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 mt-6 sm:mt-10 relative z-10">
+
+                {/* ===== ACCOUNT STATUS BADGES ===== */}
+                <div className="flex flex-wrap gap-2 items-center justify-center mb-4">
+
+                    {/* Monetization */}
+                    {listing.monetized !== undefined && (
+                        <span className={`flex items-center gap-1 px-3 py-2 rounded-lg text-xs font-semibold border ${listing.monetized
+                            ? "bg-green-50 text-green-700 border-green-100"
+                            : "bg-gray-100 text-gray-700 border-gray-200"
+                            }`}>
+                            <DollarSign size={14} />
+                            {listing.monetized ? "Monetized" : "Not Monetized"}
+                        </span>
+                    )}
+
+                    {/* Payout */}
+                    {listing.payoutAvailable !== undefined && (
+                        <span className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold border ${listing.payoutAvailable
+                            ? "bg-green-50 text-green-700 border-green-100"
+                            : "bg-gray-100 text-gray-700 border-gray-200"
+                            }`}>
+                            💰 {listing.payoutAvailable ? "Payout Available" : "No Payout"}
+                        </span>
+                    )}
+
+                    {/* Strike Status */}
+                    {["YouTube", "YouTube NonMonetised", "Facebook", "Facebook NonMonetised"].includes(listing.platform) && (
+                        <span className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold border ${listing.strikes === 0
+                            ? "bg-green-50 text-green-700 border-green-100"
+                            : listing.strikes === 1
+                                ? "bg-yellow-50 text-yellow-700 border-yellow-100"
+                                : "bg-red-50 text-red-700 border-red-100"
+                            }`}>
+                            <ShieldCheck size={14} />
+                            {listing.strikes === 0
+                                ? "No Strikes"
+                                : listing.strikes === 1
+                                    ? "1 Strike"
+                                    : `${listing.strikes} Strikes`}
+                        </span>
+                    )}
+
+                    {/* OG Email */}
+                    {listing.includeEmail && (
+                        <span className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold border bg-blue-50 text-blue-700 border-blue-100">
+                            <Mail size={14} />
+                            OG Email
+                        </span>
+                    )}
+
+                </div>
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
 
                     {/* LEFT SIDE */}
@@ -221,6 +272,7 @@ export default function AccountDetails() {
                                     color="blue"
                                 />
 
+
                                 {/* Engagement (Instagram only) */}
                                 {listing.platform === "Instagram" && (
                                     <MetricCard
@@ -238,6 +290,17 @@ export default function AccountDetails() {
                                     value={`₹${listing.revenue?.toLocaleString() || 0}`}
                                     color="yellow"
                                 />
+
+                                {/* Payout */}
+                                {listing.payoutAvailable !== undefined && (
+                                    <MetricCard
+                                        icon={<DollarSign size={18} />}
+                                        label="Payout"
+                                        value={listing.payoutAvailable ? "Available" : "Not Available"}
+                                        color="green"
+                                    />
+                                )}
+
 
                                 {/* Niche */}
                                 <MetricCard

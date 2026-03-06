@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Shield, Lock, CheckCircle, CreditCard, HelpCircle } from "lucide-react";
+import { ShieldCheck, Lock, CheckCircle, CreditCard, HelpCircle, Mail, DollarSign, Shield } from "lucide-react";
 import { databases, DATABASE_ID, COLLECTION_ID, storage, BUCKET_ID } from "../lib/appwrite";
 
 // Utility to get a viewable file URL from Appwrite fileId
@@ -43,17 +43,15 @@ export default function Checkout() {
     fetchListing();
   }, [id]);
 
-  if (loading) {
-    return <div className="text-center py-20 text-gray-500">Loading checkout...</div>;
-  }
-
-  if (!listing) {
-    return <div className="text-center py-20 text-red-500">Listing not found</div>;
-  }
+  if (loading) return <div className="text-center py-20 text-gray-500">Loading checkout...</div>;
+  if (!listing) return <div className="text-center py-20 text-red-500">Listing not found</div>;
 
   const price = listing.price ?? 0;
   const serviceFee = Math.round(price * 0.05);
   const total = price + serviceFee;
+
+  const supportsStrikes = ["YouTube", "YouTube NonMonetised", "Facebook", "Facebook NonMonetised"].includes(listing.platform);
+  const isMonetized = ["YouTube", "Facebook", "Instagram"].includes(listing.platform);
 
   const steps = [
     { title: "Payment to Escrow", desc: "Your payment is held securely in our escrow vault. The seller cannot access funds yet." },
@@ -69,47 +67,13 @@ export default function Checkout() {
 
         {/* Breadcrumb */}
         <div className="text-sm mb-6 flex items-center gap-2 flex-wrap">
-
-          <button
-            onClick={() => navigate("/")}
-            className="text-gray-500 hover:text-blue-600 transition cursor-pointer"
-          >
-            Home
-          </button>
-
+          <button onClick={() => navigate("/")} className="text-gray-500 hover:text-blue-600 transition cursor-pointer">Home</button>
           <span className="text-gray-400">›</span>
-
-          <button
-           onClick={() =>
-  navigate("/marketplace", { state: { resetFilters: true } })
-}
-            className="text-gray-500 hover:text-blue-600 transition cursor-pointer"
-          >
-            Marketplace
-          </button>
-
+          <button onClick={() => navigate("/marketplace", { state: { resetFilters: true } })} className="text-gray-500 hover:text-blue-600 transition cursor-pointer">Marketplace</button>
           <span className="text-gray-400">›</span>
-
-          <button
-            onClick={() =>
-              navigate(
-                `/account/${listing.$id}/${listing.handle
-                  .replace("@", "")
-                  .replace(/\s+/g, "_")
-                  .toLowerCase()}`
-              )
-            }
-            className="text-gray-500 hover:text-blue-600 transition cursor-pointer"
-          >
-            Account Details
-          </button>
-
+          <button onClick={() => navigate(`/account/${listing.$id}/${listing.handle.replace("@", "").replace(/\s+/g, "_").toLowerCase()}`)} className="text-gray-500 hover:text-blue-600 transition cursor-pointer">Account Details</button>
           <span className="text-gray-400">›</span>
-
-          <span className="text-gray-900 font-medium">
-            Checkout
-          </span>
-
+          <span className="text-gray-900 font-medium">Checkout</span>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -118,73 +82,60 @@ export default function Checkout() {
           <div className="lg:col-span-2 space-y-6">
 
             {/* Order Summary */}
-            <div className="bg-white rounded-2xl shadow border border-amber-50 overflow-hidden">
-              <div className="p-6 font-semibold text-lg">
-                Order Summary
-              </div>
+            <div className="bg-white rounded-2xl shadow border border-gray-100 overflow-hidden">
+              {/* Cover */}
+              <img src={listing.coverImageUrl} alt={`${listing.handle} cover`} className="w-full h-48 object-cover" />
 
-              {/* Cover Image */}
-              <img
-                src={listing.coverImageUrl}
-                alt={`${listing.handle} account cover`}
-                title={`${listing.handle} account cover`}
-                className="w-full h-48 object-cover"
-              />
-
-              {/* Account Info */}
+              {/* Info */}
               <div className="p-6 flex gap-4">
-                <img
-                  src={listing.avatarUrl}
-                  alt={`${listing.handle} avatar`}
-                  title={`${listing.handle} avatar`}
-                  className="w-20 h-20 rounded-xl object-cover"
-                />
-
+                <img src={listing.avatarUrl} alt={`${listing.handle} avatar`} className="w-20 h-20 rounded-xl object-cover" />
                 <div className="flex-1">
-                  <div className="flex items-center gap-3">
-                    <h3 className="font-bold text-lg">
-                      {listing.handle}
-                    </h3>
 
-                    {listing.revenue > 0 && (
-                      <span className="bg-green-100 text-green-600 text-xs px-2 py-1 rounded-2xl border border-green-300 font-semibold">
-                        MONETISED
+                  <p className="text-sm text-gray-500">{listing.niche}</p>
+
+                  <div className="grid grid-cols-3 gap-4 mt-3 text-sm">
+                    <div>
+                      <p className="text-gray-400">Followers</p>
+                      <p className="font-semibold">{listing.followers.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-400">Engagement</p>
+                      <p className="font-semibold">{listing.engagement}%</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-400">Revenue</p>
+                      <p className="font-semibold">₹{listing.revenue}/mo</p>
+                    </div>
+                  </div>
+
+                  {/* ===== ACCOUNT STATUS BADGES ===== */}
+                  <div className="flex flex-wrap gap-2 mt-4 items-center text-xs">
+                    {listing.monetized !== undefined && (
+                      <span className={`flex items-center gap-1 px-2 py-1 rounded-lg font-semibold border ${listing.monetized ? "bg-green-50 text-green-700 border-green-100" : "bg-gray-100 text-gray-700 border-gray-200"}`}>
+                        <DollarSign size={14} /> {listing.monetized ? "Monetized" : "Not Monetized"}
+                      </span>
+                    )}
+
+                    {listing.payoutAvailable !== undefined && (
+                      <span className={`flex items-center gap-1 px-2 py-1 rounded-lg font-semibold border ${listing.payoutAvailable ? "bg-green-50 text-green-700 border-green-100" : "bg-gray-100 text-gray-700 border-gray-200"}`}>
+                        💰 {listing.payoutAvailable ? "Payout Available" : "No Payout"}
+                      </span>
+                    )}
+
+                    {supportsStrikes && (
+                      <span className={`flex items-center gap-1 px-2 py-1 rounded-lg font-semibold border ${listing.strikes === 0 ? "bg-green-50 text-green-700 border-green-100" : listing.strikes === 1 ? "bg-yellow-50 text-yellow-700 border-yellow-100" : "bg-red-50 text-red-700 border-red-100"}`}>
+                        <ShieldCheck size={14} />
+                        {listing.strikes === 0 ? "No Strikes" : listing.strikes === 1 ? "1 Strike" : `${listing.strikes} Strikes`}
+                      </span>
+                    )}
+
+                    {listing.includeEmail && (
+                      <span className="flex items-center gap-1 px-2 py-1 rounded-lg font-semibold border bg-blue-50 text-blue-700 border-blue-100">
+                        <Mail size={14} /> OG Email
                       </span>
                     )}
                   </div>
 
-                  <p className="text-sm text-gray-500">
-                    {listing.niche}
-                  </p>
-
-                  <div className="grid grid-cols-3 gap-4 mt-4 text-sm">
-                    <div>
-                      <p className="text-gray-400">Followers</p>
-                      <p className="font-semibold">
-                        {listing.followers.toLocaleString()}
-                      </p>
-                    </div>
-
-                    <div>
-                      <p className="text-gray-400">Engagement</p>
-                      <p className="font-semibold">
-                        {listing.engagement}%
-                      </p>
-                    </div>
-
-                    <div>
-                      <p className="text-gray-400">Revenue</p>
-                      <p className="font-semibold">
-                        ${listing.revenue}/mo
-                      </p>
-                    </div>
-                  </div>
-
-                  {listing.includeEmail && (
-                    <div className="mt-4 text-xs bg-blue-50 text-blue-600 px-3 py-1 rounded-lg inline-block">
-                      OG Email Included
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
@@ -260,51 +211,82 @@ export default function Checkout() {
 
           </div>
 
-          {/* ================= RIGHT SIDE (STIKCY) ================= */}
+          {/* ================= RIGHT SIDE (STICKY) ================= */}
           <div className="space-y-4">
-            <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden sticky top-10">
+            <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden sticky top-4">
               <div className="bg-blue-600 p-6 text-white">
                 <h3 className="font-bold text-lg">Payment Summary</h3>
                 <p className="text-blue-100 text-xs mt-1">Review your order</p>
               </div>
 
               <div className="p-6 space-y-4">
+                {/* Account Price */}
                 <div className="flex justify-between items-center">
                   <span className="text-gray-500 text-sm">Account Price</span>
-                  <span className="font-bold text-gray-800">${price.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-500 text-sm">Marketplace Fee (5%)</span>
-                  <span className="font-bold text-gray-800">${serviceFee.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between items-center text-xs">
-                  <span className="text-gray-500 flex items-center gap-1">Escrow Protection <HelpCircle size={12} /></span>
-                  <span className="text-green-500 font-bold uppercase">Included</span>
-                </div>
-                <div className="flex justify-between items-center text-xs">
-                  <span className="text-gray-500">Transfer Support</span>
-                  <span className="text-green-500 font-bold uppercase">Free</span>
+                  <span className="font-bold text-gray-800">₹{price.toLocaleString()}</span>
                 </div>
 
+                {/* Marketplace Fee */}
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-500 text-sm">Marketplace Fee (5%)</span>
+                  <span className="font-bold text-gray-800">₹{serviceFee.toLocaleString()}</span>
+                </div>
+
+                {/* Account Status Badges */}
+                <div className="flex flex-wrap gap-2 text-xs mt-2">
+                  {listing.monetized !== undefined && (
+                    <span className={`flex items-center gap-1 px-2 py-1 rounded-lg font-semibold border ${listing.monetized ? "bg-green-50 text-green-700 border-green-100" : "bg-gray-100 text-gray-700 border-gray-200"}`}>
+                      <DollarSign size={14} /> {listing.monetized ? "Monetized" : "Not Monetized"}
+                    </span>
+                  )}
+
+                  {supportsStrikes && (
+                    <span className={`flex items-center gap-1 px-2 py-1 rounded-lg font-semibold border ${listing.strikes === 0 ? "bg-green-50 text-green-700 border-green-100" : listing.strikes === 1 ? "bg-yellow-50 text-yellow-700 border-yellow-100" : "bg-red-50 text-red-700 border-red-100"}`}>
+                      <ShieldCheck size={14} />
+                      {listing.strikes === 0 ? "No Strikes" : listing.strikes === 1 ? "1 Strike" : `${listing.strikes} Strikes`}
+                    </span>
+                  )}
+
+                  {listing.includeEmail && (
+                    <span className="flex items-center gap-1 px-2 py-1 rounded-lg font-semibold border bg-blue-50 text-blue-700 border-blue-100">
+                      <Mail size={14} /> OG Email
+                    </span>
+                  )}
+                </div>
+
+                {/* Total */}
                 <div className="border-t border-dashed pt-4 flex justify-between items-end">
                   <div>
                     <p className="font-bold text-gray-900 text-lg">Total Amount</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-black text-blue-600">${total.toLocaleString()}</p>
+                    <p className="text-2xl font-black text-blue-600">₹{total.toLocaleString()}</p>
                     <p className="text-[10px] text-gray-400">One-time payment</p>
                   </div>
                 </div>
 
+                {/* Complete Purchase -> WhatsApp */}
                 <button
-                  onClick={() => alert("Redirecting to Secure Gateway...")}
-                  className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-blue-700 transition shadow-lg shadow-blue-100 mt-4 cursor-pointer"
+                  onClick={() => {
+                    const phone = "919680819409"; // full international format, no spaces
+                    const message = `Hello, I want to purchase the account ${listing.handle} for ₹${total}.`;
+
+                    // Fallback: use web.whatsapp.com explicitly
+                    const url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
+
+                    window.open(url, "_blank");
+                  }}
+                  className="w-full bg-green-500 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-green-600 transition shadow-lg shadow-green-200 mt-4 cursor-pointer"
                 >
                   <Lock size={18} />
-                  Complete Secure Purchase
+                  Complete Purchase via WhatsApp
                 </button>
 
-                <button className="w-full text-gray-400 text-sm font-semibold py-2 hover:text-gray-600 transition cursor-pointer">
+                {/* Cancel */}
+                <button
+                  onClick={() => navigate(-1)}
+                  className="w-full text-gray-400 text-sm font-semibold py-2 hover:text-gray-600 transition cursor-pointer"
+                >
                   Cancel Order
                 </button>
 
@@ -315,7 +297,7 @@ export default function Checkout() {
                   </p>
                 </div>
 
-                {/* Need Help Box */}
+                {/* Need Help */}
                 <div className="bg-blue-50/50 border border-blue-100 rounded-2xl p-4 flex items-center gap-4">
                   <div className="bg-white p-2 rounded-xl shadow-sm text-blue-600">
                     <HelpCircle size={20} />
@@ -327,9 +309,7 @@ export default function Checkout() {
                   </div>
                 </div>
               </div>
-
             </div>
-
           </div>
 
         </div>
