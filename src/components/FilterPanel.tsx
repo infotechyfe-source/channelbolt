@@ -1,7 +1,7 @@
 import React from "react";
 import { ChevronDown } from "lucide-react";
 
-type Platform = "Instagram" | "YouTube" | "Facebook";
+type Platform = "Instagram" | "YouTube" | "Facebook" | "Facebook NonMonetised" | "YouTube NonMonetised";
 
 interface FilterPanelProps {
   platforms: Platform[];
@@ -66,7 +66,7 @@ export default function FilterPanel({
 
       {/* Platform */}
       <FilterSection title="Platform">
-        {(["Instagram", "YouTube", "Facebook"] as Platform[]).map((p) => (
+        {(["Instagram", "YouTube","YouTube NonMonetised" , "Facebook", "Facebook NonMonetised"] as Platform[]).map((p) => (
           <Checkbox
             key={p}
             label={p}

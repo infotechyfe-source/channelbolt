@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 const SocialLoader = () => {
   const [status, setStatus] = useState("Connecting...");
@@ -12,14 +12,14 @@ const SocialLoader = () => {
       i++;
     }, 1500);
     return () => clearInterval(interval);
-  }, []);
+  },);
 
   return (
     <div className="flex flex-col items-center justify-center py-24 min-h-[300px]">
       <div className="relative mb-10">
         {/* The "Glow" behind the icons */}
         <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400 via-pink-500 to-red-500 blur-2xl opacity-20 animate-pulse scale-150"></div>
-        
+
         {/* The Icon Container */}
         <div className="relative bg-white p-5 rounded-2xl shadow-xl border border-gray-50 flex items-center space-x-3">
           {/* Animated Dots with Social Brand Colors */}

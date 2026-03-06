@@ -8,7 +8,7 @@ import FilterPanel from "../components/FilterPanel";
 import { Query } from "appwrite";
 import { databases, DATABASE_ID, COLLECTION_ID } from "../lib/appwrite";
 
-type Platform = "Instagram" | "YouTube" | "Facebook";
+type Platform = "Instagram" | "YouTube" | "Facebook" | "Facebook NonMonetised" | "Youtube NonMonetised";
 type Listing = {
   $id: string;
   niche: string;
@@ -252,7 +252,7 @@ export default function Marketplace() {
               {/* Platform Tabs - Scrollable on Mobile */}
               <div className="overflow-x-auto no-scrollbar -mx-4 px-4 lg:mx-0 lg:px-0">
                 <div className="inline-flex bg-gray-200/50 p-1 rounded-xl whitespace-nowrap">
-                  {["All", "Instagram", "Facebook", "YouTube", "Facebook NonMonetized"].map((label) => (
+                  {["All", "Instagram", "Facebook", "YouTube", "Facebook NonMonetised"].map((label) => (
                     <button
                       key={label}
                       onClick={() => setActivePlatform(label as any)}

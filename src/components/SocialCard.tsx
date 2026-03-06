@@ -12,7 +12,12 @@ import {
 } from "lucide-react";
 import { storage, BUCKET_ID } from "../lib/appwrite";
 
-type Platform = "Instagram" | "Facebook" | "YouTube";
+type Platform =
+  | "Instagram"
+  | "YouTube"
+  | "Facebook"
+  | "Facebook NonMonetised"
+  | "YouTube NonMonetised";
 
 type SocialCardProps = {
   $id: string; // document ID
@@ -23,10 +28,11 @@ type SocialCardProps = {
   engagement: number;
   revenue: number;
   price?: number;
-  coverImage: string; 
-  avatar: string;     
+  coverImage: string;
+  avatar: string;
   includeEmail?: boolean | null;
   variant?: "default" | "trending";
+  status?: "active" | "pending" | "sold";
 };
 
 export default function SocialCard({
@@ -45,6 +51,18 @@ export default function SocialCard({
 }: SocialCardProps) {
   const navigate = useNavigate();
 
+  const isMonetized =
+    platform === "Instagram" ||
+    platform === "YouTube" ||
+    platform === "Facebook";
+
+  const basePlatform =
+    platform === "Youtube NonMonetised"
+      ? "YouTube"
+      : platform === "Facebook NonMonetised"
+        ? "Facebook"
+        : platform;
+
   // Converts Appwrite file ID to URL
   const getImageUrl = (fileId: string) => {
     if (!fileId) return "/placeholder.jpg"; // fallback if empty
@@ -55,10 +73,10 @@ export default function SocialCard({
   const coverUrl = getImageUrl(coverImage);
   const avatarUrl = getImageUrl(avatar);
   const slug = handle
-  .toLowerCase()
-  .replace(/@/g, "")
-  .trim()
-  .replace(/\s+/g, "_");
+    .toLowerCase()
+    .replace(/@/g, "")
+    .trim()
+    .replace(/\s+/g, "_");
 
   // ================= TRENDING VARIANT =================
   if (variant === "trending") {
@@ -118,17 +136,45 @@ export default function SocialCard({
       {/* COVER IMAGE */}
       <div className="relative h-44 w-full">
         <img src={coverUrl} alt={`${handle} cover`} className="w-full h-full object-cover" />
+
         {/* Monetized Badge */}
-        <div className="absolute top-4 right-4 bg-white px-3 py-1.5 rounded-full flex items-center gap-2 shadow-sm">
+        <div className="absolute top-4 right-4 bg-white/80 px-2 py-1 rounded-full flex items-center gap-2 shadow-sm">
+          {/* Platform Icon */}
           <div
-            className="flex items-center justify-center w-5 h-5 text-white font-bold rounded-full 
-                bg-linear-to-tr from-yellow-400 via-red-500 to-purple-500"
+            className={`flex items-center justify-center w-5 h-5 text-white rounded-full
+  ${platform === "Instagram"
+                ? "bg-linear-to-tr from-yellow-400 via-red-500 to-purple-600"
+                : platform === "YouTube" || platform === "YouTube NonMonetised"
+                  ? platform === "YouTube"
+                    ? "bg-red-600"
+                    : "bg-red-500"
+                  : platform === "Facebook" || platform === "Facebook NonMonetised"
+                    ? platform === "Facebook"
+                      ? "bg-blue-600"
+                      : "bg-blue-400"
+                    : "bg-gray-400"
+              }
+`}
           >
             {platform === "Instagram" && <Instagram className="w-3.5 h-3.5" />}
-            {platform === "YouTube" && <Youtube className="w-3.5 h-3.5" />}
-            {platform === "Facebook" && <Facebook className="w-3.5 h-3.5" />}
+
+            {(platform === "YouTube" || platform === "YouTube NonMonetised") && (
+              <Youtube className="w-3.5 h-3.5" />
+            )}
+
+            {(platform === "Facebook" || platform === "Facebook NonMonetised") && (
+              <Facebook className="w-3.5 h-3.5" />
+            )}
           </div>
-          <span className="text-xs font-bold uppercase text-gray-800 tracking-wide">Monetised</span>
+
+          {/* Badge Text */}
+          <span
+            className={`text-xs font-bold uppercase tracking-wide
+    ${isMonetized ? "text-gray-800" : "text-gray-700"}`}
+          >
+            {isMonetized ? "Monetised" : "Non Monetised"}
+          </span>
+
         </div>
       </div>
 
@@ -167,8 +213,8 @@ export default function SocialCard({
               {platform === "Instagram"
                 ? "USA"
                 : platform === "YouTube"
-                ? "UK"
-                : "India"}
+                  ? "UK"
+                  : "India"}
             </p>
           </div>
           <div>

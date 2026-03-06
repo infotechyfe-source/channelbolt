@@ -1,14 +1,12 @@
-import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import {
-    ArrowUpRight, CalendarDays, CheckCircle, Clock, DollarSign, Mail, ShieldCheck, ShoppingCart, Sparkles, Target,
-    TrendingUp, Users,
-} from "lucide-react";
+import Loading from "../components/AccountLoader";
 import SecureTransfer from "../components/SecureTransfer";
+import { useParams, useNavigate } from "react-router-dom";
 import SimilarAccounts from "../components/SimilarAccounts";
 import AccountAnalytics from "../components/AccountAnalytics";
 import { databases, DATABASE_ID, COLLECTION_ID, storage, BUCKET_ID } from "../lib/appwrite";
-import SocialLoader from "../components/socialloader";
+import { ArrowUpRight, CalendarDays, CheckCircle, Clock, DollarSign, Mail, ShieldCheck, ShoppingCart, Sparkles, Target,TrendingUp, Users,} from "lucide-react";
+
 // Utility to get a usable file URL
 const getFileUrl = (fileId?: string) => {
     if (!fileId) return "/placeholder.jpg";
@@ -52,7 +50,7 @@ export default function AccountDetails() {
     }, [id]);
 
     if (loading) {
-        return <SocialLoader />;
+        return <Loading />;
     }
 
     if (!listing) {
@@ -86,7 +84,7 @@ export default function AccountDetails() {
 
                     <button
                         onClick={() => navigate("/")}
-                        className="text-gray-500 hover:text-blue-600 transition"
+                        className="text-gray-500 hover:text-blue-600 transition cursor-pointer"
                     >
                         Home
                     </button>
@@ -95,14 +93,14 @@ export default function AccountDetails() {
 
                     <button
                         onClick={() => navigate("/marketplace")}
-                        className="text-gray-500 hover:text-blue-600 transition"
+                        className="text-gray-500 hover:text-blue-600 transition cursor-pointer"
                     >
                         Marketplace
                     </button>
 
                     <span className="text-gray-400">›</span>
 
-                    <span className="text-gray-900 font-medium capitalize">
+                    <span className="text-gray-900 font-medium capitalize cursor-pointer">
                         {handle?.replace(/_/g, " ")}
                     </span>
 
