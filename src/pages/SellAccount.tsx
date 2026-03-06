@@ -256,7 +256,7 @@ export default function SellAccount() {
       <div className="max-w-7xl mx-auto px-4 md:px-6 space-y-12">
         <div className=" mx-auto grid lg:grid-cols-3 gap-10">
           {/* LEFT */}
-          <div className="lg:col-span-2 bg-white p-10 rounded-3xl shadow-xl border border-gray-100 space-y-10">
+          <div className="lg:col-span-2 bg-white p-10 rounded-3xl shadow-xl border border-gray-100 space-y-10 mb-6">
             {/* Platform */}
             <div>
               <h3 className="text-xl font-semibold mb-5">Select Platform *</h3>
@@ -474,7 +474,7 @@ export default function SellAccount() {
           </div>
 
           {/* RIGHT */}
-          <div className="space-y-6 lg:sticky lg:top-24 h-fit">
+          <div className="space-y-6 lg:sticky lg:top-10 h-fit mb-6">
             <div className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
               <h3 className="font-bold text-lg mb-6">Estimated Earnings</h3>
               <div className="space-y-4 text-sm">
