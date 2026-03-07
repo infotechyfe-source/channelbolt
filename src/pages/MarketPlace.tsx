@@ -7,8 +7,8 @@ import heromarketImg from "../assets/hero-market.jpg"
 import FilterPanel from "../components/FilterPanel";
 import { Query } from "appwrite";
 import { databases, DATABASE_ID, COLLECTION_ID } from "../lib/appwrite";
+import type { Platform } from "../types/platform";
 
-type Platform = "Instagram" | "YouTube" | "Facebook" | "Facebook NonMonetised" | "Youtube NonMonetised";
 type Listing = {
   $id: string;
   niche: string;

@@ -51,7 +51,6 @@ export default function Checkout() {
   const total = price + serviceFee;
 
   const supportsStrikes = ["YouTube", "YouTube NonMonetised", "Facebook", "Facebook NonMonetised"].includes(listing.platform);
-  const isMonetized = ["YouTube", "Facebook", "Instagram"].includes(listing.platform);
 
   const steps = [
     { title: "Payment to Escrow", desc: "Your payment is held securely in our escrow vault. The seller cannot access funds yet." },

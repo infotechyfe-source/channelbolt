@@ -1,7 +1,6 @@
 import React from "react";
 import { ChevronDown } from "lucide-react";
-
-type Platform = "Instagram" | "YouTube" | "Facebook" | "Facebook NonMonetised" | "YouTube NonMonetised";
+import type { Platform } from "../types/platform";
 
 interface FilterPanelProps {
   platforms: Platform[];
