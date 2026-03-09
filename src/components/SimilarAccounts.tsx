@@ -45,7 +45,7 @@ const SimilarAccounts = () => {
     }, []);
 
     return (
-        <section className="max-w-7xl mx-auto px-6 py-16">
+        <section className="max-w-7xl mx-auto px-6 pt-16">
             {/* Header */}
             <div className="flex justify-between items-center mb-10">
                 <div>

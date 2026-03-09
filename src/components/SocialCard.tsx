@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Instagram, Facebook, Youtube, Mail, BadgeCheck, Users, TrendingUp, MapPin, ChartNoAxesCombined, } from "lucide-react";
+import { Instagram, Facebook, Youtube, Mail, BadgeCheck, Users, TrendingUp, MapPin, ChartNoAxesCombined, XCircle, CheckCircle, } from "lucide-react";
 import { storage, BUCKET_ID } from "../lib/appwrite";
 import type { Platform } from "../types/platform";
 
@@ -116,7 +116,7 @@ export default function SocialCard({
         <div className="px-6 pb-5">
           <button
             onClick={() => navigate(`/account/${$id}/${slug}`)}
-            className="w-full mt-3 bg-blue-600 text-white py-2 rounded-xl text-sm font-medium hover:bg-blue-700 transition"
+            className="w-full mt-3 bg-blue-600 text-white py-2 rounded-xl text-sm font-medium hover:bg-blue-700 transition cursor-pointer"
           >
             View Details
           </button>
@@ -142,7 +142,7 @@ export default function SocialCard({
           <div
             className={`flex items-center justify-center w-5 h-5 text-white rounded-full
         ${platform === "Instagram"
-                ? "bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600"
+                ? "bg-linear-to-tr from-yellow-400 via-red-500 to-purple-600"
                 : platform === "YouTube" || platform === "YouTube NonMonetised"
                   ? "bg-red-600"
                   : platform === "Facebook" || platform === "Facebook NonMonetised"
@@ -213,7 +213,7 @@ export default function SocialCard({
             </p>
             <p className="font-semibold text-gray-900">
               {platform === "Instagram"
-                ? "USA"
+                ? "India"
                 : platform === "YouTube"
                   ? "UK"
                   : "India"}
@@ -258,19 +258,21 @@ export default function SocialCard({
           )}
 
           {payoutAvailable ? (
-            <span className="flex items-center bg-green-50 text-green-700 px-2.5 py-1 rounded-md text-xs font-semibold border border-green-100">
-              💰 Payout Available
+            <span className="flex items-center gap-1.5 bg-green-50 text-green-700 px-2.5 py-1 rounded-md text-xs font-semibold border border-green-100">
+              <CheckCircle size={14} />
+              Payout Available
             </span>
           ) : (
-            <span className="flex items-center bg-gray-100 text-gray-700 px-2.5 py-1 rounded-md text-xs font-semibold border border-gray-200">
-              💰 No Payout
+            <span className="flex items-center gap-1.5 bg-gray-100 text-gray-700 px-2.5 py-1 rounded-md text-xs font-semibold border border-gray-200">
+              <XCircle size={14} />
+              No Payout
             </span>
           )}
 
         </div>
 
         {/* PRICE */}
-        <div className="mt-auto border-t pt-4 mb-4">
+        <div className="mt-auto border-t border-blue-300 pt-4 mb-4">
           <p className="text-xs text-gray-400 mb-1">Listing Price</p>
           <p className="text-xl font-bold text-blue-600">
             ₹{price?.toLocaleString()}
@@ -281,14 +283,14 @@ export default function SocialCard({
         <div className="flex gap-2">
           <button
             onClick={() => navigate(`/account/${$id}/${handle.replace("@", "")}`)}
-            className="flex-1 border border-gray-300 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition"
+            className="flex-1 border border-gray-300 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition cursor-pointer"
           >
             View Details
           </button>
 
           <button
             onClick={() => navigate(`/checkout/${$id}`)}
-            className="flex-1 bg-blue-600 text-white py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition"
+            className="flex-1 bg-blue-600 text-white py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition cursor-pointer"
           >
             Buy Now
           </button>

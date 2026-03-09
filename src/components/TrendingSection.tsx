@@ -66,7 +66,7 @@ export default function RecommendedListings() {
   }
 
   return (
-    <section className="bg-[#0A0A0A] py-12 sm:py-16 px-4 sm:px-6 lg:px-8 text-white">
+    <section className="bg-[#0A0A0A] py-12 sm:py-16 px-4 sm:px-6 lg:px-8 ">
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}
@@ -96,7 +96,7 @@ export default function RecommendedListings() {
 
             <button
               onClick={() => navigate("/marketplace")}
-              className="bg-blue-500 px-4 py-2 rounded-xl font-semibold hover:bg-blue-600 flex items-center gap-2 cursor-pointer"
+              className="bg-blue-500 text-white px-4 py-2 rounded-xl font-semibold hover:bg-blue-600 flex items-center gap-2 cursor-pointer"
             >
               View All
               <ArrowUpRight className="w-4 h-4" />

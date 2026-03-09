@@ -3,7 +3,6 @@ import Loading from "../components/AccountLoader";
 import SecureTransfer from "../components/SecureTransfer";
 import { useParams, useNavigate } from "react-router-dom";
 import SimilarAccounts from "../components/SimilarAccounts";
-import AccountAnalytics from "../components/AccountAnalytics";
 import { databases, DATABASE_ID, COLLECTION_ID, storage, BUCKET_ID } from "../lib/appwrite";
 import { ArrowUpRight, CalendarDays, CheckCircle, Clock, DollarSign, Mail, ShieldCheck, ShoppingCart, Sparkles, Target, TrendingUp, Users, } from "lucide-react";
 
@@ -56,24 +55,6 @@ export default function AccountDetails() {
     if (!listing) {
         return <div className="text-center py-20 text-red-500">Listing not found.</div>;
     }
-
-    const followerData = [
-        { month: "Jan", followers: 120000 },
-        { month: "Feb", followers: 135000 },
-        { month: "Mar", followers: 150000 },
-        { month: "Apr", followers: 170000 },
-        { month: "May", followers: 185000 },
-        { month: "Jun", followers: listing.followers },
-    ];
-
-    const likesData = [
-        { month: "Jan", likes: 18000 },
-        { month: "Feb", likes: 22000 },
-        { month: "Mar", likes: 26000 },
-        { month: "Apr", likes: 31000 },
-        { month: "May", likes: 35000 },
-        { month: "Jun", likes: 39000 },
-    ];
 
     return (
         <div className="bg-gray-50 min-h-screen pb-20">
@@ -359,31 +340,6 @@ export default function AccountDetails() {
                             </div>
                         </div>
 
-                        {/* ===== PROOF IMAGES ===== */}
-                        {listing.proofImageUrls?.length > 0 && (
-                            <div className="bg-white rounded-3xl border border-gray-100 p-8 shadow-sm">
-
-                                <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                                    Account Proof Screenshots
-                                </h3>
-
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                                    {listing.proofImageUrls.map((url: string, index: number) => (
-                                        <div
-                                            key={index}
-                                            className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition"
-                                        >
-                                            <img
-                                                src={url}
-                                                alt={`Proof ${index + 1}`}
-                                                className="w-full h-48 object-cover hover:scale-105 transition duration-300"
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-
-                            </div>
-                        )}
 
                         {/* ===== ACCOUNT OVERVIEW ===== */}
                         <div className="bg-white rounded-3xl border border-gray-100 p-8 shadow-sm">
@@ -463,8 +419,44 @@ export default function AccountDetails() {
                             </div>
 
                         </div>
+                        {/* ===== PROOF IMAGES ===== */}
+                        {listing.proofImageUrls?.length > 0 && (
+                            <div className="bg-white rounded-3xl border border-gray-100 p-8 shadow-sm">
 
+                                <div className="flex items-center justify-between mb-6">
+                                    <h3 className="text-2xl font-bold text-gray-900">
+                                        Account Proof Screenshots
+                                    </h3>
 
+                                    <span className="text-sm text-gray-400">
+                                        {listing.proofImageUrls.length} images
+                                    </span>
+                                </div>
+
+                                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+                                    {listing.proofImageUrls.map((url: string, index: number) => (
+                                        <div
+                                            key={index}
+                                            className="group relative rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition cursor-pointer"
+                                        >
+                                            <img
+                                                src={url}
+                                                alt={`Proof ${index + 1}`}
+                                                className="w-full h-44 object-cover transition duration-500 group-hover:scale-110"
+                                            />
+
+                                            {/* Hover overlay */}
+                                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 flex items-center justify-center transition">
+                                                <span className="opacity-0 group-hover:opacity-100 text-white text-sm font-semibold">
+                                                    View
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                            </div>
+                        )}
 
                     </div>
 
@@ -562,10 +554,6 @@ export default function AccountDetails() {
                         </div>
                     </div>
                 </div>
-                <AccountAnalytics
-                    followerData={followerData}
-                    likesData={likesData}
-                />
                 < SecureTransfer />
                 < SimilarAccounts />
             </div>

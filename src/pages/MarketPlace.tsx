@@ -5,6 +5,7 @@ import { ChevronDown, ChevronLeft, ChevronRight, Filter, Flame, X } from "lucide
 import SocialCard from "../components/SocialCard";
 import heromarketImg from "../assets/hero-market.jpg"
 import FilterPanel from "../components/FilterPanel";
+import { useSearchParams } from "react-router-dom";
 import { Query } from "appwrite";
 import { databases, DATABASE_ID, COLLECTION_ID } from "../lib/appwrite";
 import type { Platform } from "../types/platform";
@@ -36,6 +37,10 @@ export default function Marketplace() {
 
   const calculatePrice = (listing: Listing) =>
     listing.price ?? Math.round(listing.followers / 10);
+
+  const [searchParams] = useSearchParams();
+const niche = searchParams.get("niche");
+
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -134,6 +139,29 @@ export default function Marketplace() {
     setEngagement([]);
     setActivePlatform("All");
   }, []);
+
+  useEffect(() => {
+
+  const fetchListings = async () => {
+
+    const queries = [];
+
+    if (niche) {
+      queries.push(Query.equal("niche", niche));
+    }
+
+    const res = await databases.listDocuments(
+      DATABASE_ID,
+      COLLECTION_ID,
+      queries
+    );
+
+    setListings(res.documents);
+  };
+
+  fetchListings();
+
+}, [niche]);
 
   if (loading) {
     return (
