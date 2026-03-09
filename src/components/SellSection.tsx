@@ -9,7 +9,7 @@ export default function SellSection() {
         <div className="absolute top-0 left-0 w-72 h-72 sm:w-96 sm:h-96 bg-purple-600 opacity-30 blur-[120px] rounded-full" />
         <div className="absolute bottom-0 right-0 w-72 h-72 sm:w-96 sm:h-96 bg-pink-600 opacity-20 blur-[120px] rounded-full" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-28 grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-16 items-center">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-16 grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-16 items-center">
 
           {/* LEFT CONTENT */}
           <div className="text-center lg:text-left">

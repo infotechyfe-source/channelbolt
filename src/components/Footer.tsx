@@ -5,7 +5,7 @@ import { Twitter, Facebook, Instagram, Linkedin, Youtube, Mail } from "lucide-re
 
 export default function Footer() {
   return (
-    <footer className="bg-[#F5F7FA] text-gray-700 pt-16 sm:pt-20 pb-8 sm:pb-12">
+    <footer className="bg-[#F5F7FA] text-gray-700 pt-16 pb-4 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-16">
 
         {/* ================= 5 COLUMN SECTION ================= */}

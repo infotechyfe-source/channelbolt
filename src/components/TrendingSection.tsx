@@ -66,7 +66,7 @@ export default function RecommendedListings() {
   }
 
   return (
-    <section className="bg-[#0A0A0A] py-12 sm:py-16 px-4 sm:px-6 lg:px-8 ">
+    <section className="bg-[#0A0A0A] py-12 px-4 sm:px-6 lg:px-8 ">
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}

@@ -5,7 +5,7 @@ const LiquidCapital = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="bg-white text-gray-900 py-12 px-4 sm:px-6 lg:px-16 font-sans">
+    <section className="bg-white text-gray-900 py-16 px-4 sm:px-6 lg:px-16 font-sans">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
         {/* Left Content */}

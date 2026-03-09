@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import Loading from "../components/AccountLoader";
 import SecureTransfer from "../components/SecureTransfer";
@@ -461,7 +462,7 @@ export default function AccountDetails() {
                     </div>
 
                     {/* RIGHT SIDE - PRICE CARD */}
-                    <div className=" lg:col-span-4 lg:block">
+                    <div className="hidden lg:col-span-4 lg:block">
                         <div className="sticky top-28">
                             <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
 
@@ -557,6 +558,7 @@ export default function AccountDetails() {
                 < SecureTransfer />
                 < SimilarAccounts />
             </div>
+            
             {/* ================= MOBILE STICKY BUY BAR ================= */}
             <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-2xl p-4 flex items-center justify-between z-50">
 
@@ -567,7 +569,7 @@ export default function AccountDetails() {
                     </p>
                 </div>
                 <button
-                    onClick={() => navigate(`/checkout/${listing.id}`)}
+                    onClick={() => navigate(`/checkout/${listing.$id}`)}
                     className="bg-linear-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 shadow-lg"
                 >
                     <ShoppingCart size={18} />

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import {
   databases,
@@ -230,6 +231,7 @@ export default function AdminEditListing({
             />
 
             <select
+              title="monetise"
               className="input"
               value={form.monetized ? "yes":"no"}
               onChange={(e)=>handleChange("monetized",e.target.value==="yes")}
@@ -239,6 +241,7 @@ export default function AdminEditListing({
             </select>
 
             <select
+              title="verify"
               className="input"
               value={form.verified ? "yes":"no"}
               onChange={(e)=>handleChange("verified",e.target.value==="yes")}

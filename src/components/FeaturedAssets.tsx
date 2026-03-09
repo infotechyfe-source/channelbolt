@@ -71,7 +71,7 @@ const justSold = listings?.slice(2, 5) || [];
 }
 
   return (
-    <section className="bg-[#0B0F19] text-white py-10 sm:py-16 px-4 sm:px-6 lg:px-16 font-sans">
+    <section className="bg-[#0B0F19] text-white py-16 px-4 sm:px-6 lg:px-16 font-sans">
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}

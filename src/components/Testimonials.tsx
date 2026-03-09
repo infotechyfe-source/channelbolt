@@ -84,7 +84,7 @@ export default function Testimonials() {
   };
 
   return (
-    <section className="bg-[#fcfcfc] py-20 px-4 sm:px-6 lg:px-16 overflow-hidden">
+    <section className="bg-[#fcfcfc] py-16 px-4 sm:px-6 lg:px-16 overflow-hidden">
       <div className="max-w-6xl mx-auto">
 
         {/* Security Badge */}

@@ -1,8 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { ShieldCheck, Lock, CheckCircle, CreditCard, HelpCircle, Mail, DollarSign, Shield } from "lucide-react";
+import { ShieldCheck, Lock, CheckCircle, CreditCard, HelpCircle, Mail, DollarSign, Shield, ShoppingCart } from "lucide-react";
 import { databases, DATABASE_ID, COLLECTION_ID, storage, BUCKET_ID } from "../lib/appwrite";
-
+import Loading from "../components/AccountLoader";
 // Utility to get a viewable file URL from Appwrite fileId
 const getFileUrl = (fileId?: string) => {
   if (!fileId) return "/placeholder.jpg"; // fallback
@@ -43,7 +43,9 @@ export default function Checkout() {
     fetchListing();
   }, [id]);
 
-  if (loading) return <div className="text-center py-20 text-gray-500">Loading checkout...</div>;
+  if (loading) {
+    return <Loading />;
+  }
   if (!listing) return <div className="text-center py-20 text-red-500">Listing not found</div>;
 
   const price = listing.price ?? 0;
@@ -277,7 +279,7 @@ export default function Checkout() {
                   }}
                   className="w-full bg-green-500 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-green-600 transition shadow-lg shadow-green-200 mt-4 cursor-pointer"
                 >
-                  <Lock size={18} />
+                  <ShoppingCart size={18} />
                   Complete Purchase via WhatsApp
                 </button>
 
@@ -312,6 +314,30 @@ export default function Checkout() {
           </div>
 
         </div>
+      </div>
+
+      {/* ================= MOBILE STICKY BUY BAR ================= */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-2xl p-4 flex items-center justify-between z-50">
+
+        <div>
+          <p className="text-xs text-gray-500">Price</p>
+          <p className="text-2xl font-black text-blue-600">₹{total.toLocaleString()}</p>
+        </div>
+        <button
+          onClick={() => {
+            const phone = "919680819409"; // full international format, no spaces
+            const message = `Hello, I want to purchase the account ${listing.handle} for ₹${total}.`;
+
+            // Fallback: use web.whatsapp.com explicitly
+            const url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
+
+            window.open(url, "_blank");
+          }}
+          className="bg-linear-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 shadow-lg shadow-green-200 cursor-pointer"
+        >
+          <ShoppingCart size={18} />
+          Complete Purchase
+        </button>
       </div>
     </div>
   );
