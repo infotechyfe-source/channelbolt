@@ -27,7 +27,7 @@ export default function Contact() {
   }
 
   return (
-    <div className="bg-gradient-to-b from-gray-50 to-white min-h-screen py-16 px-6">
+    <div className="bg-linear-to-b from-gray-50 to-white min-h-screen py-16 px-6">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
 
         {/* LEFT SIDE - INFO */}
