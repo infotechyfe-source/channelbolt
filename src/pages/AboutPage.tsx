@@ -1,82 +1,164 @@
 import React from "react";
-import { ShieldCheck, Rocket, Users, Globe } from "lucide-react";
+import { ShieldCheck, Rocket, Users, Globe, TrendingUp, CheckCircle } from "lucide-react";
 
 const AboutPage: React.FC = () => {
   return (
-    <section className="bg-gray-50 min-h-screen py-16 px-6">
-      <div className="max-w-6xl mx-auto">
+    <section className="bg-gray-50 py-20 px-6">
+      <div className="max-w-7xl mx-auto">
 
-        {/* HERO SECTION */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
-            About <span className="text-blue-600">ChannelBolt</span>
+        {/* HERO */}
+        <div className="text-center mb-20">
+          <span className="bg-blue-100 text-blue-600 px-4 py-1 rounded-full text-sm font-semibold">
+            About ChannelBolt
+          </span>
+
+          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mt-6 mb-6">
+            The Trusted Marketplace for
+            <span className="text-blue-600"> Social Media Assets</span>
           </h1>
+
           <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            India’s Trusted Marketplace for Buying & Selling Social Media Pages
+            ChannelBolt helps creators, entrepreneurs, and brands instantly
+            acquire high-quality social media assets and accelerate their
+            online growth.
           </p>
         </div>
 
-        {/* MAIN CONTENT */}
-        <div className="bg-white rounded-3xl shadow-lg p-8 sm:p-12 mb-16">
-          <p className="text-gray-700 text-lg leading-relaxed mb-6">
-            In today’s digital world, attention is power — and building a strong
-            social media presence takes time, strategy, and consistency.
-            <span className="font-semibold"> ChannelBolt </span>
-            was created to make that journey faster, smarter, and more secure.
-          </p>
+        {/* TRUST STATS */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
 
-          <p className="text-gray-700 text-lg leading-relaxed mb-6">
-            We are a professional digital marketplace where individuals,
-            influencers, entrepreneurs, and brands can buy and sell social media accounts including:
-          </p>
+          <div className="bg-white rounded-xl p-6 text-center shadow">
+            <h3 className="text-2xl font-bold text-gray-900">10K+</h3>
+            <p className="text-gray-600 text-sm">Active Buyers</p>
+          </div>
 
-          {/* PLATFORM LIST */}
-          <ul className="list-disc list-inside text-gray-800 text-lg space-y-2 mb-6">
-            <li>Instagram Pages</li>
-            <li>Facebook Pages</li>
-            <li>YouTube Channels</li>
-          </ul>
+          <div className="bg-white rounded-xl p-6 text-center shadow">
+            <h3 className="text-2xl font-bold text-gray-900">5K+</h3>
+            <p className="text-gray-600 text-sm">Verified Listings</p>
+          </div>
 
-          <p className="text-gray-700 text-lg leading-relaxed">
-            Whether you want to grow your brand instantly, monetize an existing
-            audience, or invest in a ready-made social media asset,
-            ChannelBolt provides a safe and transparent platform to make it happen.
+          <div className="bg-white rounded-xl p-6 text-center shadow">
+            <h3 className="text-2xl font-bold text-gray-900">$2M+</h3>
+            <p className="text-gray-600 text-sm">Transactions</p>
+          </div>
+
+          <div className="bg-white rounded-xl p-6 text-center shadow">
+            <h3 className="text-2xl font-bold text-gray-900">4.9★</h3>
+            <p className="text-gray-600 text-sm">Marketplace Rating</p>
+          </div>
+
+        </div>
+
+        {/* ABOUT CONTENT */}
+        <div className="grid md:grid-cols-2 gap-12 items-center mb-20">
+
+          <div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">
+              Built for the Creator Economy
+            </h2>
+
+            <p className="text-gray-700 mb-6 leading-relaxed">
+              In today's digital economy, social media pages are valuable
+              digital assets. Building an audience from scratch can take years.
+              ChannelBolt provides a smarter solution by connecting buyers and
+              sellers in a trusted marketplace.
+            </p>
+
+            <p className="text-gray-700 mb-6 leading-relaxed">
+              Our platform enables entrepreneurs and creators to buy or sell
+              verified accounts across multiple platforms, helping brands grow
+              instantly with real audiences.
+            </p>
+
+            <ul className="space-y-3">
+              <li className="flex items-center gap-3">
+                <CheckCircle className="text-green-500" size={18} />
+                Instagram Pages
+              </li>
+
+              <li className="flex items-center gap-3">
+                <CheckCircle className="text-green-500" size={18} />
+                YouTube Channels
+              </li>
+
+              <li className="flex items-center gap-3">
+                <CheckCircle className="text-green-500" size={18} />
+                Facebook Pages
+              </li>
+            </ul>
+          </div>
+
+          {/* IMAGE / VISUAL */}
+          <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-3xl p-10 text-white shadow-xl">
+            <h3 className="text-2xl font-bold mb-4">
+              Grow Faster with ChannelBolt
+            </h3>
+
+            <p className="text-blue-100 mb-6">
+              Skip years of audience building and launch your brand instantly
+              with verified social media assets.
+            </p>
+
+            <div className="flex items-center gap-3">
+              <TrendingUp />
+              <span>Accelerate your digital growth</span>
+            </div>
+          </div>
+
+        </div>
+
+        {/* CORE VALUES */}
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            Why Choose ChannelBolt
+          </h2>
+
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            We are building a trusted ecosystem where digital assets can be
+            bought and sold safely.
           </p>
         </div>
 
-        {/* VALUES SECTION */}
+        {/* VALUE CARDS */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
 
           <div className="bg-white rounded-2xl p-6 shadow hover:shadow-xl transition">
             <ShieldCheck className="text-blue-600 mb-4" size={32} />
-            <h3 className="font-semibold text-lg mb-2">Secure Transactions</h3>
+            <h3 className="font-semibold text-lg mb-2">
+              Secure Transactions
+            </h3>
             <p className="text-gray-600 text-sm">
-              Verified listings and protected transfers ensure a safe buying
-              and selling experience.
+              Verified listings and safe transfers protect buyers and sellers.
             </p>
           </div>
 
           <div className="bg-white rounded-2xl p-6 shadow hover:shadow-xl transition">
             <Rocket className="text-blue-600 mb-4" size={32} />
-            <h3 className="font-semibold text-lg mb-2">Instant Growth</h3>
+            <h3 className="font-semibold text-lg mb-2">
+              Instant Growth
+            </h3>
             <p className="text-gray-600 text-sm">
-              Skip years of building from scratch and scale your brand instantly.
+              Skip years of audience building and launch instantly.
             </p>
           </div>
 
           <div className="bg-white rounded-2xl p-6 shadow hover:shadow-xl transition">
             <Users className="text-blue-600 mb-4" size={32} />
-            <h3 className="font-semibold text-lg mb-2">Real Engagement</h3>
+            <h3 className="font-semibold text-lg mb-2">
+              Real Engagement
+            </h3>
             <p className="text-gray-600 text-sm">
-              Access pages with genuine followers and transparent analytics.
+              Listings include transparent analytics and genuine followers.
             </p>
           </div>
 
           <div className="bg-white rounded-2xl p-6 shadow hover:shadow-xl transition">
             <Globe className="text-blue-600 mb-4" size={32} />
-            <h3 className="font-semibold text-lg mb-2">Trusted Platform</h3>
+            <h3 className="font-semibold text-lg mb-2">
+              Trusted Platform
+            </h3>
             <p className="text-gray-600 text-sm">
-              Built for entrepreneurs, creators, and brands across India.
+              Built for creators, entrepreneurs, and brands globally.
             </p>
           </div>
 

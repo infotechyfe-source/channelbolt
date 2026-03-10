@@ -19,7 +19,7 @@ export default function Footer() {
           {/* Logo + Description */}
           <div className="max-w-sm">
             <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold text-lg">
+              <div className="w-11 h-11 rounded-xl bg-linear-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold text-lg">
                 S
               </div>
 
@@ -59,11 +59,11 @@ export default function Footer() {
               {/* Instagram */}
               <a
                 href="#"
-                className="group bg-white border border-gray-200 p-2 rounded-lg transition hover:bg-[#e82246]"
+                className="group bg-white border border-gray-200 p-2 rounded-lg transition hover:bg-linear-to-tr from-yellow-400 via-red-500 to-purple-600"
               >
                 <Instagram
                   size={16}
-                  className="text-[#ce2342] group-hover:text-white group-hover:scale-110 transition"
+                  className="text-red-500 group-hover:text-white group-hover:scale-110 transition"
                 />
               </a>
 

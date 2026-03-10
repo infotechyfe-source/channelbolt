@@ -18,10 +18,10 @@ export default function MarketplaceCategories() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                         <CategoryCard
                             platform="instagram"
-                            gradient="from-pink-500 via-purple-500 to-yellow-400"
+                            gradient="from-yellow-400 via-red-500 to-purple-600"
                             icon={<Instagram size={32} />}
                             title="Instagram Pages"
-                            count="1,892 Pages"
+                            count="1,000+ Pages"
                         />
 
                         <CategoryCard
@@ -29,7 +29,7 @@ export default function MarketplaceCategories() {
                             gradient="from-blue-500 to-blue-600"
                             icon={<Facebook size={32} />}
                             title="Facebook Page Monetized"
-                            count="1,892 Pages"
+                            count="1,500+ Pages"
                         />
 
                         <CategoryCard
@@ -37,7 +37,7 @@ export default function MarketplaceCategories() {
                             gradient="from-red-500 to-red-600"
                             icon={<Youtube size={32} />}
                             title="YouTube Channel Monetized"
-                            count="1,534 Channels"
+                            count="1,024+ Channels"
                         />
 
                         <CategoryCard

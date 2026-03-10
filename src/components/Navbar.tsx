@@ -136,8 +136,8 @@ export default function Navbar() {
               <Link to="/sell" className={linkClass("/sell")}>
                 {t("sellAccount")}
               </Link>
-              <Link to="/testimonials" className={linkClass("/testimonials")}>
-                {t("testimonials")}
+              <Link to="/about" className={linkClass("/about")}>
+                {t("About Us")}
               </Link>
               <Link to="/contact" className={linkClass("/contact")}>
                 {t("contact")}
@@ -209,7 +209,7 @@ export default function Navbar() {
             <Link to="/sell" className="block px-2 py-2 text-gray-300 hover:text-white rounded-md">
               {t("sellAccount")}
             </Link>
-            <Link to="/testimonials" className="block px-2 py-2 text-gray-300 hover:text-white rounded-md">
+            <Link to="/about" className="block px-2 py-2 text-gray-300 hover:text-white rounded-md">
               {t("testimonials")}
             </Link>
             <Link to="/contact" className="block px-2 py-2 text-gray-300 hover:text-white rounded-md">

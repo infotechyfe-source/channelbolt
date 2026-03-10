@@ -5,6 +5,7 @@ import {
   Clock,
   ShieldCheck,
   CheckCircle,
+  MessageSquare,
 } from "lucide-react";
 
 export default function Contact() {
@@ -27,86 +28,93 @@ export default function Contact() {
   }
 
   return (
-    <div className="bg-linear-to-b from-gray-50 to-white min-h-screen py-16 px-6">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
+    <div className="bg-gradient-to-b from-gray-50 to-white min-h-screen">
 
-        {/* LEFT SIDE - INFO */}
-        <div>
-          <h1 className="text-3xl font-bold mb-4">
-            Contact Us
-          </h1>
-          <p className="text-gray-600 mb-8">
-            Have questions about buying or selling accounts? Need help with escrow or transfers? 
-            Our team is here to assist you.
-          </p>
+      {/* HERO */}
+      <div className="max-w-4xl mx-auto text-center pt-16 px-6">
+        <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
+          Contact <span className="text-blue-600">ChannelBolt</span>
+        </h1>
 
-          <div className="space-y-6">
+        <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+          Have questions about buying or selling accounts? Our team is ready
+          to help you with transfers, escrow, and listings.
+        </p>
+      </div>
 
-            <div className="flex items-start gap-4">
-              <Mail className="text-blue-600" size={20} />
-              <div>
-                <p className="font-semibold">Email Support</p>
-                <p className="text-gray-500 text-sm">
-                  support@yoursite.com
-                </p>
-              </div>
+      {/* MAIN SECTION */}
+      <div className="max-w-6xl mx-auto py-16 px-6 grid grid-cols-1 lg:grid-cols-2 gap-12">
+
+        {/* LEFT SIDE INFO */}
+        <div className="space-y-8">
+
+          <div className="bg-white p-6 rounded-2xl shadow border flex gap-4">
+            <Mail className="text-blue-600 mt-1" size={22} />
+            <div>
+              <p className="font-semibold">Email Support</p>
+              <p className="text-gray-500 text-sm">
+                support@channelbolt.com
+              </p>
             </div>
-
-            <div className="flex items-start gap-4">
-              <Phone className="text-blue-600" size={20} />
-              <div>
-                <p className="font-semibold">Phone</p>
-                <p className="text-gray-500 text-sm">
-                  +91 98765 43210
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <Clock className="text-blue-600" size={20} />
-              <div>
-                <p className="font-semibold">Working Hours</p>
-                <p className="text-gray-500 text-sm">
-                  Monday – Saturday <br />
-                  9:00 AM – 6:00 PM IST
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <ShieldCheck className="text-blue-600" size={20} />
-              <div>
-                <p className="font-semibold">Secure Transactions</p>
-                <p className="text-gray-500 text-sm">
-                  All payments are protected with escrow security.
-                </p>
-              </div>
-            </div>
-
           </div>
+
+          <div className="bg-white p-6 rounded-2xl shadow border flex gap-4">
+            <Phone className="text-blue-600 mt-1" size={22} />
+            <div>
+              <p className="font-semibold">Phone</p>
+              <p className="text-gray-500 text-sm">
+                +91 98765 43210
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl shadow border flex gap-4">
+            <Clock className="text-blue-600 mt-1" size={22} />
+            <div>
+              <p className="font-semibold">Working Hours</p>
+              <p className="text-gray-500 text-sm">
+                Monday – Saturday <br />
+                9:00 AM – 6:00 PM IST
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl shadow border flex gap-4">
+            <ShieldCheck className="text-blue-600 mt-1" size={22} />
+            <div>
+              <p className="font-semibold">Secure Transactions</p>
+              <p className="text-gray-500 text-sm">
+                All payments are protected using escrow security.
+              </p>
+            </div>
+          </div>
+
         </div>
 
-        {/* RIGHT SIDE - FORM */}
+        {/* RIGHT SIDE FORM */}
         <div className="bg-white p-10 rounded-3xl shadow-xl border">
-          <h2 className="text-xl font-semibold mb-6">
-            Send Us a Message
-          </h2>
+          <div className="flex items-center gap-2 mb-6">
+            <MessageSquare className="text-blue-600" size={22} />
+            <h2 className="text-xl font-semibold">
+              Send Us a Message
+            </h2>
+          </div>
 
           <div className="space-y-5">
 
             <input
               type="text"
               placeholder="Your Full Name"
-              className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500"
+              className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
             />
 
             <input
               type="email"
               placeholder="Your Email Address"
-              className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500"
+              className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
             />
 
-            <select className="w-full border rounded-xl px-4 py-3">
+            <select className="w-full border rounded-xl px-4 py-3 outline-none">
               <option>General Inquiry</option>
               <option>Buying Support</option>
               <option>Selling Support</option>
@@ -117,7 +125,7 @@ export default function Contact() {
             <textarea
               rows={5}
               placeholder="Write your message..."
-              className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500"
+              className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
             />
 
             <button
@@ -129,41 +137,43 @@ export default function Contact() {
 
           </div>
         </div>
-
       </div>
 
       {/* FAQ SECTION */}
-      <div className="max-w-4xl mx-auto mt-20">
-        <h2 className="text-2xl font-bold text-center mb-10">
+      <div className="max-w-4xl mx-auto pb-20 px-6">
+
+        <h2 className="text-3xl font-bold text-center mb-12">
           Frequently Asked Questions
         </h2>
 
         <div className="space-y-6">
 
-          <div className="bg-white p-6 rounded-2xl shadow-sm border">
+          <div className="bg-white p-6 rounded-2xl shadow border">
             <p className="font-semibold mb-2">
               How does escrow work?
             </p>
             <p className="text-gray-600 text-sm">
-              Buyer funds are held securely until the account transfer is completed and confirmed.
+              Buyer funds are held securely until the account transfer is
+              completed and confirmed.
             </p>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl shadow-sm border">
+          <div className="bg-white p-6 rounded-2xl shadow border">
             <p className="font-semibold mb-2">
-              How long does review take for sellers?
+              How long does seller review take?
             </p>
             <p className="text-gray-600 text-sm">
-              Account listings are usually reviewed within 24 hours.
+              Listings are typically reviewed and approved within 24 hours.
             </p>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl shadow-sm border">
+          <div className="bg-white p-6 rounded-2xl shadow border">
             <p className="font-semibold mb-2">
               Is my data secure?
             </p>
             <p className="text-gray-600 text-sm">
-              Yes, we use encrypted connections and secure payment gateways.
+              Yes. We use encrypted connections and secure payment gateways
+              to protect your information.
             </p>
           </div>
 
