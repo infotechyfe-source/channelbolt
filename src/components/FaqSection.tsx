@@ -39,7 +39,7 @@ export default function FaqSection() {
 
         {/* LEFT SIDE */}
         <div className="flex flex-col">
-          <span className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-1 rounded-full text-sm font-medium w-max">
+          <span className="bg-linear-to-r from-purple-600 to-indigo-600 text-white px-4 py-1 rounded-full text-sm font-medium w-max">
             Got Questions?
           </span>
 
@@ -92,7 +92,7 @@ export default function FaqSection() {
               >
                 <h3 className="font-semibold text-base sm:text-lg">{faq.question}</h3>
 
-                <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-blue-500 text-white">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-blue-500 text-white cursor-pointer">
                   {activeIndex === index ? <Minus size={16} /> : <Plus size={16} />}
                 </div>
               </button>

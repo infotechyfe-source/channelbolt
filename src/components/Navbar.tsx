@@ -147,7 +147,7 @@ export default function Navbar() {
             {/* Right Section */}
             <div className="flex items-center gap-4 relative">
               {/* Language Dropdown */}
-              <div className="relative" ref={dropdownRef}>
+              <div className="relative hidden md:block" ref={dropdownRef}>
                 <button
                   onClick={() => setOpenLang(!openLang)}
                   className="border border-gray-600 px-3 py-1.5 rounded-md text-sm hover:bg-gray-700 transition flex items-center gap-2"
@@ -215,6 +215,25 @@ export default function Navbar() {
             <Link to="/contact" className="block px-2 py-2 text-gray-300 hover:text-white rounded-md">
               {t("contact")}
             </Link>
+
+            {/* Language Switcher Mobile */}
+            <div className="border-t border-gray-700 pt-3 mt-3">
+              <p className="text-gray-400 text-sm px-2 mb-2">Language</p>
+
+              <button
+                onClick={() => changeLanguage("en")}
+                className="block w-full text-left px-2 py-2 text-gray-300 hover:text-white"
+              >
+                🇬🇧 English
+              </button>
+
+              <button
+                onClick={() => changeLanguage("hi")}
+                className="block w-full text-left px-2 py-2 text-gray-300 hover:text-white"
+              >
+                🇮🇳 हिन्दी
+              </button>
+            </div>
 
             {/* Buy Now CTA Mobile */}
             <Link

@@ -108,7 +108,7 @@ const justSold = listings?.slice(2, 5) || [];
                 <span className="bg-blue-600/80 text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-full uppercase font-semibold">{featuredMain.platform}</span>
                 <span className="bg-purple-600/80 text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-full uppercase font-semibold">{featuredMain.niche}</span>
               </div>
-              <h3 className="text-lg sm:text-2xl font-bold mb-1">@{featuredMain.handle}</h3>
+              <h3 className="text-lg sm:text-2xl font-bold mb-1">{featuredMain.handle}</h3>
               {featuredMain.verified && (
                 <div className="flex items-center gap-2 text-sm text-green-400 mb-3 sm:mb-4">
                   <CheckCircle size={14} /> Verified

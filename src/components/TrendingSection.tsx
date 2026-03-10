@@ -31,7 +31,7 @@ export default function RecommendedListings() {
           DATABASE_ID,
           COLLECTION_ID,
           [
-            Query.limit(3), // only 3 recommended
+            Query.limit(3),
             Query.orderDesc("$createdAt"),
           ]
         );
@@ -47,10 +47,7 @@ export default function RecommendedListings() {
     fetchListings();
   }, []);
 
-  const niches = [
-    "All",
-    ...new Set(listings.map((a) => a.niche)),
-  ];
+  const niches = ["All", ...new Set(listings.map((a) => a.niche))];
 
   const filteredListings =
     selectedNiche === "All"
@@ -59,35 +56,41 @@ export default function RecommendedListings() {
 
   if (loading) {
     return (
-      <section className="py-20 text-center text-white bg-[#0A0A0A]">
+      <section className="py-16 text-center text-white bg-[#0A0A0A]">
         Loading listings...
       </section>
     );
   }
 
   return (
-    <section className="bg-[#0A0A0A] py-12 px-4 sm:px-6 lg:px-8 ">
+    <section className="bg-[#0A0A0A] py-10 sm:py-14 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-12 gap-4">
-          <div className="max-w-2xl">
-            <span className="inline-block bg-[#E5EEFF] text-[#2563EB] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-8 sm:mb-10">
+
+          {/* Title */}
+          <div className="max-w-xl">
+            <span className="inline-block bg-[#E5EEFF] text-[#2563EB] text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
               Trending
             </span>
-            <h2 className="text-3xl font-bold mb-3">
+
+            <h2 className="text-2xl sm:text-3xl font-bold mb-2">
               Recommended Listings
             </h2>
-            <p className="text-gray-400">
+
+            <p className="text-gray-400 text-sm sm:text-base">
               Premium social assets vetted for growth potential.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-3">
+          {/* Filter + Button */}
+          <div className="flex flex-col sm:flex-row gap-3 sm:items-center w-full sm:w-auto">
+
             <select
               value={selectedNiche}
               onChange={(e) => setSelectedNiche(e.target.value)}
-              className="bg-white text-black px-4 py-2 rounded-xl text-sm"
+              className="bg-white text-black px-4 py-2 rounded-xl text-sm w-full sm:w-auto"
             >
               {niches.map((n) => (
                 <option key={n}>{n}</option>
@@ -96,21 +99,22 @@ export default function RecommendedListings() {
 
             <button
               onClick={() => navigate("/marketplace")}
-              className="bg-blue-500 text-white px-4 py-2 rounded-xl font-semibold hover:bg-blue-600 flex items-center gap-2 cursor-pointer"
+              className="bg-blue-500 text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-blue-600 flex items-center justify-center gap-2 transition w-full sm:w-auto cursor-pointer"
             >
               View All
               <ArrowUpRight className="w-4 h-4" />
             </button>
+
           </div>
         </div>
 
         {/* Cards */}
         {filteredListings.length === 0 ? (
-          <p className="text-gray-400 text-center">
+          <p className="text-gray-400 text-center py-10">
             No listings available.
           </p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
             {filteredListings.map((account) => (
               <SocialCard
                 key={account.$id}
