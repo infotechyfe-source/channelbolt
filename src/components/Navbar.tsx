@@ -89,21 +89,21 @@ export default function Navbar() {
                 className="flex items-center gap-6 sm:gap-10 px-4 sm:px-6 py-1 whitespace-nowrap shrink-0"
               >
                 <Link to="/marketplace" className="flex items-center gap-2 hover:text-white transition">
-                  <Instagram size={16} />
+               <div className="bg-linear-to-br from-yellow-400 via-red-500 to-purple-400 rounded"><Instagram size={16} /></div>   
                   Explore Instagram Pages
                 </Link>
 
                 <Link to="/marketplace" className="flex items-center gap-2 hover:text-white transition">
-                  <Facebook size={16} />
+                  <div className="bg-blue-500 rounded"><Facebook size={16} /></div>
                   Facebook Monetised Assets
                 </Link>
 
                 <Link to="/marketplace" className="flex items-center gap-2 hover:text-white transition">
-                  <Youtube size={16} />
+                  <div className="bg-red-500 overflow-hidden rounded-3xl"><Youtube size={16} /></div>
                   YouTube Channels
                 </Link>
 
-                <div className="flex items-center gap-2 text-green-400">
+                <div className="flex items-center gap-2 text-white-400">
                   <ShieldCheck size={16} />
                   Secure Escrow Protection
                 </div>
@@ -113,27 +113,27 @@ export default function Navbar() {
                   4.9/5 Rated Marketplace
                 </div>
 
-                <div className="flex items-center gap-2 text-blue-300">
+                <div className="flex items-center gap-2 text-white-300">
                   <TrendingUp size={16} />
                   10,000+ Active Buyers
                 </div>
 
-                <div className="flex items-center gap-2 text-purple-300">
+                <div className="flex items-center gap-2 text-white-300">
                   <Users size={16} />
                   Verified Seller Profiles
                 </div>
 
-                <div className="flex items-center gap-2 text-indigo-300">
+                <div className="flex items-center gap-2 text-white-300">
                   <DollarSign size={16} />
                   $2M+ Transactions Completed
                 </div>
 
-                <div className="flex items-center gap-2 text-pink-300">
+                <div className="flex items-center gap-2 text-white-300">
                   <Clock size={16} />
                   Fast & Secure Transfers
                 </div>
 
-                <div className="flex items-center gap-2 text-orange-300">
+                <div className="flex items-center gap-2 text-white-300">
                   <BadgeCheck size={16} />
                   Authentic Engagement Guaranteed
                 </div>
