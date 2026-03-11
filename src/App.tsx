@@ -23,6 +23,7 @@ import BuyerProtection from "./components/BuyerProtection";
 
 import AdminDashboard from "./pages/AdminPage";
 import AdminProtectedRoute from "./components/AdminRoute";
+import RefundPolicy from "./pages/RefundPolicy";
 
 export default function App() {
   return (
@@ -60,6 +61,7 @@ export default function App() {
                   <Route path="/how-it-works" element={<HowItWorks />} />
                   <Route path="/terms" element={<Terms />} />
                   <Route path="/privacy" element={<PrivacyPolicy />} />
+                   <Route path="/refund" element={<RefundPolicy />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/verification" element={<VerificationProcess />} />

@@ -25,13 +25,23 @@ export default function AdminEditListing({
     engagement: listing.engagement || 0,
     revenue: listing.revenue || 0,
     price: listing.price || 0,
+
     coverImage: listing.coverImage || "",
     avatar: listing.avatar || "",
+
+    includeEmail: listing.includeEmail ?? false,
+    status: listing.status || "pending",
+    slug: listing.slug || "",
+
     accountType: listing.accountType || "",
     pageStatus: listing.pageStatus || "",
-    monetized: listing.monetized || false,
-    verified: listing.verified || false,
-    strikes: listing.strikes || 0,
+
+    monetized: listing.monetized ?? false,
+    verified: listing.verified ?? false,
+
+    payoutAvailable: listing.payoutAvailable ?? false,
+    strikes: listing.strikes ?? 0,
+
     proofImages: listing.proofImages || [],
   });
 
@@ -139,21 +149,21 @@ export default function AdminEditListing({
             <input
               className="input"
               value={form.handle}
-              onChange={(e)=>handleChange("handle",e.target.value)}
+              onChange={(e) => handleChange("handle", e.target.value)}
               placeholder="Handle"
             />
 
             <input
               className="input"
               value={form.platform}
-              onChange={(e)=>handleChange("platform",e.target.value)}
+              onChange={(e) => handleChange("platform", e.target.value)}
               placeholder="Platform"
             />
 
             <input
               className="input"
               value={form.niche}
-              onChange={(e)=>handleChange("niche",e.target.value)}
+              onChange={(e) => handleChange("niche", e.target.value)}
               placeholder="Niche"
             />
 
@@ -161,7 +171,7 @@ export default function AdminEditListing({
               type="number"
               className="input"
               value={form.followers}
-              onChange={(e)=>handleChange("followers",Number(e.target.value))}
+              onChange={(e) => handleChange("followers", Number(e.target.value))}
               placeholder="Followers"
             />
 
@@ -182,7 +192,7 @@ export default function AdminEditListing({
               type="number"
               className="input"
               value={form.engagement}
-              onChange={(e)=>handleChange("engagement",Number(e.target.value))}
+              onChange={(e) => handleChange("engagement", Number(e.target.value))}
               placeholder="Engagement %"
             />
 
@@ -190,7 +200,7 @@ export default function AdminEditListing({
               type="number"
               className="input"
               value={form.revenue}
-              onChange={(e)=>handleChange("revenue",Number(e.target.value))}
+              onChange={(e) => handleChange("revenue", Number(e.target.value))}
               placeholder="Revenue"
             />
 
@@ -198,7 +208,7 @@ export default function AdminEditListing({
               type="number"
               className="input"
               value={form.price}
-              onChange={(e)=>handleChange("price",Number(e.target.value))}
+              onChange={(e) => handleChange("price", Number(e.target.value))}
               placeholder="Price"
             />
 
@@ -219,35 +229,70 @@ export default function AdminEditListing({
             <input
               className="input"
               value={form.accountType}
-              onChange={(e)=>handleChange("accountType",e.target.value)}
+              onChange={(e) => handleChange("accountType", e.target.value)}
               placeholder="Account Type"
             />
 
             <input
               className="input"
-              value={form.pageStatus}
-              onChange={(e)=>handleChange("pageStatus",e.target.value)}
+              value={form.pageStatus || ""}
+              onChange={(e) => handleChange("pageStatus", e.target.value)}
               placeholder="Page Status"
             />
 
-            <select
-              title="monetise"
+            <input
               className="input"
-              value={form.monetized ? "yes":"no"}
-              onChange={(e)=>handleChange("monetized",e.target.value==="yes")}
+              value={form.slug}
+              onChange={(e) => handleChange("slug", e.target.value)}
+              placeholder="Slug"
+            />
+
+            <input
+              type="number"
+              className="input"
+              value={form.strikes || 0}
+              onChange={(e) => handleChange("strikes", Number(e.target.value))}
+              placeholder="Strikes"
+            />
+
+            <select
+              title="monetized"
+              className="input"
+              value={form.monetized ? "yes" : "no"}
+              onChange={(e) => handleChange("monetized", e.target.value === "yes")}
             >
               <option value="yes">Monetized</option>
               <option value="no">Not Monetized</option>
             </select>
 
             <select
-              title="verify"
+              title="verified"
               className="input"
-              value={form.verified ? "yes":"no"}
-              onChange={(e)=>handleChange("verified",e.target.value==="yes")}
+              value={form.verified ? "yes" : "no"}
+              onChange={(e) => handleChange("verified", e.target.value === "yes")}
             >
               <option value="yes">Verified</option>
               <option value="no">Not Verified</option>
+            </select>
+
+            <select
+              title="includeEmail"
+              className="input"
+              value={form.includeEmail ? "yes" : "no"}
+              onChange={(e) => handleChange("includeEmail", e.target.value === "yes")}
+            >
+              <option value="yes">Email Included</option>
+              <option value="no">No Email</option>
+            </select>
+
+            <select
+              title="payoutAvailable"
+              className="input"
+              value={form.payoutAvailable ? "yes" : "no"}
+              onChange={(e) => handleChange("payoutAvailable", e.target.value === "yes")}
+            >
+              <option value="yes">Payout Enabled</option>
+              <option value="no">Payout Disabled</option>
             </select>
 
           </div>
@@ -285,7 +330,7 @@ export default function AdminEditListing({
 
           <div className="grid grid-cols-4 gap-3 mt-4">
 
-            {form.proofImages.map((img: string, index: number)=>(
+            {form.proofImages.map((img: string, index: number) => (
               <div key={index} className="relative">
 
                 <img
@@ -294,7 +339,7 @@ export default function AdminEditListing({
                 />
 
                 <button
-                  onClick={()=>removeImage(index)}
+                  onClick={() => removeImage(index)}
                   className="absolute top-1 right-1 bg-red-500 text-white text-xs px-2 rounded"
                 >
                   ✕
@@ -306,6 +351,50 @@ export default function AdminEditListing({
           </div>
 
         </div>
+
+        <div className="mb-6">
+
+  <h3 className="font-semibold mb-3 text-gray-700">
+    Listing Status
+  </h3>
+
+  <select
+    className="input"
+    value={form.status}
+    onChange={(e)=>handleChange("status",e.target.value)}
+  >
+    <option value="pending">Pending</option>
+    <option value="approved">Approved</option>
+    <option value="rejected">Rejected</option>
+  </select>
+
+</div>
+
+<div className="mb-6">
+
+  <h3 className="font-semibold mb-3 text-gray-700">
+    Images
+  </h3>
+
+  <div className="grid grid-cols-2 gap-4">
+
+    <input
+      className="input"
+      value={form.avatar}
+      onChange={(e)=>handleChange("avatar",e.target.value)}
+      placeholder="Avatar File ID"
+    />
+
+    <input
+      className="input"
+      value={form.coverImage}
+      onChange={(e)=>handleChange("coverImage",e.target.value)}
+      placeholder="Cover Image File ID"
+    />
+
+  </div>
+
+</div>
 
         {/* ACTIONS */}
 

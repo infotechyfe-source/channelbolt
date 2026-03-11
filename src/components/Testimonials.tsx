@@ -2,16 +2,20 @@ import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, CheckCircle2, ShieldCheck } from "lucide-react";
 import { motion } from "framer-motion";
 
-import { databases, account, DATABASE_ID, TESTIMONIALS_COLLECTION_ID } from "../lib/appwrite";
+import { databases, account, DATABASE_ID } from "../lib/appwrite";
 import { ID } from "appwrite";
+
+// SECOND COLLECTION FOR TESTIMONIALS
+const TESTIMONIAL_COLLECTION_ID = import.meta.env.VITE_APPWRITE_TESTIMONIAL_COLLECTION_ID;
+
 export default function Testimonials() {
 
-  // STATIC TESTIMONIALS
+  // STATIC TESTIMONIALS (UNCHANGED)
   const staticTestimonials = [
     {
       name: "Michael Chen",
       role: "Content Strategist, TechFlow Media",
-      text: "The escrow service gave me complete peace of mind.",
+      text: "The escrow service gave me complete peace of mind. Sold my YouTube channel for a fair price and the funds were released immediately after the buyer confirmed receipt.",
       deal: "$42,500 — YouTube Channel Sold",
       platform: "youtube",
       avatar: "https://randomuser.me/api/portraits/men/32.jpg"
@@ -19,7 +23,7 @@ export default function Testimonials() {
     {
       name: "Elena Rodriguez",
       role: "Digital Marketer, Growth Hacking Agency",
-      text: "Highly recommended for scaling quickly.",
+      text: "I've bought three Facebook pages through this platform. The verification process is rigorous—no bots, just real organic growth.",
       deal: "$12,000 — 3 Facebook Pages",
       platform: "facebook",
       avatar: "https://randomuser.me/api/portraits/women/44.jpg"
@@ -36,9 +40,7 @@ export default function Testimonials() {
 
   const [dbTestimonials, setDbTestimonials] = useState<any[]>([]);
   const [reviewText, setReviewText] = useState("");
-
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState(0);
 
   // FETCH REVIEWS FROM DATABASE
   useEffect(() => {
@@ -49,20 +51,18 @@ export default function Testimonials() {
 
         const res = await databases.listDocuments(
           DATABASE_ID,
-          TESTIMONIALS_COLLECTION_ID
+          TESTIMONIAL_COLLECTION_ID
         );
 
-        const user = await account.get();
-
-        const formatted = res.documents.map((doc: any) => ({
-          name: user.name,
+        const mapped = res.documents.map((t: any) => ({
+          name: t.userName,
           role: "Verified User",
-          text: doc.text,
+          text: t.text,
           deal: "User Review",
-          avatar: `https://ui-avatars.com/api/?name=${user.name}`
+          avatar: `https://ui-avatars.com/api/?name=${t.userName}`
         }));
 
-        setDbTestimonials(formatted);
+        setDbTestimonials(mapped);
 
       } catch (err) {
         console.log(err);
@@ -74,23 +74,20 @@ export default function Testimonials() {
 
   }, []);
 
-  // MERGE STATIC + USER REVIEWS
   const testimonials = [...staticTestimonials, ...dbTestimonials];
 
   const prev = () => {
-    setDirection(-1);
+    
     setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
   const next = () => {
-    setDirection(1);
+  
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);
   };
 
   // SUBMIT REVIEW
   const submitReview = async () => {
-
-    if (!reviewText.trim()) return;
 
     try {
 
@@ -98,15 +95,17 @@ export default function Testimonials() {
 
       await databases.createDocument(
         DATABASE_ID,
-        TESTIMONIALS_COLLECTION_ID,
+        TESTIMONIAL_COLLECTION_ID,
         ID.unique(),
         {
           userId: user.$id,
+          userName: user.name,
           text: reviewText
         }
       );
 
       setReviewText("");
+
       alert("Review submitted successfully!");
 
     } catch (err) {
@@ -114,7 +113,6 @@ export default function Testimonials() {
     }
 
   };
-
   return (
     <section className="bg-[#fcfcfc] py-4 px-4 sm:px-6 lg:px-16 overflow-hidden">
 
@@ -133,6 +131,10 @@ export default function Testimonials() {
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0f172a] mb-4">
             Trusted by <span className="text-blue-600">Buyers and Sellers</span>
           </h2>
+
+          <p className="text-gray-500 text-sm sm:text-lg max-w-2xl mx-auto">
+            Join thousands of entrepreneurs who trust our verified marketplace.
+          </p>
         </div>
 
         {/* CAROUSEL */}
@@ -141,20 +143,20 @@ export default function Testimonials() {
           <button
             title="left"
             onClick={prev}
-            className="absolute left-0 md:-left-10 top-1/2 -translate-y-1/2 z-20 bg-blue-600 text-white p-3 rounded-full"
+            className="absolute left-0 md:-left-10 top-1/2 transform -translate-y-1/2 z-20 bg-blue-600 text-white p-3 rounded-full cursor-pointer"
           >
             <ChevronLeft size={20} />
           </button>
 
           <button
-          title="right"
+            title="right"
             onClick={next}
-            className="absolute right-0 md:-right-40 top-1/2 -translate-y-1/2 z-20 bg-blue-600 text-white p-3 rounded-full"
+            className="absolute right-0 md:-right-10 top-1/2 transform -translate-y-1/2 z-20 bg-blue-600 text-white p-3 rounded-full cursor-pointer"
           >
             <ChevronRight size={20} />
           </button>
 
-          {/* TESTIMONIAL CARDS */}
+          {/* CARDS */}
           <div className="w-full flex justify-center relative h-90">
 
             {testimonials.map((testimonial, index) => {
@@ -166,7 +168,6 @@ export default function Testimonials() {
               else if (index === (currentIndex + 1) % testimonials.length) position = "right";
 
               return (
-
                 <motion.div
                   key={index}
                   animate={position}
@@ -174,7 +175,7 @@ export default function Testimonials() {
                     hidden: { opacity: 0, scale: 0.9, x: 0 },
                     center: { opacity: 1, scale: 1, x: 0 },
                     left: { opacity: 0.5, scale: 0.9, x: -380 },
-                    right: { opacity: 0.5, scale: 0.9, x: 380 }
+                    right: { opacity: 0.5, scale: 0.9, x: 380 },
                   }}
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   className="absolute w-80 bg-white border border-gray-200 rounded-[40px] p-8 shadow-lg"
@@ -187,9 +188,15 @@ export default function Testimonials() {
                     />
 
                     <div>
-                      <h4 className="font-bold">{testimonial.name}</h4>
-                      <p className="text-gray-400 text-xs">{testimonial.role}</p>
+                      <h4 className="font-bold text-gray-900">
+                        {testimonial.name}
+                      </h4>
+
+                      <p className="text-gray-400 text-xs">
+                        {testimonial.role}
+                      </p>
                     </div>
+
                   </div>
 
                   <p className="text-gray-600 text-sm mb-6">
@@ -207,17 +214,26 @@ export default function Testimonials() {
                   )}
 
                 </motion.div>
-
               );
-
             })}
 
           </div>
 
         </div>
 
+        {/* PAGINATION */}
+        <div className="flex justify-center gap-2">
+          {testimonials.map((_, i) => (
+            <motion.div
+              key={i}
+              className={`h-1.5 rounded-full ${i === currentIndex ? "bg-blue-600" : "bg-gray-200"}`}
+              animate={{ width: i === currentIndex ? 24 : 12 }}
+            />
+          ))}
+        </div>
+
         {/* REVIEW FORM */}
-        <div className="max-w-xl mx-auto mt-16 bg-white p-6 rounded-2xl border shadow-sm">
+        <div className="max-w-4xl mx-auto mt-16 bg-white p-6 rounded-2xl border shadow-sm">
 
           <h3 className="font-bold text-lg mb-4 text-center">
             Leave a Review
@@ -241,5 +257,5 @@ export default function Testimonials() {
 
       </div>
     </section>
-  )
+  );
 }

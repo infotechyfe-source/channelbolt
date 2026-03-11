@@ -13,7 +13,7 @@ export default function SellAccount() {
   const [followers, setFollowers] = useState<string>("");
   const [engagement, setEngagement] = useState<string>("");
   const [revenue, setRevenue] = useState<string>("");
-  const [price, setPrice] = useState<number>("");
+  const [price, setPrice] = useState<string>("");
   const [description, setDescription] = useState("");
 
   const [coverFile, setCoverFile] = useState<File | null>(null);
@@ -114,7 +114,7 @@ export default function SellAccount() {
         engagement: platform === "Instagram" ? Number(engagement) : null,
 
         revenue: revenue ? Number(revenue) : 0,
-        price,
+        price: Number(price),
 
         coverImage: coverId,
         avatar: avatarId,
@@ -269,7 +269,7 @@ export default function SellAccount() {
           <img
             src={SellBannerImg}
             alt="Social Media Visuals"
-            className="h-[110%] object-contain translate-x-10"
+            className="h-[110%] w-full object-contain translate-x-10"
           />
         </div>
 
@@ -281,26 +281,47 @@ export default function SellAccount() {
             {/* Platform */}
             <div>
               <h3 className="text-xl font-semibold mb-5">Select Platform *</h3>
-              <div className="grid md:grid-cols-3 gap-5">
-                {[
-                  { name: "Instagram", icon: Instagram, color: "text-pink-600" },
-                  { name: "Facebook", icon: Facebook, color: "text-blue-600" },
-                  { name: "YouTube", icon: Youtube, color: "text-red-600" },
-                ].map(item => {
-                  const Icon = item.icon;
-                  const active = platform === item.name;
-                  return (
-                    <button
-                      key={item.name}
-                      onClick={() => setPlatform(item.name as Platform)}
-                      className={`rounded-2xl cursor-pointer border border-amber-50 p-6 shadow transition-all duration-200 ${active ? "border-indigo-600 bg-indigo-50 shadow-md" : "hover:border-gray-300"}`}
-                    >
-                      <Icon className={`mx-auto mb-3 ${item.color}`} size={28} />
-                      <p className="font-medium">{item.name}</p>
-                    </button>
-                  );
-                })}
-              </div>
+              <div className="grid md:grid-cols-3 gap-6">
+  {[
+    { name: "Instagram", icon: Instagram, color: "text-pink-500" },
+    { name: "Facebook", icon: Facebook, color: "text-blue-600" },
+    { name: "YouTube", icon: Youtube, color: "text-red-600" },
+  ].map((item) => {
+    const Icon = item.icon;
+    const active = platform === item.name;
+
+    return (
+      <button
+        key={item.name}
+        onClick={() => setPlatform(item.name as Platform)}
+        className={`group relative rounded-2xl border p-8 transition-all duration-300
+        ${
+          active
+            ? "border-indigo-600 bg-indigo-50 shadow-lg"
+            : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-md"
+        }`}
+      >
+        {/* Icon */}
+        <div className="flex justify-center mb-4">
+          <Icon
+            size={36}
+            className={`${item.color} transition-transform duration-300 group-hover:scale-110`}
+          />
+        </div>
+
+        {/* Platform Name */}
+        <p className="text-lg font-semibold text-gray-800">
+          {item.name}
+        </p>
+
+        {/* Active indicator */}
+        {active && (
+          <span className="absolute top-4 right-4 w-2.5 h-2.5 bg-indigo-600 rounded-full"></span>
+        )}
+      </button>
+    );
+  })}
+</div>
             </div>
 
             {/* Account Details */}
