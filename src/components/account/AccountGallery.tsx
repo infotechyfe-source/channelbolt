@@ -38,6 +38,7 @@ export default function AccountGallery({ listing }: any) {
 
             {/* Desktop Arrows */}
             <button
+                aria-label="left"
                 onClick={() => scroll("left")}
                 className="hidden lg:flex absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 hover:bg-gray-100 transition"
             >
@@ -45,6 +46,7 @@ export default function AccountGallery({ listing }: any) {
             </button>
 
             <button
+                aria-label="right"
                 onClick={() => scroll("right")}
                 className="hidden lg:flex absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 hover:bg-gray-100 transition"
             >
