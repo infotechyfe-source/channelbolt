@@ -11,4 +11,5 @@ export const storage = new Storage(client);
 
 export const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
 export const COLLECTION_ID = import.meta.env.VITE_APPWRITE_COLLECTION_ID;
+export const TESTIMONIALS_COLLECTION_ID = import.meta.env.VITE_APPWRITE_TESTIMONIALS_COLLECTION_ID;
 export const BUCKET_ID = import.meta.env.VITE_APPWRITE_BUCKET_ID!;

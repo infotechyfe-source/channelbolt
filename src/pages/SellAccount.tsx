@@ -13,7 +13,7 @@ export default function SellAccount() {
   const [followers, setFollowers] = useState<string>("");
   const [engagement, setEngagement] = useState<string>("");
   const [revenue, setRevenue] = useState<string>("");
-  const [price, setPrice] = useState<number>(25000);
+  const [price, setPrice] = useState<number>("");
   const [description, setDescription] = useState("");
 
   const [coverFile, setCoverFile] = useState<File | null>(null);
@@ -32,8 +32,10 @@ export default function SellAccount() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const fee = Math.round(price * 0.05);
-  const receive = price - fee;
+  const numericPrice = Number(price) || 0;
+
+  const fee = Math.round(numericPrice * 0.05);
+  const receive = numericPrice - fee;
 
 
   // ----- IMAGE PREVIEW -----
@@ -102,19 +104,38 @@ export default function SellAccount() {
         proofImages.map(file => uploadFile(file))
       );
 
-      const baseData: any = {
+      const baseData = {
         handle: username.startsWith("@") ? username : "@" + username,
         slug,
         platform,
         niche: description || "General",
+
         followers: Number(followers),
+        engagement: platform === "Instagram" ? Number(engagement) : null,
+
         revenue: revenue ? Number(revenue) : 0,
         price,
+
         coverImage: coverId,
         avatar: avatarId,
-        proofImages: proofImageIds, // 👈 ARRAY STORED HERE
+        proofImages: proofImageIds,
+
+        accountType: platform === "Instagram" ? accountType : null,
+        pageStatus: platform === "Facebook" ? pageStatus : null,
+
+        monetized:
+          platform === "YouTube" || platform === "Facebook"
+            ? monetized
+            : null,
+
+        avgViews: platform === "YouTube" ? Number(avgViews) || null : null,
+
+        includeEmail: false,
+
         status: "pending",
-        verified: false
+        verified: false,
+        payoutAvailable: false,
+        strikes: 0
       };
 
       if (platform === "Instagram") {
@@ -354,14 +375,33 @@ export default function SellAccount() {
                       onChange={setAvgViews}
                     />
 
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={monetized}
-                        onChange={(e) => setMonetized(e.target.checked)}
-                      />
-                      Monetized Channel
-                    </label>
+                    <div className="space-y-2">
+                      <label className="font-medium text-gray-700 block">
+                        Monetization Status
+                      </label>
+
+                      <div className="flex gap-6">
+                        <label className="flex items-center gap-2">
+                          <input
+                            type="radio"
+                            name="monetized"
+                            checked={monetized === true}
+                            onChange={() => setMonetized(true)}
+                          />
+                          Monetised
+                        </label>
+
+                        <label className="flex items-center gap-2">
+                          <input
+                            type="radio"
+                            name="monetized"
+                            checked={monetized === false}
+                            onChange={() => setMonetized(false)}
+                          />
+                          Non-Monetised
+                        </label>
+                      </div>
+                    </div>
                   </>
                 )}
 
@@ -451,22 +491,32 @@ export default function SellAccount() {
             </div>
 
             {/* Price */}
+
             <div>
               <h3 className="text-xl font-semibold mb-4">Set Price *</h3>
+
               <div className="relative">
-                <span className="absolute left-4 top-3 text-gray-500 font-medium">₹</span>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium">
+                  ₹
+                </span>
+
                 <input
                   type="number"
+                  placeholder="Enter your asking price (e.g. 25000)"
                   value={price}
-                  onChange={e => setPrice(Number(e.target.value))}
+                  onChange={(e) => setPrice(e.target.value)}
                   className="w-full pl-8 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
                 />
               </div>
 
+              <p className="text-xs text-gray-500 mt-2">
+                Set a competitive price based on followers, engagement, and revenue.
+              </p>
+
               <button
                 onClick={handleSubmit}
-                disabled={loading}
-                className="w-full mt-6 py-4 bg-linear-to-r from-indigo-600 to-blue-600 text-white rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-200 disabled:opacity-50"
+                disabled={loading || !price}
+                className="w-full mt-6 py-4 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-200 disabled:opacity-50"
               >
                 {loading ? "Submitting..." : "Submit Listing"}
               </button>
@@ -484,7 +534,7 @@ export default function SellAccount() {
                 </div>
                 <div className="flex justify-between text-red-500">
                   <span>Platform Fee (5%)</span>
-                  <span>- ${fee.toLocaleString()}</span>
+                  <span>-₹{fee.toLocaleString()}</span>
                 </div>
                 <div className="border-t pt-4 flex justify-between text-lg font-bold text-green-600">
                   <span>You Receive</span>
