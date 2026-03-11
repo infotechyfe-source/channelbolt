@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, CheckCircle2, ShieldCheck } from "lucide-react";
 import { motion } from "framer-motion";
 
-import { databases, DATABASE_ID } from "../lib/appwrite";
+import { databases, DATABASE_ID } from "../../lib/appwrite";
 
 // TESTIMONIAL COLLECTION
 const TESTIMONIAL_COLLECTION_ID = import.meta.env.VITE_APPWRITE_TESTIMONIAL_COLLECTION_ID;

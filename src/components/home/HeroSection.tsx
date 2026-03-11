@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Instagram, Youtube, Facebook, TrendingUp, Users, DollarSign, ShieldCheck, ArrowRight } from "lucide-react";
 import { Query } from "appwrite";
-import { databases } from "../lib/appwrite";
+import { databases } from "../../lib/appwrite";
 
 export default function HeroSection() {
   const [instagram, setInstagram] = useState<any>(null);

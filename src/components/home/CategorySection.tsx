@@ -1,17 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { databases } from "../lib/appwrite";
+import { databases } from "../../lib/appwrite";
 
-import businessImg from "../assets/business.png";
-import carsBikesImg from "../assets/cars.png";
-import educationImg from "../assets/education.png";
-import fitnessImg from "../assets/fitness.png";
-import artDesignImg from "../assets/art-design.png";
-import cryptoImg from "../assets/crypto.png";
-import fashionImg from "../assets/fashion.png";
-import foodImg from "../assets/food.png";
-import brandImg from "../assets/brand.png";
-import blogImg from "../assets/blog.png";
+import businessImg from "../../assets/business.png";
+import carsBikesImg from "../../assets/cars.png";
+import educationImg from "../../assets/education.png";
+import fitnessImg from "../../assets/fitness.png";
+import artDesignImg from "../../assets/art-design.png";
+import cryptoImg from "../../assets/crypto.png";
+import fashionImg from "../../assets/fashion.png";
+import foodImg from "../../assets/food.png";
+import brandImg from "../../assets/brand.png";
+import blogImg from "../../assets/blog.png";
 
 // Category type
 export type Category = {

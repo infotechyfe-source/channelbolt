@@ -1,8 +1,8 @@
 import { ArrowUpRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import SocialCard from "../components/SocialCard";
+import SocialCard from "../../components/SocialCard";
 import { useEffect, useState } from "react";
-import { databases, DATABASE_ID, COLLECTION_ID } from "../lib/appwrite";
+import { databases, DATABASE_ID, COLLECTION_ID } from "../../lib/appwrite";
 import { Query } from "appwrite";
 
 interface Listing {

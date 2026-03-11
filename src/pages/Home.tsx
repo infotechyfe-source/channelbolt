@@ -1,23 +1,23 @@
 
-import FeaturedAssets from '../components/FeaturedAssets';
-import LiquidCapital from '../components/LiquidCapital';
-import SecuritySection from '../components/SecuritySection';
-import AnalyticsSection from '../components/AnalyticsSection';
-import Testimonials from "../components/Testimonials"
-import HeroSection from "../components/HeroSection";
-import FaqSection from "../components/FaqSection";
-import BuyWithConfidence from "../components/BuyWithConfidence";
-import TrendingSection from "../components/TrendingSection";
-import CategorySection from "../components/CategorySection";
-import MarketplaceSection from "../components/MarketPlaceSection";
-import HeroSellSection from "../components/SellSection";
+import HeroSection from "../components/home/HeroSection";
+import MarketplaceSection from "../components/home/MarketPlaceSection";
+import CategorySection from "../components/home/CategorySection";
+import TrendingSection from "../components/home/TrendingSection";
+import FeaturedAssets from '../components/home/FeaturedAssets';
+import LiquidCapital from '../components/home/LiquidCapital';
+import SecuritySection from '../components/home/SecuritySection';
+import AnalyticsSection from '../components/home/AnalyticsSection';
+import Testimonials from "../components/home/Testimonials"
+import HeroSellSection from "../components/home/SellSection";
+import BuyWithConfidence from "../components/home/BuyWithConfidence";
+import FaqSection from "../components/home/FaqSection";
 export default function Home() {
 
   return (
     <div className="flex flex-col bg-white w-full overflow-x-hidden">
       <section className="w-full px-4 sm:px-6 lg:px-8">
       </section>
-        <HeroSection />
+      <HeroSection />
       <MarketplaceSection />
       <CategorySection />
       <TrendingSection />

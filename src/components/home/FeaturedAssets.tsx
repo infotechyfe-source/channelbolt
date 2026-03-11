@@ -5,9 +5,9 @@ import {
   Clock,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import featureImg from "../assets/feature.png";
+import featureImg from "../../assets/feature.png";
 import { useEffect, useState } from "react";
-import { databases } from "../lib/appwrite";
+import { databases } from "../../lib/appwrite";
 import { Query } from "appwrite";
 
 type Listing = {
