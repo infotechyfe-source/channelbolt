@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, ChevronLeft, ChevronRight, Filter, Flame, X } from "lucide-react";
 import SocialCard from "../components/SocialCard";
@@ -30,6 +30,7 @@ export default function Marketplace() {
   const [activePlatform, setActivePlatform] = useState<
     "All" | "Instagram" | "Facebook" | "YouTube"
   >("All");
+  const platformTabs = ["All", "Instagram", "Facebook", "YouTube", "Facebook NonMonetised"];
   const [platforms, setPlatforms] = useState<Platform[]>([]);
   const [followersRange, setFollowersRange] = useState<string | null>(null);
   const [price, setPrice] = useState(Infinity);
@@ -39,7 +40,8 @@ export default function Marketplace() {
     listing.price ?? Math.round(listing.followers / 10);
 
   const [searchParams] = useSearchParams();
-const niche = searchParams.get("niche");
+  const niche = searchParams.get("niche");
+  const tabsRef = useRef<HTMLDivElement>(null);
 
 
   useEffect(() => {
@@ -61,6 +63,28 @@ const niche = searchParams.get("niche");
     fetchListings();
   }, []);
 
+  useEffect(() => {
+
+    const fetchListings = async () => {
+
+      const queries = [];
+
+      if (niche) {
+        queries.push(Query.equal("niche", niche));
+      }
+
+      const res = await databases.listDocuments(
+        DATABASE_ID,
+        COLLECTION_ID,
+        queries
+      );
+
+      setListings(res.documents);
+    };
+
+    fetchListings();
+
+  }, [niche]);
 
   // ================= FILTER + SORT =================
   const filteredListings = useMemo(() => {
@@ -140,28 +164,18 @@ const niche = searchParams.get("niche");
     setActivePlatform("All");
   }, []);
 
-  useEffect(() => {
+  const scrollToTab = (index: number) => {
+    const container = tabsRef.current;
+    if (!container) return;
 
-  const fetchListings = async () => {
+    const tab = container.children[index] as HTMLElement;
 
-    const queries = [];
-
-    if (niche) {
-      queries.push(Query.equal("niche", niche));
-    }
-
-    const res = await databases.listDocuments(
-      DATABASE_ID,
-      COLLECTION_ID,
-      queries
-    );
-
-    setListings(res.documents);
+    tab?.scrollIntoView({
+      behavior: "smooth",
+      inline: "center",
+      block: "nearest"
+    });
   };
-
-  fetchListings();
-
-}, [niche]);
 
   if (loading) {
     return (
@@ -215,7 +229,7 @@ const niche = searchParams.get("niche");
   return (
     <>
       {/* =================HERO ================= */}
-      <div className="relative w-full h-68 overflow-hidden mb-12">
+      <div className="relative w-full h-68 overflow-hidden mb-8">
 
         {/* Background Image */}
         <img src={heromarketImg} alt="Marketplace"
@@ -260,55 +274,98 @@ const niche = searchParams.get("niche");
 
           {/* ========== MAIN CONTENT ========== */}
           <section className="col-span-12 lg:col-span-9 xl:col-span-10 space-y-6">
+
             {/* ================= TOP BAR ================= */}
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between bg-white p-4 rounded-2xl shadow-sm lg:bg-transparent lg:p-0 lg:shadow-none">
+            <div className="bg-white rounded-2xl shadow-sm p-4 lg:bg-transparent lg:p-0 lg:shadow-none">
 
-              <div className="flex items-center justify-between w-full lg:w-auto">
-                {/* Mobile Filter Trigger */}
-                <button
-                  onClick={() => setShowMobileFilters(true)}
-                  className="lg:hidden flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-semibold"
-                >
-                  <Filter size={16} /> Filters
-                </button>
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
 
-                <p className="text-sm text-gray-500 lg:hidden">
-                  <span className="font-semibold text-gray-800">{filteredListings.length}</span> results
-                </p>
-              </div>
+                {/* LEFT SIDE */}
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:flex-1">
 
-              {/* Platform Tabs - Scrollable on Mobile */}
-              <div className="overflow-x-auto no-scrollbar -mx-4 px-4 lg:mx-0 lg:px-0">
-                <div className="inline-flex bg-gray-200/50 p-1 rounded-xl whitespace-nowrap">
-                  {["All", "Instagram", "Facebook", "YouTube", "Facebook NonMonetised"].map((label) => (
+                  {/* MOBILE → Filter + Sort */}
+                  <div className="flex items-center justify-between gap-4 lg:hidden">
+
+                    {/* Filter Button */}
                     <button
-                      key={label}
-                      onClick={() => setActivePlatform(label as any)}
-                      className={`px-5 py-2 rounded-lg text-sm font-medium transition-all ${activePlatform === label ? "text-white bg-blue-600 shadow-sm" : "text-gray-500 hover:text-gray-800 cursor-pointer"}`}
+                      onClick={() => setShowMobileFilters(true)}
+                      className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-semibold"
                     >
-                      {label}
+                      <Filter size={16} /> Filters
                     </button>
-                  ))}
-                </div>
-              </div>
 
-              <div className="flex items-center justify-between sm:justify-end gap-4 border-t pt-4 sm:border-0 sm:pt-0">
-                <span className="text-sm text-gray-500 hidden xl:block">Sort by:</span>
-                <div className="relative w-full sm:w-auto">
-                  <select
-                    title="sort"
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value as any)}
-                    className="w-full appearance-none bg-white border border-gray-200 rounded-xl px-4 py-2.5 pr-10 text-sm font-medium focus:ring-2 focus:ring-blue-500 outline-none"
-                  >
-                    <option value="price">Price</option>
-                    <option value="followers">Followers</option>
-                    <option value="engagement">Engagement</option>
-                  </select>
-                  <ChevronDown size={16} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                </div>
-              </div>
+                    {/* Sort Dropdown */}
+                    <div className="relative w-40">
+                      <select
+                        title="sort"
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value as any)}
+                        className="w-full appearance-none bg-white border border-gray-200 rounded-xl px-4 py-2 pr-10 text-sm font-medium focus:ring-2 focus:ring-blue-500 outline-none"
+                      >
+                        <option value="price">Price</option>
+                        <option value="followers">Followers</option>
+                        <option value="engagement">Engagement</option>
+                      </select>
 
+                      <ChevronDown
+                        size={16}
+                        className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                      />
+                    </div>
+                  </div>
+
+                  {/* PLATFORM TABS */}
+                  <div className="overflow-x-auto no-scrollbar">
+                    <div
+                      ref={tabsRef}
+                      className="flex bg-gray-200/50 p-1 rounded-xl whitespace-nowrap w-max"
+                    >
+                      {platformTabs.map((label, index) => (
+                        <button
+                          key={label}
+                          onClick={() => {
+                            setActivePlatform(label as any);
+                            scrollToTab(index);
+                          }}
+                          className={`px-5 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer ${activePlatform === label
+                              ? "text-white bg-blue-600 shadow-sm"
+                              : "text-gray-500 hover:text-gray-800"
+                            }`}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* DESKTOP → SORT */}
+                <div className="hidden lg:flex items-center gap-3">
+
+                  <span className="text-sm text-gray-500">Sort by:</span>
+
+                  <div className="relative w-40">
+                    <select
+                      title="sort"
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value as any)}
+                      className="w-full appearance-none bg-white border border-gray-200 rounded-xl px-4 py-2 pr-10 text-sm font-medium focus:ring-2 focus:ring-blue-500 outline-none"
+                    >
+                      <option value="price">Price</option>
+                      <option value="followers">Followers</option>
+                      <option value="engagement">Engagement</option>
+                    </select>
+
+                    <ChevronDown
+                      size={16}
+                      className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                    />
+                  </div>
+
+                </div>
+
+              </div>
             </div>
 
             {/* Listings */}
@@ -327,7 +384,7 @@ const niche = searchParams.get("niche");
                   coverImage={listing.coverImage}
                   avatar={listing.avatar}
                   includeEmail={listing.includeEmail}
-                  payoutAvailable= {listing.payoutAvailable}
+                  payoutAvailable={listing.payoutAvailable}
                   status={listing.status}
                 />
               ))}

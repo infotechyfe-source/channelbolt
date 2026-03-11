@@ -1,25 +1,39 @@
 "use client";
 
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import {
-  Instagram, Facebook, Youtube, ShieldCheck, Star, Users, DollarSign, Clock, BadgeCheck, TrendingUp,
-  Menu, X,
+  Instagram,
+  Facebook,
+  Youtube,
+  ShieldCheck,
+  Star,
+  Users,
+  DollarSign,
+  Clock,
+  BadgeCheck,
+  TrendingUp,
+  Menu,
+  X,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+
 import { logoutUser } from "../lib/auth";
 
 export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const { t, i18n } = useTranslation();
+
   const [openLang, setOpenLang] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
+
   const dropdownRef = useRef<HTMLDivElement>(null);
+
   const { user, loading, refreshUser } = useAuth();
 
+  // ================= LOGOUT =================
   const handleLogout = async () => {
     try {
       await logoutUser();
@@ -30,22 +44,31 @@ export default function Navbar() {
     }
   };
 
+  // ================= CLOSE LANGUAGE DROPDOWN =================
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setOpenLang(false);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // ================= PREVENT SCROLL WHEN MENU OPEN =================
+  useEffect(() => {
+    document.body.style.overflow = openMenu ? "hidden" : "auto";
+  }, [openMenu]);
+
+  // ================= ACTIVE LINK STYLE =================
   const linkClass = (path: string) =>
-    `relative px-2 py-1 transition ${location.pathname === path
+    `relative px-2 py-1 transition ${location.pathname.startsWith(path)
       ? "text-white font-semibold after:absolute after:left-0 after:-bottom-1 after:w-full after:h-[2px] after:bg-blue-500"
       : "text-gray-300 hover:text-white"
     }`;
 
+  // ================= LANGUAGE SWITCH =================
   const changeLanguage = (lang: string) => {
     i18n.changeLanguage(lang);
     localStorage.setItem("language", lang);
@@ -54,10 +77,12 @@ export default function Navbar() {
 
   return (
     <>
-      {/* TOP STRIP */}
+      {/* ================= TOP MARQUEE STRIP ================= */}
       <div className="bg-linear-to-r from-blue-600 via-slate-700 to-indigo-600 text-gray-200 text-xs sm:text-sm border-b border-gray-800 overflow-hidden">
         <div className="relative w-full overflow-hidden">
+
           <div className="flex w-max animate-marquee hover:[animation-play-state:paused]">
+
             {[...Array(2)].map((_, index) => (
               <div
                 key={index}
@@ -114,40 +139,50 @@ export default function Navbar() {
                 </div>
               </div>
             ))}
+
           </div>
         </div>
       </div>
 
-      {/* NAVBAR */}
-      <nav className="bg-[#111827] text-white shadow-md">
+      {/* ================= NAVBAR ================= */}
+      <nav className="bg-[#111827]/95 backdrop-blur-md sticky top-0 z-50 text-white shadow-md">
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
           <div className="flex items-center justify-between h-16">
 
-            {/* Logo */}
+            {/* LOGO */}
             <Link to="/" className="text-2xl font-bold tracking-wide">
               Channel<span className="text-blue-600">Bolt</span>
             </Link>
 
-            {/* Desktop Navigation */}
+            {/* DESKTOP NAVIGATION */}
             <div className="hidden md:flex items-center gap-6">
+
               <Link to="/marketplace" className={linkClass("/marketplace")}>
                 {t("marketplace")}
               </Link>
+
               <Link to="/sell" className={linkClass("/sell")}>
                 {t("sellAccount")}
               </Link>
+
               <Link to="/about" className={linkClass("/about")}>
                 {t("About Us")}
               </Link>
+
               <Link to="/contact" className={linkClass("/contact")}>
                 {t("contact")}
               </Link>
+
             </div>
 
-            {/* Right Section */}
+            {/* RIGHT SECTION */}
             <div className="flex items-center gap-4 relative">
-              {/* Language Dropdown */}
+
+              {/* LANGUAGE SWITCH */}
               <div className="relative hidden md:block" ref={dropdownRef}>
+
                 <button
                   onClick={() => setOpenLang(!openLang)}
                   className="border border-gray-600 px-3 py-1.5 rounded-md text-sm hover:bg-gray-700 transition flex items-center gap-2"
@@ -157,25 +192,32 @@ export default function Navbar() {
 
                 {openLang && (
                   <div className="absolute right-0 mt-2 w-32 bg-white text-black rounded-md shadow-lg overflow-hidden z-50">
+
                     <button
                       onClick={() => changeLanguage("en")}
                       className="w-full text-left px-4 py-2 hover:bg-gray-100 transition"
                     >
                       🇬🇧 English
                     </button>
+
                     <button
                       onClick={() => changeLanguage("hi")}
                       className="w-full text-left px-4 py-2 hover:bg-gray-100 transition"
                     >
                       🇮🇳 हिन्दी
                     </button>
+
                   </div>
                 )}
+
               </div>
 
-              {/* Login/Logout button based on state */}
+              {/* LOGIN / LOGOUT */}
               {!loading && !user && (
-                <Link to="/login" className="bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-md font-medium transition shadow-md hover:shadow-blue-500/30 cursor-pointer">
+                <Link
+                  to="/login"
+                  className="bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-md font-medium transition shadow-md hover:shadow-blue-500/30"
+                >
                   Login
                 </Link>
               )}
@@ -183,42 +225,68 @@ export default function Navbar() {
               {!loading && user && (
                 <button
                   onClick={handleLogout}
-                  className="bg-red-600 px-5 py-2 rounded-md font-medium transition shadow-md hover:shadow-blue-500/30 cursor-pointer"
+                  className="bg-red-600 hover:bg-red-700 px-5 py-2 rounded-md font-medium transition shadow-md hover:shadow-red-500/30"
                 >
                   Logout
                 </button>
               )}
 
-              {/* Hamburger for Mobile */}
+              {/* MOBILE MENU BUTTON */}
               <button
+                aria-label="Toggle Menu"
                 onClick={() => setOpenMenu(!openMenu)}
                 className="md:hidden p-2 rounded-md hover:bg-gray-700 transition"
               >
                 {openMenu ? <X size={24} /> : <Menu size={24} />}
               </button>
+
             </div>
+
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* ================= MOBILE MENU ================= */}
         {openMenu && (
           <div className="md:hidden bg-[#111827] px-4 pt-2 pb-4 space-y-2">
-            <Link to="/marketplace" className="block px-2 py-2 text-gray-300 hover:text-white rounded-md">
+
+            <Link
+              to="/marketplace"
+              onClick={() => setOpenMenu(false)}
+              className="block px-2 py-2 text-gray-300 hover:text-white rounded-md"
+            >
               {t("marketplace")}
             </Link>
-            <Link to="/sell" className="block px-2 py-2 text-gray-300 hover:text-white rounded-md">
+
+            <Link
+              to="/sell"
+              onClick={() => setOpenMenu(false)}
+              className="block px-2 py-2 text-gray-300 hover:text-white rounded-md"
+            >
               {t("sellAccount")}
             </Link>
-            <Link to="/about" className="block px-2 py-2 text-gray-300 hover:text-white rounded-md">
-              {t("testimonials")}
+
+            <Link
+              to="/about"
+              onClick={() => setOpenMenu(false)}
+              className="block px-2 py-2 text-gray-300 hover:text-white rounded-md"
+            >
+              {t("About Us")}
             </Link>
-            <Link to="/contact" className="block px-2 py-2 text-gray-300 hover:text-white rounded-md">
+
+            <Link
+              to="/contact"
+              onClick={() => setOpenMenu(false)}
+              className="block px-2 py-2 text-gray-300 hover:text-white rounded-md"
+            >
               {t("contact")}
             </Link>
 
-            {/* Language Switcher Mobile */}
+            {/* LANGUAGE MOBILE */}
             <div className="border-t border-gray-700 pt-3 mt-3">
-              <p className="text-gray-400 text-sm px-2 mb-2">Language</p>
+
+              <p className="text-gray-400 text-sm px-2 mb-2">
+                Language
+              </p>
 
               <button
                 onClick={() => changeLanguage("en")}
@@ -233,15 +301,18 @@ export default function Navbar() {
               >
                 🇮🇳 हिन्दी
               </button>
+
             </div>
 
-            {/* Buy Now CTA Mobile */}
+            {/* CTA */}
             <Link
               to="/marketplace"
+              onClick={() => setOpenMenu(false)}
               className="block bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md font-medium text-center"
             >
               {t("buyNow")}
             </Link>
+
           </div>
         )}
       </nav>

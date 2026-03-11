@@ -282,46 +282,45 @@ export default function SellAccount() {
             <div>
               <h3 className="text-xl font-semibold mb-5">Select Platform *</h3>
               <div className="grid md:grid-cols-3 gap-6">
-  {[
-    { name: "Instagram", icon: Instagram, color: "text-pink-500" },
-    { name: "Facebook", icon: Facebook, color: "text-blue-600" },
-    { name: "YouTube", icon: Youtube, color: "text-red-600" },
-  ].map((item) => {
-    const Icon = item.icon;
-    const active = platform === item.name;
+                {[
+                  { name: "Instagram", icon: Instagram, color: "text-[#E1306C]" },
+                  { name: "Facebook", icon: Facebook, color: "text-blue-600" },
+                  { name: "YouTube", icon: Youtube, color: "text-red-600" },
+                ].map((item) => {
+                  const Icon = item.icon;
+                  const active = platform === item.name;
 
-    return (
-      <button
-        key={item.name}
-        onClick={() => setPlatform(item.name as Platform)}
-        className={`group relative rounded-2xl border p-8 transition-all duration-300
-        ${
-          active
-            ? "border-indigo-600 bg-indigo-50 shadow-lg"
-            : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-md"
-        }`}
-      >
-        {/* Icon */}
-        <div className="flex justify-center mb-4">
-          <Icon
-            size={36}
-            className={`${item.color} transition-transform duration-300 group-hover:scale-110`}
-          />
-        </div>
+                  return (
+                    <button
+                      key={item.name}
+                      onClick={() => setPlatform(item.name as Platform)}
+                      className={`group cursor-pointer relative rounded-2xl border p-8 transition-all duration-300
+        ${active
+                          ? "border-indigo-600 bg-indigo-50 shadow-lg"
+                          : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-md"
+                        }`}
+                    >
+                      {/* Icon */}
+                      <div className="flex justify-center mb-4">
+                        <Icon
+                          size={36}
+                          className={`${item.color} transition-transform duration-300 group-hover:scale-110`}
+                        />
+                      </div>
 
-        {/* Platform Name */}
-        <p className="text-lg font-semibold text-gray-800">
-          {item.name}
-        </p>
+                      {/* Platform Name */}
+                      <p className="text-lg font-semibold text-gray-800">
+                        {item.name}
+                      </p>
 
-        {/* Active indicator */}
-        {active && (
-          <span className="absolute top-4 right-4 w-2.5 h-2.5 bg-indigo-600 rounded-full"></span>
-        )}
-      </button>
-    );
-  })}
-</div>
+                      {/* Active indicator */}
+                      {active && (
+                        <span className="absolute top-4 right-4 w-2.5 h-2.5 bg-green-500 rounded-full"></span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             {/* Account Details */}
@@ -537,7 +536,7 @@ export default function SellAccount() {
               <button
                 onClick={handleSubmit}
                 disabled={loading || !price}
-                className="w-full mt-6 py-4 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-200 disabled:opacity-50"
+                className="w-full mt-6 py-4 bg-linear-to-r from-indigo-600 to-blue-600 text-white rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-200 disabled:opacity-50"
               >
                 {loading ? "Submitting..." : "Submit Listing"}
               </button>

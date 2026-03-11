@@ -2,47 +2,40 @@ import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, CheckCircle2, ShieldCheck } from "lucide-react";
 import { motion } from "framer-motion";
 
-import { databases, account, DATABASE_ID } from "../lib/appwrite";
-import { ID } from "appwrite";
+import { databases, DATABASE_ID } from "../lib/appwrite";
 
-// SECOND COLLECTION FOR TESTIMONIALS
+// TESTIMONIAL COLLECTION
 const TESTIMONIAL_COLLECTION_ID = import.meta.env.VITE_APPWRITE_TESTIMONIAL_COLLECTION_ID;
 
 export default function Testimonials() {
 
-  // STATIC TESTIMONIALS (UNCHANGED)
   const staticTestimonials = [
     {
       name: "Michael Chen",
       role: "Content Strategist, TechFlow Media",
       text: "The escrow service gave me complete peace of mind. Sold my YouTube channel for a fair price and the funds were released immediately after the buyer confirmed receipt.",
-      deal: "$42,500 — YouTube Channel Sold",
-      platform: "youtube",
+      deal: "₹42,500 — YouTube Channel Sold",
       avatar: "https://randomuser.me/api/portraits/men/32.jpg"
     },
     {
       name: "Elena Rodriguez",
       role: "Digital Marketer, Growth Hacking Agency",
       text: "I've bought three Facebook pages through this platform. The verification process is rigorous—no bots, just real organic growth.",
-      deal: "$12,000 — 3 Facebook Pages",
-      platform: "facebook",
+      deal: "₹12,000 — 3 Facebook Pages",
       avatar: "https://randomuser.me/api/portraits/women/44.jpg"
     },
     {
       name: "David Park",
       role: "Entrepreneur, E-com Ventures",
       text: "Finding a niche-specific Instagram account was impossible until I found this marketplace.",
-      deal: "$8,500 — Instagram Page Purchase",
-      platform: "instagram",
+      deal: "₹8,500 — Instagram Page Purchase",
       avatar: "https://randomuser.me/api/portraits/men/46.jpg"
     }
   ];
 
   const [dbTestimonials, setDbTestimonials] = useState<any[]>([]);
-  const [reviewText, setReviewText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // FETCH REVIEWS FROM DATABASE
   useEffect(() => {
 
     const fetchTestimonials = async () => {
@@ -56,9 +49,9 @@ export default function Testimonials() {
 
         const mapped = res.documents.map((t: any) => ({
           name: t.userName,
-          role: "Verified User",
+          role: "Verified Buyer",
           text: t.text,
-          deal: "User Review",
+          deal: "Verified Purchase",
           avatar: `https://ui-avatars.com/api/?name=${t.userName}`
         }));
 
@@ -77,42 +70,13 @@ export default function Testimonials() {
   const testimonials = [...staticTestimonials, ...dbTestimonials];
 
   const prev = () => {
-    
     setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
   const next = () => {
-  
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);
   };
 
-  // SUBMIT REVIEW
-  const submitReview = async () => {
-
-    try {
-
-      const user = await account.get();
-
-      await databases.createDocument(
-        DATABASE_ID,
-        TESTIMONIAL_COLLECTION_ID,
-        ID.unique(),
-        {
-          userId: user.$id,
-          userName: user.name,
-          text: reviewText
-        }
-      );
-
-      setReviewText("");
-
-      alert("Review submitted successfully!");
-
-    } catch (err) {
-      console.log(err);
-    }
-
-  };
   return (
     <section className="bg-[#fcfcfc] py-4 px-4 sm:px-6 lg:px-16 overflow-hidden">
 
@@ -222,7 +186,7 @@ export default function Testimonials() {
         </div>
 
         {/* PAGINATION */}
-        <div className="flex justify-center gap-2">
+        <div className="flex justify-center gap-2 mt-6">
           {testimonials.map((_, i) => (
             <motion.div
               key={i}
@@ -230,29 +194,6 @@ export default function Testimonials() {
               animate={{ width: i === currentIndex ? 24 : 12 }}
             />
           ))}
-        </div>
-
-        {/* REVIEW FORM */}
-        <div className="max-w-4xl mx-auto mt-16 bg-white p-6 rounded-2xl border shadow-sm">
-
-          <h3 className="font-bold text-lg mb-4 text-center">
-            Leave a Review
-          </h3>
-
-          <textarea
-            value={reviewText}
-            onChange={(e) => setReviewText(e.target.value)}
-            placeholder="Share your experience..."
-            className="w-full border rounded-xl p-3"
-          />
-
-          <button
-            onClick={submitReview}
-            className="mt-4 w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700"
-          >
-            Submit Review
-          </button>
-
         </div>
 
       </div>
