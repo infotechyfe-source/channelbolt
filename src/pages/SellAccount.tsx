@@ -254,38 +254,65 @@ export default function SellAccount() {
 
   return (
     <div className="bg-gray-50 min-h-screen ">
-      <div className="max-w-7xl relative w-full h-80 bg-[#3b82f6] overflow-hidden flex items-center mx-auto shadow-md mb-10">
 
-        <div className="relative z-10 w-1/2 pl-12 lg:pl-20">
-          <h1 className="text-white text-5xl font-bold leading-tight mb-4">
-            Sell Your Digital Asset Securely
-          </h1>
-          <p className="text-blue-100 text-lg max-w-md">
-            Join thousands of creators who trust our platform for secure transactions.
-          </p>
+      <div className="max-w-7xl mx-auto bg-[#3b82f6] rounded-none sm:rounded-3xl overflow-hidden mb-8">
+        <div className="flex flex-col lg:flex-row items-center">
+
+          <div className="w-full lg:w-1/2 px-6 py-10 lg:py-16 lg:px-16">
+            <h1 className="text-white text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight mb-3">
+              Sell Your Digital Asset Securely
+            </h1>
+
+            <p className="text-blue-100 text-sm sm:text-base max-w-md">
+              Join thousands of creators who trust our platform for secure transactions.
+            </p>
+          </div>
+
+          <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
+            <img
+              src={SellBannerImg}
+              alt="Social Media Visuals"
+              className="w-[85%] max-w-md lg:max-w-lg"
+            />
+          </div>
+
         </div>
-
-        <div className="absolute right-15 top-6 h-full w-1/2 flex justify-end items-center">
-          <img
-            src={SellBannerImg}
-            alt="Social Media Visuals"
-            className="h-[110%] w-full object-contain translate-x-10"
-          />
-        </div>
-
       </div>
+
       <div className="max-w-7xl mx-auto px-4 md:px-6 space-y-12">
         <div className=" mx-auto grid lg:grid-cols-3 gap-10">
           {/* LEFT */}
-          <div className="lg:col-span-2 bg-white p-10 rounded-3xl shadow-xl border border-gray-100 space-y-10 mb-6">
+          <div className="lg:col-span-2 bg-white p-6 sm:p-8 lg:p-10 rounded-3xl shadow-xl border border-gray-100 space-y-10 mb-6">
             {/* Platform */}
             <div>
-              <h3 className="text-xl font-semibold mb-5">Select Platform *</h3>
-              <div className="grid md:grid-cols-3 gap-6">
+              <h3 className="text-lg sm:text-xl font-semibold mb-4">
+                Select Platform *
+              </h3>
+
+              <div className="grid grid-cols-3 gap-3 sm:gap-6">
+
                 {[
-                  { name: "Instagram", icon: Instagram, color: "text-[#E1306C]" },
-                  { name: "Facebook", icon: Facebook, color: "text-blue-600" },
-                  { name: "YouTube", icon: Youtube, color: "text-red-600" },
+                  {
+                    name: "Instagram",
+                    icon: Instagram,
+                    iconColor: "text-pink-600",
+                    bg: "bg-pink-50",
+                    border: "border-pink-200",
+                  },
+                  {
+                    name: "Facebook",
+                    icon: Facebook,
+                    iconColor: "text-blue-600",
+                    bg: "bg-blue-50",
+                    border: "border-blue-200",
+                  },
+                  {
+                    name: "YouTube",
+                    icon: Youtube,
+                    iconColor: "text-red-600",
+                    bg: "bg-red-50",
+                    border: "border-red-200",
+                  },
                 ].map((item) => {
                   const Icon = item.icon;
                   const active = platform === item.name;
@@ -294,28 +321,34 @@ export default function SellAccount() {
                     <button
                       key={item.name}
                       onClick={() => setPlatform(item.name as Platform)}
-                      className={`group cursor-pointer relative rounded-2xl border p-8 transition-all duration-300
-        ${active
-                          ? "border-indigo-600 bg-indigo-50 shadow-lg"
-                          : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-md"
+                      className={`relative flex flex-col items-center justify-center
+          rounded-xl sm:rounded-2xl border transition-all duration-200
+          p-3 sm:p-6 cursor-pointer
+          ${active
+                          ? `${item.bg} ${item.border} ring-2 ring-offset-1 ring-indigo-500`
+                          : "bg-white border-gray-200 hover:shadow-sm"
                         }`}
                     >
                       {/* Icon */}
-                      <div className="flex justify-center mb-4">
+                      <div
+                        className={`flex items-center justify-center
+            w-10 h-10 sm:w-14 sm:h-14 rounded-lg
+            ${item.bg}`}
+                      >
                         <Icon
-                          size={36}
-                          className={`${item.color} transition-transform duration-300 group-hover:scale-110`}
+                          size={22}
+                          className={`${item.iconColor} sm:w-7 sm:h-7`}
                         />
                       </div>
 
                       {/* Platform Name */}
-                      <p className="text-lg font-semibold text-gray-800">
+                      <p className="text-xs sm:text-sm font-semibold text-gray-800 mt-2">
                         {item.name}
                       </p>
 
                       {/* Active indicator */}
                       {active && (
-                        <span className="absolute top-4 right-4 w-2.5 h-2.5 bg-green-500 rounded-full"></span>
+                        <span className="absolute top-2 right-2 w-2 h-2 bg-green-500 rounded-full"></span>
                       )}
                     </button>
                   );
@@ -324,10 +357,13 @@ export default function SellAccount() {
             </div>
 
             {/* Account Details */}
-            <div className="space-y-6">
-              <h3 className="text-xl font-semibold">Account Details *</h3>
+            <div className="space-y-8">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
+                Account Details *
+              </h3>
 
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
                 <Input
                   label="Username *"
                   placeholder="@daily_motivation"
@@ -338,87 +374,110 @@ export default function SellAccount() {
                 <Input
                   label="Followers *"
                   type="number"
+                  placeholder="120000"
                   value={followers}
                   onChange={setFollowers}
                 />
 
+                {/* Instagram Fields */}
                 {platform === "Instagram" && (
                   <>
                     <Input
-                      label="Engagement Rate (%) *"
+                      label="Engagement Rate (%)"
                       type="number"
+                      placeholder="4.2"
                       value={engagement}
                       onChange={setEngagement}
                     />
 
-                    <select
-                      value={accountType}
-                      onChange={(e) => setAccountType(e.target.value)}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3"
-                    >
-                      <option value="Creator">Creator</option>
-                      <option value="Business">Business</option>
-                      <option value="Personal">Personal</option>
-                    </select>
+                    <div>
+                      <label className="font-medium block mb-2 text-gray-700">
+                        Account Type
+                      </label>
+
+                      <select
+                        value={accountType}
+                        onChange={(e) => setAccountType(e.target.value)}
+                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      >
+                        <option value="Creator">Creator</option>
+                        <option value="Business">Business</option>
+                        <option value="Personal">Personal</option>
+                      </select>
+                    </div>
                   </>
                 )}
 
+                {/* Facebook Fields */}
                 {platform === "Facebook" && (
                   <>
-                    <select
-                      value={pageStatus}
-                      onChange={(e) => setPageStatus(e.target.value)}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3"
-                    >
-                      <option value="Green">Green (Good Standing)</option>
-                      <option value="Yellow">Yellow (Warning)</option>
-                      <option value="Red">Red (Restricted)</option>
-                    </select>
+                    <div>
+                      <label className="font-medium block mb-2 text-gray-700">
+                        Page Status
+                      </label>
 
-                    <label className="flex items-center gap-2">
+                      <select
+                        value={pageStatus}
+                        onChange={(e) => setPageStatus(e.target.value)}
+                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      >
+                        <option value="Green">🟢 Good Standing</option>
+                        <option value="Yellow">🟡 Warning</option>
+                        <option value="Red">🔴 Restricted</option>
+                      </select>
+                    </div>
+
+                    <label className="flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 cursor-pointer">
                       <input
                         type="checkbox"
                         checked={monetized}
                         onChange={(e) => setMonetized(e.target.checked)}
+                        className="w-4 h-4 accent-indigo-600"
                       />
-                      Monetized Page
+                      <span className="text-gray-700 font-medium">
+                        Monetized Page
+                      </span>
                     </label>
                   </>
                 )}
 
+                {/* YouTube Fields */}
                 {platform === "YouTube" && (
                   <>
                     <Input
                       label="Average Views Per Video"
                       type="number"
+                      placeholder="50000"
                       value={avgViews}
                       onChange={setAvgViews}
                     />
 
-                    <div className="space-y-2">
-                      <label className="font-medium text-gray-700 block">
+                    <div>
+                      <label className="font-medium block mb-2 text-gray-700">
                         Monetization Status
                       </label>
 
-                      <div className="flex gap-6">
-                        <label className="flex items-center gap-2">
+                      <div className="flex gap-4">
+                        <label className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 cursor-pointer">
                           <input
                             type="radio"
                             name="monetized"
                             checked={monetized === true}
                             onChange={() => setMonetized(true)}
+                            className="accent-indigo-600"
                           />
-                          Monetised
+                          Monetized
                         </label>
 
-                        <label className="flex items-center gap-2">
+                        <label className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 cursor-pointer">
                           <input
                             type="radio"
                             name="monetized"
                             checked={monetized === false}
                             onChange={() => setMonetized(false)}
+                            className="accent-indigo-600"
                           />
-                          Non-Monetised
+                          Non-Monetized
                         </label>
                       </div>
                     </div>
@@ -428,90 +487,130 @@ export default function SellAccount() {
                 <Input
                   label="Monthly Revenue"
                   type="number"
+                  placeholder="1500"
                   value={revenue}
                   onChange={setRevenue}
                 />
 
-                <div className="md:col-span-2">
+                <div className="sm:col-span-2">
                   <label className="font-medium block mb-2 text-gray-700">
                     Account Description / Niche
                   </label>
+
                   <textarea
-                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 h-28"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 h-28 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="Describe your audience, niche, content style..."
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                   />
                 </div>
+
               </div>
             </div>
 
-            {/* Upload */}
-            <div>
-              <h3 className="text-xl font-semibold mb-5">Upload Images *</h3>
-              <div className="grid md:grid-cols-2 gap-6">
-                <ImageUpload label="Cover Image *" preview={coverPreview} onChange={setCoverFile} id="cover" />
-                <ImageUpload label="Avatar Image *" preview={avatarPreview} onChange={setAvatarFile} id="avatar" />
-              </div>
-              <h3 className="text-xl font-semibold mb-5">
-                Upload Account Proof Images (Max 5) *
+            {/* Upload Section */}
+            <div className="space-y-8">
+
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
+                Upload Images *
               </h3>
 
-              <div className="border-2 border-dashed border-gray-300 rounded-2xl p-6 text-center bg-gray-50 hover:border-indigo-500 transition">
-                <Upload className="mx-auto text-indigo-500 mb-3" size={32} />
-                <p className="font-semibold text-gray-700">
-                  Upload screenshots (Followers, Revenue, Insights, Monetization, etc.)
+              {/* Profile Images */}
+              <div>
+                <p className="text-sm text-gray-500 mb-4">
+                  Upload your account cover and profile image.
                 </p>
 
-                <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  id="proofUpload"
-                  className="hidden"
-                  onChange={(e) => handleProofUpload(e.target.files)}
-                />
+                <div className="grid grid-cols-2 gap-4 sm:gap-6">
+                  <ImageUpload
+                    label="Cover Image"
+                    preview={coverPreview}
+                    onChange={setCoverFile}
+                    id="cover"
+                  />
 
-                <label
-                  htmlFor="proofUpload"
-                  className="inline-block mt-4 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-xl cursor-pointer text-sm font-medium transition"
-                >
-                  Upload Images
-                </label>
-
-                <p className="text-xs text-gray-500 mt-3">
-                  You can upload up to 5 proof images.
-                </p>
+                  <ImageUpload
+                    label="Avatar Image"
+                    preview={avatarPreview}
+                    onChange={setAvatarFile}
+                    id="avatar"
+                  />
+                </div>
               </div>
 
-              {/* Preview Grid */}
-              {proofPreviews.length > 0 && (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mt-6">
-                  {proofPreviews.map((preview, index) => (
-                    <div key={index} className="relative group">
-                      <img
-                        src={preview}
-                        className="w-full h-36 object-cover rounded-xl shadow-md"
-                        alt="Proof Preview"
-                      />
+              {/* Proof Images */}
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-3">
+                  Account Proof Images (Max 5)
+                </h4>
 
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setProofImages(prev => prev.filter((_, i) => i !== index));
-                          setProofPreviews(prev => prev.filter((_, i) => i !== index));
-                        }}
-                        className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white text-xs px-2 py-1 rounded-full opacity-90"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  ))}
+                <div className="border-2 border-dashed border-gray-300 rounded-2xl p-5 sm:p-6 text-center bg-gray-50 hover:border-indigo-500 transition">
+
+                  <Upload className="mx-auto text-indigo-500 mb-3" size={28} />
+
+                  <p className="text-sm sm:text-base font-medium text-gray-700">
+                    Upload proof screenshots
+                  </p>
+
+                  <p className="text-xs text-gray-500 mt-1">
+                    Followers • Insights • Revenue • Monetization
+                  </p>
+
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    id="proofUpload"
+                    className="hidden"
+                    onChange={(e) => handleProofUpload(e.target.files)}
+                  />
+
+                  <label
+                    htmlFor="proofUpload"
+                    className="inline-flex items-center gap-2 mt-4 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg cursor-pointer text-sm font-medium transition"
+                  >
+                    <Upload size={16} />
+                    Upload Images
+                  </label>
+
+                  <p className="text-xs text-gray-400 mt-3">
+                    Maximum 5 screenshots allowed
+                  </p>
                 </div>
-              )}
+
+                {/* Preview Grid */}
+                {proofPreviews.length > 0 && (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-6">
+                    {proofPreviews.map((preview, index) => (
+                      <div key={index} className="relative group">
+
+                        <img
+                          src={preview}
+                          className="w-full h-28 sm:h-32 object-cover rounded-xl border border-gray-200"
+                          alt="Proof Preview"
+                        />
+
+                        {/* Remove button */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setProofImages(prev => prev.filter((_, i) => i !== index));
+                            setProofPreviews(prev => prev.filter((_, i) => i !== index));
+                          }}
+                          className="absolute top-2 right-2 bg-black/70 hover:bg-red-500 text-white text-xs px-2 py-1 rounded-md transition"
+                        >
+                          Remove
+                        </button>
+
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+              </div>
             </div>
 
             {/* Price */}
-
             <div>
               <h3 className="text-xl font-semibold mb-4">Set Price *</h3>
 
@@ -541,32 +640,51 @@ export default function SellAccount() {
                 {loading ? "Submitting..." : "Submit Listing"}
               </button>
             </div>
+
           </div>
 
           {/* RIGHT */}
-          <div className="space-y-6 lg:sticky lg:top-10 h-fit mb-6">
-            <div className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
-              <h3 className="font-bold text-lg mb-6">Estimated Earnings</h3>
-              <div className="space-y-4 text-sm">
+          <div className="space-y-4 lg:space-y-6 lg:sticky lg:top-10 h-fit mb-6">
+
+            <div className="bg-white p-5 sm:p-6 lg:p-8 rounded-2xl lg:rounded-3xl shadow-md lg:shadow-xl border border-gray-100">
+
+              {/* Title */}
+              <h3 className="font-semibold text-base sm:text-lg mb-4 sm:mb-6">
+                Estimated Earnings
+              </h3>
+
+              {/* Earnings Breakdown */}
+              <div className="space-y-3 text-sm">
+
                 <div className="flex justify-between text-gray-600">
                   <span>Your Price</span>
-                  <span className="font-semibold">₹{price.toLocaleString()}</span>
+                  <span className="font-semibold text-gray-900">
+                    ₹{price.toLocaleString()}
+                  </span>
                 </div>
+
                 <div className="flex justify-between text-red-500">
                   <span>Platform Fee (5%)</span>
                   <span>-₹{fee.toLocaleString()}</span>
                 </div>
-                <div className="border-t pt-4 flex justify-between text-lg font-bold text-green-600">
+
+                <div className="border-t pt-3 flex justify-between items-center text-base font-bold text-green-600">
                   <span>You Receive</span>
-                  <span>₹{receive.toLocaleString()}</span>
+                  <span className="text-lg">
+                    ₹{receive.toLocaleString()}
+                  </span>
                 </div>
+
               </div>
 
-              <div className="mt-6 flex items-center text-sm text-gray-500 bg-green-50 p-3 rounded-xl">
-                <ShieldCheck className="mr-2 text-green-600" size={18} />
-                Secure & Protected Transactions
+              {/* Security Badge */}
+              <div className="mt-4 sm:mt-6 flex items-center gap-2 text-xs sm:text-sm text-gray-600 bg-green-50 p-2.5 sm:p-3 rounded-lg sm:rounded-xl">
+                <ShieldCheck className="text-green-600 shrink-0" size={16} />
+                <span>Secure & Protected Transactions</span>
               </div>
+
             </div>
+
           </div>
         </div>
       </div>

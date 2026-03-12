@@ -50,7 +50,7 @@ const SimilarAccounts = () => {
         if (!scrollRef.current) return;
 
         scrollRef.current.scrollBy({
-            left: direction === "left" ? -350 : 350,
+            left: direction === "left" ? -320 : 320,
             behavior: "smooth",
         });
     };
@@ -59,20 +59,21 @@ const SimilarAccounts = () => {
         <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-8">
 
             {/* Header */}
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-6 sm:mb-8">
 
                 <div>
-                    <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
+                    <h2 className="text-xl sm:text-3xl font-bold tracking-tight">
                         Similar Premium Accounts
                     </h2>
-                    <p className="text-gray-500 mt-1 text-sm sm:text-base">
+
+                    <p className="text-gray-500 mt-1 text-xs sm:text-base">
                         Handpicked accounts matching your interests
                     </p>
                 </div>
 
                 <button
                     onClick={() => navigate("/marketplace")}
-                    className="hidden sm:flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-semibold transition cursor-pointer"
+                    className="hidden sm:flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-semibold transition"
                 >
                     Browse All <ArrowRight size={18} />
                 </button>
@@ -81,13 +82,13 @@ const SimilarAccounts = () => {
 
             {/* Loading */}
             {loading && (
-                <p className="text-gray-400">Loading accounts...</p>
+                <p className="text-gray-400 text-sm">Loading accounts...</p>
             )}
 
             {!loading && listings.length > 0 && (
                 <div className="relative">
 
-                    {/* Arrows Desktop */}
+                    {/* Desktop Arrows */}
                     <button
                         aria-label="left"
                         onClick={() => scroll("left")}
@@ -107,12 +108,12 @@ const SimilarAccounts = () => {
                     {/* Carousel */}
                     <div
                         ref={scrollRef}
-                        className="flex gap-2 overflow-x-auto pb-2 snap-x snap-mandatory no-scrollbar"
+                        className="flex gap-4 overflow-x-auto pb-3 snap-x snap-mandatory no-scrollbar -mx-4 px-4"
                     >
                         {listings.map((account) => (
                             <div
                                 key={account.$id}
-                                className="snap-start shrink-0 w-[280px] sm:w-[320px]"
+                                className="snap-start shrink-0 w-[85%] sm:w-[320px]"
                             >
                                 <SocialCard
                                     $id={account.$id}
@@ -131,14 +132,19 @@ const SimilarAccounts = () => {
                         ))}
                     </div>
 
+                    {/* Mobile Scroll Hint */}
+                    <p className="text-center text-xs text-gray-400 mt-2 sm:hidden">
+                        Swipe to explore more accounts →
+                    </p>
+
                 </div>
             )}
 
-            {/* Mobile Browse Button */}
-            <div className="mt-8 flex justify-center sm:hidden">
+            {/* Mobile CTA */}
+            <div className="mt-6 flex justify-center sm:hidden">
                 <button
                     onClick={() => navigate("/marketplace")}
-                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold"
+                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold shadow-sm"
                 >
                     Browse All Accounts <ArrowRight size={18} />
                 </button>

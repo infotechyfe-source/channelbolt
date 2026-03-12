@@ -11,10 +11,13 @@ export default function HeroSection() {
   const [instagram, setInstagram] = useState<any>(null);
   const [youtube, setYoutube] = useState<any>(null);
   const [facebook, setFacebook] = useState<any>(null);
+  const [recentListings, setRecentListings] = useState<any[]>([]);
+
 
   useEffect(() => {
     const fetchHeroListings = async () => {
       try {
+
         // Instagram - highest followers
         const instaRes = await databases.listDocuments(
           "69a55aa1001ac4d8ba49",
@@ -48,9 +51,22 @@ export default function HeroSection() {
           ]
         );
 
+        // ⭐ NEW: Recent Listings
+        const recentRes = await databases.listDocuments(
+          "69a55aa1001ac4d8ba49",
+          "listings",
+          [
+            Query.orderDesc("$createdAt"),
+            Query.limit(2),
+          ]
+        );
+
         setInstagram(instaRes.documents[0] || null);
         setYoutube(ytRes.documents[0] || null);
         setFacebook(fbRes.documents[0] || null);
+
+        // ⭐ SET RECENT LISTINGS
+        setRecentListings(recentRes.documents);
 
       } catch (error) {
         console.error("Error fetching hero listings:", error);
@@ -65,62 +81,62 @@ export default function HeroSection() {
     <section className="relative overflow-hidden bg-linear-to-b from-gray-50 to-white py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
-        {/* ================= LEFT SIDE ================= */}
-        <div className="max-w-xl mx-auto lg:mx-0">
+        {/* ================= HERO CONTENT ================= */}
+        <div className="max-w-lg mx-auto lg:mx-0 text-center lg:text-left">
 
-          {/* VERIFIED BADGE */}
-          <div className="inline-flex items-center gap-2 bg-purple-100 text-purple-700 px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium shadow-sm">
-            <ShieldCheck size={16} className="text-purple-600" />
-            Verified & Secure Marketplace
+          {/* TRUST BADGE */}
+          <div className="inline-flex items-center gap-2 bg-purple-50 text-purple-700 px-3 py-1 rounded-full text-xs font-semibold border border-purple-100">
+            <ShieldCheck size={14} />
+            Secure Marketplace
           </div>
 
           {/* HEADLINE */}
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mt-6 leading-snug sm:leading-tight text-gray-900">
-            Buy and Sell{" "}
-            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              Verified Social Media Accounts
-            </span>{" "}
-            Securely
+          <h1 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+            Buy & Sell
+            <span className="block text-blue-600">
+              Social Media Accounts
+            </span>
           </h1>
 
-          {/* DESCRIPTION */}
-          <p className="text-gray-600 mt-4 sm:mt-6 text-base sm:text-lg leading-relaxed max-w-lg">
-            Discover high-quality Instagram pages, monetized Facebook assets, and
-            YouTube channels with real engagement, transparent analytics, and verified
-            ownership history.
+          {/* SUBTEXT */}
+          <p className="mt-4 text-gray-600 text-base sm:text-lg leading-relaxed">
+            Discover verified Instagram pages, monetized Facebook assets, and
+            YouTube channels with real engagement and transparent analytics.
           </p>
 
           {/* CTA BUTTONS */}
-          <div className="flex flex-col sm:flex-row gap-3 mt-6 sm:mt-8">
+          <div className="mt-6 flex items-center justify-center lg:justify-start gap-3">
+
             <Link
               to="/marketplace"
-              className="group bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:bg-blue-700 hover:shadow-xl transition flex items-center justify-center sm:justify-start gap-2 w-full sm:w-auto"
+              className="flex items-center gap-1.5 bg-blue-600 text-white text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-blue-700 transition"
             >
-              Browse Accounts
-              <ArrowRight size={16} className="group-hover:translate-x-1 transition" />
+              Browse
+              <ArrowRight size={14} />
             </Link>
 
             <Link
               to="/sell"
-              className="px-6 py-3 rounded-xl font-semibold border border-gray-300 hover:bg-gray-100 transition text-center w-full sm:w-auto"
+              className="flex items-center text-sm font-semibold px-4 py-2.5 rounded-lg border border-gray-300 hover:bg-gray-100 transition"
             >
-              Sell Account
+              Sell
             </Link>
+
           </div>
+
         </div>
 
-
         {/* ================= RIGHT SIDE ================= */}
-        <div className="relative flex justify-center mt-12 lg:mt-0">
+        <div className="relative flex justify-center  lg:mt-0">
 
           {/* MAIN DASHBOARD */}
-          <div className="w-full max-w-xl bg-[#f6f7f9] rounded-2xl shadow-2xl p-4 relative z-10">
+          <div className="w-full max-w-xl bg-[#f6f7f9] rounded-2xl shadow-xl p-3 sm:p-4 relative z-10">
 
             {/* HEADER */}
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-xl font-bold text-gray-900">
-                  Marketplace Dashboard
+                  ChannelBolt Dashboard
                 </h2>
                 <p className="text-gray-500 text-sm">Live Analytics</p>
               </div>
@@ -132,7 +148,7 @@ export default function HeroSection() {
             </div>
 
             {/* IMPROVED MINI BAR CHART */}
-            <div className="bg-white rounded-xl p-3 mb-4 flex items-end justify-between h-45">
+            <div className="bg-white rounded-xl p-3 mb-4 flex items-end justify-between h-28 sm:h-36">
               {[45, 70, 55, 85, 65, 100, 75, 90].map((h, i) => (
                 <div
                   key={i}
@@ -143,21 +159,21 @@ export default function HeroSection() {
             </div>
 
             {/* STATS WITH ICONS */}
-            <div className="grid grid-cols-3 gap-3 mb-4 text-center">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-4 text-center">
 
-              <div className="bg-white rounded-xl p-2 flex flex-col items-center">
+              <div className="bg-white rounded-lg sm:rounded-xl p-2 sm:p-3 flex flex-col items-center">
                 <TrendingUp size={18} className="text-green-600 mb-1" />
                 <p className="text-xs text-gray-500">Growth</p>
                 <p className="font-bold text-sm text-green-600">+32%</p>
               </div>
 
-              <div className="bg-white rounded-xl p-2 flex flex-col items-center">
+              <div className="bg-white rounded-lg sm:rounded-xl p-2 sm:p-3 flex flex-col items-center">
                 <Users size={18} className="text-blue-600 mb-1" />
                 <p className="text-xs text-gray-500">Active</p>
                 <p className="font-bold text-sm">8.4K</p>
               </div>
 
-              <div className="bg-white rounded-xl p-2 flex flex-col items-center">
+              <div className="bg-white rounded-lg sm:rounded-xl p-2 sm:p-3 flex flex-col items-center">
                 <DollarSign size={18} className="text-indigo-600 mb-1" />
                 <p className="text-xs text-gray-500">Volume</p>
                 <p className="font-bold text-sm">$1.2M</p>
@@ -169,31 +185,40 @@ export default function HeroSection() {
             <div>
               <p className="text-xs text-gray-500 mb-3">Recent Listings</p>
 
-              <div className="flex items-center justify-between bg-white rounded-lg px-4 py-2 mb-2 hover:shadow-md transition">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-md bg-linear-to-tr from-yellow-400 via-pink-500 to-purple-600" />
-                  <div>
-                    <p className="text-xs font-semibold">@fashionpage</p>
-                    <p className="text-[10px] text-gray-500">
-                      245K followers
-                    </p>
-                  </div>
-                </div>
-                <p className="text-xs font-bold">$12.5K</p>
-              </div>
+              {recentListings.map((listing) => (
+                <div
+                  key={listing.$id}
+                  className="flex items-center justify-between bg-white rounded-lg px-4 py-2 mb-2 hover:shadow-md transition"
+                >
+                  <div className="flex items-center gap-3">
 
-              <div className="flex items-center justify-between bg-white rounded-lg px-4 py-2 hover:shadow-md transition">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-md bg-red-600" />
-                  <div>
-                    <p className="text-xs font-semibold">Tech Reviews</p>
-                    <p className="text-[10px] text-gray-500">
-                      189K subscribers
-                    </p>
+                    {/* AVATAR */}
+                    <img
+                      src={listing.avatar}
+                      alt={listing.handle}
+                      className="w-8 h-8 rounded-full object-cover border"
+                    />
+
+                    {/* TEXT */}
+                    <div>
+                      <p className="text-xs font-semibold">
+                        {listing.handle}
+                      </p>
+
+                      <p className="text-[10px] text-gray-500">
+                        {listing.followers?.toLocaleString()}{" "}
+                        {listing.platform === "YouTube" ? "subscribers" : "followers"}
+                      </p>
+                    </div>
+
                   </div>
+
+                  {/* PRICE */}
+                  <p className="text-xs font-bold">
+                    ₹{listing.price?.toLocaleString()}
+                  </p>
                 </div>
-                <p className="text-xs font-bold">$24.9K</p>
-              </div>
+              ))}
             </div>
 
           </div>

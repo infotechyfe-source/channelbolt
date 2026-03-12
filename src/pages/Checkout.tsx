@@ -84,60 +84,116 @@ export default function Checkout() {
 
             {/* Order Summary */}
             <div className="bg-white rounded-2xl shadow border border-gray-100 overflow-hidden">
+
               {/* Cover */}
-              <img src={listing.coverImageUrl} alt={`${listing.handle} cover`} className="w-full h-48 object-cover" />
+              <img
+                src={listing.coverImageUrl}
+                alt={`${listing.handle} cover`}
+                className="w-full h-40 sm:h-48 object-cover"
+              />
 
               {/* Info */}
-              <div className="p-6 flex gap-4">
-                <img src={listing.avatarUrl} alt={`${listing.handle} avatar`} className="w-20 h-20 rounded-xl object-cover" />
-                <div className="flex-1">
+              <div className="p-4 sm:p-6">
 
-                  <p className="text-sm text-gray-500">{listing.niche}</p>
+                {/* Avatar + Basic Info */}
+                <div className="flex items-center gap-3 sm:gap-4">
 
-                  <div className="grid grid-cols-3 gap-4 mt-3 text-sm">
-                    <div>
-                      <p className="text-gray-400">Followers</p>
-                      <p className="font-semibold">{listing.followers.toLocaleString()}</p>
-                    </div>
-                    <div>
-                      <p className="text-gray-400">Engagement</p>
-                      <p className="font-semibold">{listing.engagement}%</p>
-                    </div>
-                    <div>
-                      <p className="text-gray-400">Revenue</p>
-                      <p className="font-semibold">₹{listing.revenue}/mo</p>
-                    </div>
-                  </div>
+                  <img
+                    src={listing.avatarUrl}
+                    alt={`${listing.handle} avatar`}
+                    className="w-14 h-14 sm:w-20 sm:h-20 rounded-xl object-cover"
+                  />
 
-                  {/* ===== ACCOUNT STATUS BADGES ===== */}
-                  <div className="flex flex-wrap gap-2 mt-4 items-center text-xs">
-                    {listing.monetized !== undefined && (
-                      <span className={`flex items-center gap-1 px-2 py-1 rounded-lg font-semibold border ${listing.monetized ? "bg-green-50 text-green-700 border-green-100" : "bg-gray-100 text-gray-700 border-gray-200"}`}>
-                        <DollarSign size={14} /> {listing.monetized ? "Monetized" : "Not Monetized"}
-                      </span>
-                    )}
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-base sm:text-lg">
+                      {listing.handle}
+                    </h3>
 
-                    {listing.payoutAvailable !== undefined && (
-                      <span className={`flex items-center gap-1 px-2 py-1 rounded-lg font-semibold border ${listing.payoutAvailable ? "bg-green-50 text-green-700 border-green-100" : "bg-gray-100 text-gray-700 border-gray-200"}`}>
-                        💰 {listing.payoutAvailable ? "Payout Available" : "No Payout"}
-                      </span>
-                    )}
-
-                    {supportsStrikes && (
-                      <span className={`flex items-center gap-1 px-2 py-1 rounded-lg font-semibold border ${listing.strikes === 0 ? "bg-green-50 text-green-700 border-green-100" : listing.strikes === 1 ? "bg-yellow-50 text-yellow-700 border-yellow-100" : "bg-red-50 text-red-700 border-red-100"}`}>
-                        <ShieldCheck size={14} />
-                        {listing.strikes === 0 ? "No Strikes" : listing.strikes === 1 ? "1 Strike" : `${listing.strikes} Strikes`}
-                      </span>
-                    )}
-
-                    {listing.includeEmail && (
-                      <span className="flex items-center gap-1 px-2 py-1 rounded-lg font-semibold border bg-blue-50 text-blue-700 border-blue-100">
-                        <Mail size={14} /> OG Email
-                      </span>
-                    )}
+                    <p className="text-sm text-gray-500">
+                      {listing.niche}
+                    </p>
                   </div>
 
                 </div>
+
+                {/* Stats */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4 text-sm">
+
+                  <div>
+                    <p className="text-gray-400">Followers</p>
+                    <p className="font-semibold">
+                      {listing.followers.toLocaleString()}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-gray-400">Engagement</p>
+                    <p className="font-semibold">
+                      {listing.engagement}%
+                    </p>
+                  </div>
+
+                  <div className="col-span-2 sm:col-span-1">
+                    <p className="text-gray-400">Revenue</p>
+                    <p className="font-semibold">
+                      ₹{listing.revenue}/mo
+                    </p>
+                  </div>
+
+                </div>
+
+                {/* Account Status Badges */}
+                <div className="flex flex-wrap gap-2 mt-4 text-xs">
+
+                  {listing.monetized !== undefined && (
+                    <span
+                      className={`flex items-center gap-1 px-2 py-1 rounded-lg font-semibold border ${listing.monetized
+                          ? "bg-green-50 text-green-700 border-green-100"
+                          : "bg-gray-100 text-gray-700 border-gray-200"
+                        }`}
+                    >
+                      <DollarSign size={12} />
+                      {listing.monetized ? "Monetized" : "Not Monetized"}
+                    </span>
+                  )}
+
+                  {listing.payoutAvailable !== undefined && (
+                    <span
+                      className={`flex items-center gap-1 px-2 py-1 rounded-lg font-semibold border ${listing.payoutAvailable
+                          ? "bg-green-50 text-green-700 border-green-100"
+                          : "bg-gray-100 text-gray-700 border-gray-200"
+                        }`}
+                    >
+                      💰 {listing.payoutAvailable ? "Payout Available" : "No Payout"}
+                    </span>
+                  )}
+
+                  {supportsStrikes && (
+                    <span
+                      className={`flex items-center gap-1 px-2 py-1 rounded-lg font-semibold border ${listing.strikes === 0
+                          ? "bg-green-50 text-green-700 border-green-100"
+                          : listing.strikes === 1
+                            ? "bg-yellow-50 text-yellow-700 border-yellow-100"
+                            : "bg-red-50 text-red-700 border-red-100"
+                        }`}
+                    >
+                      <ShieldCheck size={12} />
+                      {listing.strikes === 0
+                        ? "No Strikes"
+                        : listing.strikes === 1
+                          ? "1 Strike"
+                          : `${listing.strikes} Strikes`}
+                    </span>
+                  )}
+
+                  {listing.includeEmail && (
+                    <span className="flex items-center gap-1 px-2 py-1 rounded-lg font-semibold border bg-blue-50 text-blue-700 border-blue-100">
+                      <Mail size={12} /> OG Email
+                    </span>
+                  )}
+
+                </div>
+
               </div>
             </div>
 
