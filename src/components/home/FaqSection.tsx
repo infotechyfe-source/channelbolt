@@ -34,7 +34,7 @@ export default function FaqSection() {
   };
 
   return (
-    <section className="bg-black text-white py-16 px-4 sm:px-6 lg:px-16">
+    <section className="bg-black text-white py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
 
         {/* LEFT SIDE */}

@@ -2,7 +2,7 @@ import { DollarSign, Mail, ShieldCheck } from "lucide-react";
 
 export default function AccountBadges({ listing }: any) {
   return (
-    <div className="flex flex-wrap gap-2 justify-center sm:justify-center my-6">
+   <div className="hidden md:flex flex-wrap gap-2 justify-center my-6">
 
       {listing.monetized !== undefined && (
         <span

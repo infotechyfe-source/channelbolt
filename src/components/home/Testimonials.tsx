@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 
 import { databases, DATABASE_ID } from "../../lib/appwrite";
 
-// TESTIMONIAL COLLECTION
 const TESTIMONIAL_COLLECTION_ID = import.meta.env.VITE_APPWRITE_TESTIMONIAL_COLLECTION_ID;
 
 export default function Testimonials() {
@@ -79,21 +78,21 @@ export default function Testimonials() {
   };
 
   return (
-    <section className="bg-[#fcfcfc] py-4 px-4 sm:px-6 lg:px-16 overflow-hidden">
+    <section className="bg-[#fcfcfc] py-8 sm:py-12 px-4 sm:px-6 lg:px-16 overflow-hidden">
 
       <div className="max-w-6xl mx-auto">
 
         {/* SECURITY BADGE */}
-        <div className="flex justify-center mb-6">
-          <div className="flex items-center gap-2 bg-blue-50 border border-blue-100 text-blue-700 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider">
+        <div className="flex justify-center mb-5 sm:mb-6">
+          <div className="flex items-center gap-2 bg-blue-50 border border-blue-100 text-blue-700 px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">
             <ShieldCheck size={14} />
             Bank-Level Security
           </div>
         </div>
 
         {/* HEADER */}
-        <div className="text-center mb-12 px-2">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0f172a] mb-4">
+        <div className="text-center mb-8 sm:mb-12 px-2">
+          <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-[#0f172a] mb-3 sm:mb-4">
             Trusted by <span className="text-blue-600">Buyers and Sellers</span>
           </h2>
 
@@ -105,24 +104,26 @@ export default function Testimonials() {
         {/* CAROUSEL */}
         <div className="relative flex items-center justify-center">
 
+          {/* LEFT BUTTON */}
           <button
             title="left"
             onClick={prev}
-            className="absolute left-0 md:-left-10 top-1/2 transform -translate-y-1/2 z-20 bg-blue-600 text-white p-3 rounded-full cursor-pointer"
+            className="absolute left-0 sm:-left-6 md:-left-10 top-1/2 transform -translate-y-1/2 z-20 bg-blue-600 text-white p-2 sm:p-3 rounded-full cursor-pointer"
           >
-            <ChevronLeft size={20} />
+            <ChevronLeft size={18} />
           </button>
 
+          {/* RIGHT BUTTON */}
           <button
             title="right"
             onClick={next}
-            className="absolute right-0 md:-right-10 top-1/2 transform -translate-y-1/2 z-20 bg-blue-600 text-white p-3 rounded-full cursor-pointer"
+            className="absolute right-0 sm:-right-6 md:-right-10 top-1/2 transform -translate-y-1/2 z-20 bg-blue-600 text-white p-2 sm:p-3 rounded-full cursor-pointer"
           >
-            <ChevronRight size={20} />
+            <ChevronRight size={18} />
           </button>
 
           {/* CARDS */}
-          <div className="w-full flex justify-center relative h-90">
+          <div className="w-full flex justify-center relative h-[320px] sm:h-90">
 
             {testimonials.map((testimonial, index) => {
 
@@ -143,17 +144,18 @@ export default function Testimonials() {
                     right: { opacity: 0.5, scale: 0.9, x: 380 },
                   }}
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  className="absolute w-80 bg-white border border-gray-200 rounded-[40px] p-8 shadow-lg"
+                  className={`absolute w-[90%] sm:w-80 bg-white border border-gray-200 rounded-3xl sm:rounded-[40px] p-5 sm:p-8 shadow-lg 
+                  ${position !== "center" ? "hidden sm:block" : ""}`}
                 >
 
-                  <div className="flex items-center gap-4 mb-4">
+                  <div className="flex items-center gap-3 sm:gap-4 mb-4">
                     <img
                       src={testimonial.avatar}
-                      className="w-12 h-12 rounded-full"
+                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-full"
                     />
 
                     <div>
-                      <h4 className="font-bold text-gray-900">
+                      <h4 className="font-bold text-gray-900 text-sm sm:text-base">
                         {testimonial.name}
                       </h4>
 

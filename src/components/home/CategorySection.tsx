@@ -28,7 +28,6 @@ const CategorySection: React.FC = () => {
   const navigate = useNavigate();
   const [categories, setCategories] = useState<Category[]>([]);
 
-  // map niche → image
   const nicheImages: Record<string, string> = {
     "Architecture": businessImg,
     "Blogs & LifeStyle": blogImg,
@@ -46,18 +45,15 @@ const CategorySection: React.FC = () => {
 
     const fetchCategories = async () => {
       try {
-
         const res = await databases.listDocuments(
           DATABASE_ID,
           COLLECTION_ID
         );
 
-        // get unique niches
         const uniqueNiches = [
           ...new Set(res.documents.map((doc: any) => doc.niche))
         ];
 
-        // attach images
         const formatted: Category[] = uniqueNiches.map((niche: string) => ({
           name: niche,
           image: nicheImages[niche]
@@ -75,14 +71,14 @@ const CategorySection: React.FC = () => {
   }, []);
 
   return (
-    <section className="bg-[#0B1220] py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto bg-gray-100 rounded-3xl p-6 sm:p-10 lg:p-14">
+    <section className="bg-[#0B1220] py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto bg-gray-100 rounded p-4 sm:p-8 lg:p-12">
 
-        <h2 className="text-2xl sm:text-3xl lg:text-3xl font-bold text-center mb-10 sm:mb-14">
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-6 sm:mb-10">
           Explore by Category
         </h2>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
 
           {categories.map((cat) => (
             <div
@@ -90,16 +86,16 @@ const CategorySection: React.FC = () => {
               onClick={() =>
                 navigate(`/marketplace?niche=${encodeURIComponent(cat.name)}`)
               }
-              className="cursor-pointer bg-white rounded-2xl p-4 sm:p-6 text-center shadow hover:shadow-xl hover:-translate-y-1 sm:hover:-translate-y-2 transition-transform duration-300"
+              className="cursor-pointer bg-white rounded-2xl p-3 sm:p-4 text-center shadow hover:shadow-lg hover:-translate-y-1 sm:hover:-translate-y-2 transition-transform duration-200"
             >
 
               <img
                 src={cat.image}
                 alt={cat.name}
-                className="mx-auto mb-3 sm:mb-4 w-12 h-12 sm:w-16 sm:h-16 object-contain"
+                className="mx-auto mb-2 sm:mb-3 w-10 h-10 sm:w-14 sm:h-14 object-contain"
               />
 
-              <p className="font-medium text-sm sm:text-base">
+              <p className="font-medium text-xs sm:text-sm">
                 {cat.name}
               </p>
 

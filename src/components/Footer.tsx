@@ -11,7 +11,7 @@ import {
 export default function Footer() {
   return (
     <footer className="bg-[#F5F7FA] text-gray-700 pt-14 pb-6">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* ================= BRAND SECTION ================= */}
         <div className="flex flex-col items-center text-center md:flex-row md:items-start md:text-left md:justify-between gap-6 pb-10 border-b border-gray-200">
@@ -20,7 +20,7 @@ export default function Footer() {
           <div className="max-w-sm">
             <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
               <div className="w-11 h-11 rounded-xl bg-linear-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold text-lg">
-                S
+                CB
               </div>
 
               <h2 className="text-xl font-bold text-gray-900">
@@ -72,7 +72,7 @@ export default function Footer() {
 
           {/* ================= NEWSLETTER ================= */}
           <div className="w-full md:w-auto md:max-w-md">
-            <div className="rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 p-6 text-center md:text-left">
+            <div className="rounded-2xl bg-linear-to-r from-purple-600 to-indigo-600 p-6 text-center md:text-left">
 
               <h3 className="text-lg font-bold text-white mb-1">
                 Stay Updated

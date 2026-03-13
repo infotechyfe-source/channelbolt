@@ -1,5 +1,4 @@
 import { account } from "../lib/appwrite";
-
 export default function AdminSidebar() {
 
   const logout = async () => {
@@ -19,27 +18,20 @@ export default function AdminSidebar() {
         Admin Panel
       </h1>
 
-      <nav className="flex flex-col gap-4 flex-grow">
+      <nav className="flex flex-col gap-4 grow">
 
         <a
           href="/admin"
           className="hover:bg-gray-800 p-2 rounded"
         >
           Dashboard
-        </a>
+        </a> 
 
         <a
-          href="/admin/listings"
+          href="/admin/contactmessages"
           className="hover:bg-gray-800 p-2 rounded"
         >
-          Listings
-        </a>
-
-        <a
-          href="/admin/create"
-          className="hover:bg-gray-800 p-2 rounded"
-        >
-          Add Listing
+          Messages
         </a>
 
       </nav>

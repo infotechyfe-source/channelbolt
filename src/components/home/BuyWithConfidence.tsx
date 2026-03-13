@@ -12,7 +12,7 @@ import {
 
 export default function BuyWithConfidence() {
   return (
-    <section className="bg-gray-50 py-16 px-4 sm:px-6 lg:px-16">
+    <section className="bg-gray-50 py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
       {/* HEADER */}
       <div className="max-w-7xl mx-auto text-center mb-12 sm:mb-16 px-2">
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">

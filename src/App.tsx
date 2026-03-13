@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 import Home from "./pages/Home";
 import Marketplace from "./pages/MarketPlace";
@@ -23,13 +24,14 @@ import BuyerProtection from "./components/BuyerProtection";
 
 import AdminDashboard from "./pages/AdminPage";
 import AdminProtectedRoute from "./components/AdminRoute";
+import AdminContactMessages from "./components/AdminContactMessage";
 import RefundPolicy from "./pages/RefundPolicy";
 
 export default function App() {
   return (
     <Router>
+       <Toaster position="top-right" />
       <ScrollToTop />
-
       <Routes>
 
         {/* ADMIN ROUTE */}
@@ -41,6 +43,7 @@ export default function App() {
             </AdminProtectedRoute>
           }
         />
+        <Route path="/admin/contactmessages" element={<AdminContactMessages />} />
 
         {/* WEBSITE ROUTES */}
         <Route

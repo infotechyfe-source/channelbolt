@@ -78,8 +78,8 @@ export default function HeroSection() {
 
 
   return (
-    <section className="relative overflow-hidden bg-linear-to-b from-gray-50 to-white py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <section className="relative overflow-hidden bg-linear-to-b from-gray-50 to-white py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
 
         {/* ================= HERO CONTENT ================= */}
         <div className="max-w-lg mx-auto lg:mx-0 text-center lg:text-left">
@@ -111,7 +111,7 @@ export default function HeroSection() {
               to="/marketplace"
               className="flex items-center gap-1.5 bg-blue-600 text-white text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-blue-700 transition"
             >
-              Browse
+              Browse Accounts
               <ArrowRight size={14} />
             </Link>
 
@@ -119,7 +119,7 @@ export default function HeroSection() {
               to="/sell"
               className="flex items-center text-sm font-semibold px-4 py-2.5 rounded-lg border border-gray-300 hover:bg-gray-100 transition"
             >
-              Sell
+              Sell Accounts
             </Link>
 
           </div>

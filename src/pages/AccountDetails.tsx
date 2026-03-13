@@ -64,11 +64,11 @@ export default function AccountDetails() {
     }
 
     return (
-        <div className="bg-gray-50 min-h-screen pb-20">
+        <div className="bg-gray-50 min-h-screen py-10">
 
             {/* Breadcrumb */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 relative z-10">
-                <div className="text-sm flex items-center gap-2 flex-wrap">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+                <div className="text-sm mb-6 flex items-center gap-2 flex-wrap">
 
                     <button
                         onClick={() => navigate("/")}
@@ -93,6 +93,7 @@ export default function AccountDetails() {
                     </span>
 
                 </div>
+
             </div>
 
             <AccountHeader listing={listing} />
@@ -118,12 +119,6 @@ export default function AccountDetails() {
                 <div className="mt-8"> <AccountGallery listing={listing} /></div>
                 < SecureTransfer />
                 < SimilarAccounts />
-
-            </div>
-
-            {/* Main Container */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 mt-6 sm:mt-10 relative z-10">
-
 
             </div>
 

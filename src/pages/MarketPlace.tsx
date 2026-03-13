@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { ChevronDown, ChevronLeft, ChevronRight, Filter, Flame, X } from "lucide-react";
+import { ChevronDown, Filter, X } from "lucide-react";
 import SocialCard from "../components/SocialCard";
+import TrendingSection from "../components/TrendingRow";
 import heromarketImg from "../assets/hero-market.jpg"
 import FilterPanel from "../components/FilterPanel";
 import { useSearchParams } from "react-router-dom";
@@ -328,8 +329,8 @@ export default function Marketplace() {
                             scrollToTab(index);
                           }}
                           className={`px-5 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer ${activePlatform === label
-                              ? "text-white bg-blue-600 shadow-sm"
-                              : "text-gray-500 hover:text-gray-800"
+                            ? "text-white bg-blue-600 shadow-sm"
+                            : "text-gray-500 hover:text-gray-800"
                             }`}
                         >
                           {label}
@@ -370,23 +371,34 @@ export default function Marketplace() {
 
             {/* Listings */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-              {filteredListings.map((listing) => (
-                <SocialCard
-                  key={listing.$id}
-                  $id={listing.$id}
-                  handle={listing.handle}
-                  platform={listing.platform}
-                  niche={listing.niche}
-                  followers={listing.followers}
-                  engagement={listing.engagement}
-                  revenue={listing.revenue}
-                  price={calculatePrice(listing)}
-                  coverImage={listing.coverImage}
-                  avatar={listing.avatar}
-                  includeEmail={listing.includeEmail}
-                  payoutAvailable={listing.payoutAvailable}
-                  status={listing.status}
-                />
+              {filteredListings.map((listing, index) => (
+                <>
+
+                  <SocialCard
+                    key={listing.$id}
+                    $id={listing.$id}
+                    handle={listing.handle}
+                    platform={listing.platform}
+                    niche={listing.niche}
+                    followers={listing.followers}
+                    engagement={listing.engagement}
+                    revenue={listing.revenue}
+                    price={calculatePrice(listing)}
+                    coverImage={listing.coverImage}
+                    avatar={listing.avatar}
+                    includeEmail={listing.includeEmail}
+                    payoutAvailable={listing.payoutAvailable}
+                    status={listing.status}
+                  />
+
+                  {(index + 1) % 6 === 0 && (
+                    <TrendingSection
+                      listings={listings}
+                      calculatePrice={calculatePrice}
+                    />
+                  )}
+
+                </>
               ))}
 
               {filteredListings.length === 0 && (
@@ -394,87 +406,6 @@ export default function Marketplace() {
                   {t("noAccountsFound", "No accounts found for this search.")}
                 </p>
               )}
-            </div>
-
-            {/* ================= TRENDING SECTION ================= */}
-            <div className="mt-12 relative">
-
-              <div className="relative bg-linear-to-br from-blue-50 to-indigo-50  rounded-2xl p-6 border border-gray-200 shadow-md overflow-hidden">
-
-                {/* Header */}
-                <div className="flex items-center justify-between mb-6">
-
-                  <div className="flex items-center gap-3">
-                    <div className="bg-orange-100 text-orange-500 p-2 rounded-xl">
-                      <Flame size={18} />
-                    </div>
-
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Trending Now
-                      </h3>
-                      <p className="text-xs text-gray-500">
-                        High-demand accounts
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Arrows */}
-                  <div className="hidden md:flex items-center gap-2">
-                    <button
-                      title="left"
-                      onClick={() =>
-                        document
-                          .getElementById("trending-scroll")
-                          ?.scrollBy({ left: -320, behavior: "smooth" })
-                      }
-                      className="w-9 h-9 flex items-center justify-center rounded-full text-white bg-blue-500 hover:bg-blue-600 transition cursor-pointer"
-                    >
-                      <ChevronLeft size={16} />
-                    </button>
-
-                    <button
-                      title="right"
-                      onClick={() =>
-                        document
-                          .getElementById("trending-scroll")
-                          ?.scrollBy({ left: 320, behavior: "smooth" })
-                      }
-                      className="w-9 h-9 flex items-center justify-center rounded-full text-white bg-blue-500 hover:bg-blue-600 transition cursor-pointer"
-                    >
-                      <ChevronRight size={16} />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Cards Scroll Area */}
-                <div
-                  id="trending-scroll"
-                  className="flex flex-nowrap gap-6 overflow-x-auto scroll-smooth pb-2 no-scrollbar"
-                >
-                  {listings.slice(0, 6).map((listing) => (
-                    <div
-                      key={listing.$id}
-                      className="flex-none w-112.5"
-                    >
-                      <SocialCard
-                        $id={listing.$id}
-                        handle={listing.handle}
-                        platform={listing.platform as any}
-                        niche={listing.niche}
-                        followers={listing.followers}
-                        engagement={listing.engagement}
-                        revenue={listing.revenue}
-                        price={calculatePrice(listing)}
-                        coverImage={listing.coverImage}
-                        avatar={listing.avatar}
-                        variant="trending"
-                      />
-                    </div>
-                  ))}
-                </div>
-
-              </div>
             </div>
 
           </section>

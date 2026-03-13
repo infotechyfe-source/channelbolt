@@ -63,34 +63,28 @@ export default function RecommendedListings() {
   }
 
   return (
-    <section className="bg-[#0A0A0A] py-10 sm:py-14 px-4 sm:px-6 lg:px-8">
+    <section className="bg-[#0B1220] py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-8 sm:mb-10">
-
-          {/* Title */}
-          <div className="max-w-xl">
-            <span className="inline-block bg-[#E5EEFF] text-[#2563EB] text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
+          <div>
+            <span className="inline-block bg-[#E5EEFF] text-[#2563EB] text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider mb-2 sm:mb-2">
               Trending
             </span>
-
-            <h2 className="text-2xl sm:text-3xl font-bold mb-2">
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-1">
               Recommended Listings
             </h2>
-
-            <p className="text-gray-400 text-sm sm:text-base">
+            <p className="text-gray-400 text-xs sm:text-sm">
               Premium social assets vetted for growth potential.
             </p>
           </div>
 
-          {/* Filter + Button */}
-          <div className="flex flex-col sm:flex-row gap-3 sm:items-center w-full sm:w-auto">
-
+          <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
             <select
               value={selectedNiche}
               onChange={(e) => setSelectedNiche(e.target.value)}
-              className="bg-white text-black px-4 py-2 rounded-xl text-sm w-full sm:w-auto"
+              className="bg-white text-black px-3 py-1.5 rounded-lg text-xs sm:text-sm w-full sm:w-auto"
             >
               {niches.map((n) => (
                 <option key={n}>{n}</option>
@@ -99,12 +93,11 @@ export default function RecommendedListings() {
 
             <button
               onClick={() => navigate("/marketplace")}
-              className="bg-blue-500 text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-blue-600 flex items-center justify-center gap-2 transition w-full sm:w-auto cursor-pointer"
+              className="bg-blue-500 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-semibold text-xs sm:text-sm flex items-center gap-1 sm:gap-2 hover:bg-blue-600 transition w-full sm:w-auto"
             >
               View All
-              <ArrowUpRight className="w-4 h-4" />
+              <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4" />
             </button>
-
           </div>
         </div>
 

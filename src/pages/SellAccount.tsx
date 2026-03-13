@@ -255,7 +255,7 @@ export default function SellAccount() {
   return (
     <div className="bg-gray-50 min-h-screen ">
 
-      <div className="max-w-7xl mx-auto bg-[#3b82f6] rounded-none sm:rounded-3xl overflow-hidden mb-8">
+      <div className="max-w-7xl mx-auto bg-[#3b82f6]  overflow-hidden mb-8">
         <div className="flex flex-col lg:flex-row items-center">
 
           <div className="w-full lg:w-1/2 px-6 py-10 lg:py-16 lg:px-16">

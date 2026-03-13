@@ -1,15 +1,59 @@
 import { useState } from "react";
-import {
-  Mail,
-  Phone,
-  Clock,
-  ShieldCheck,
-  CheckCircle,
-  MessageSquare,
-} from "lucide-react";
+import toast from "react-hot-toast";
+import { Mail, Phone, Clock, ShieldCheck, CheckCircle, MessageSquare, } from "lucide-react";
+import { databases, DATABASE_ID, CONTACT_COLLECTION_ID } from "../lib/appwrite";
+import { ID } from "appwrite";
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
+
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    subject: "General Inquiry",
+    message: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e: any) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const sendMessage = async () => {
+    if (!form.name || !form.email || !form.message) {
+      toast.error("Please fill all fields");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      await databases.createDocument(
+        DATABASE_ID,
+        CONTACT_COLLECTION_ID,
+        ID.unique(),
+        {
+          name: form.name,
+          email: form.email,
+          subject: form.subject,
+          message: form.message,
+        }
+      );
+
+      toast.success("Message sent successfully!");
+      setSubmitted(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to send message");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (submitted) {
     return (
@@ -93,6 +137,7 @@ export default function Contact() {
 
         {/* RIGHT SIDE FORM */}
         <div className="bg-white p-10 rounded-3xl shadow-xl border">
+
           <div className="flex items-center gap-2 mb-6">
             <MessageSquare className="text-blue-600" size={22} />
             <h2 className="text-xl font-semibold">
@@ -104,17 +149,28 @@ export default function Contact() {
 
             <input
               type="text"
+              name="name"
+              value={form.name}
+              onChange={handleChange}
               placeholder="Your Full Name"
               className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
             />
 
             <input
               type="email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
               placeholder="Your Email Address"
               className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
             />
 
-            <select className="w-full border rounded-xl px-4 py-3 outline-none">
+            <select
+              name="subject"
+              value={form.subject}
+              onChange={handleChange}
+              className="w-full border rounded-xl px-4 py-3 outline-none"
+            >
               <option>General Inquiry</option>
               <option>Buying Support</option>
               <option>Selling Support</option>
@@ -124,15 +180,19 @@ export default function Contact() {
 
             <textarea
               rows={5}
+              name="message"
+              value={form.message}
+              onChange={handleChange}
               placeholder="Write your message..."
               className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
             />
 
             <button
-              onClick={() => setSubmitted(true)}
+              onClick={sendMessage}
+              disabled={loading}
               className="w-full bg-blue-600 text-white py-4 rounded-xl font-semibold hover:bg-blue-700 transition"
             >
-              Send Message
+              {loading ? "Sending..." : "Send Message"}
             </button>
 
           </div>
