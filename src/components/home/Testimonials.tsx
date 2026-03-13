@@ -3,9 +3,7 @@ import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, CheckCircle2, ShieldCheck } from "lucide-react";
 import { motion } from "framer-motion";
 
-import { databases, DATABASE_ID } from "../../lib/appwrite";
-
-const TESTIMONIAL_COLLECTION_ID = import.meta.env.VITE_APPWRITE_TESTIMONIAL_COLLECTION_ID;
+import { databases, DATABASE_ID, TESTIMONIALS_COLLECTION_ID } from "../../lib/appwrite";
 
 export default function Testimonials() {
 
@@ -44,7 +42,7 @@ export default function Testimonials() {
 
         const res = await databases.listDocuments(
           DATABASE_ID,
-          TESTIMONIAL_COLLECTION_ID
+          TESTIMONIALS_COLLECTION_ID
         );
 
         const mapped = res.documents.map((t: any) => ({
@@ -123,7 +121,7 @@ export default function Testimonials() {
           </button>
 
           {/* CARDS */}
-          <div className="w-full flex justify-center relative h-[320px] sm:h-90">
+          <div className="w-full flex justify-center relative h-80 sm:h-90">
 
             {testimonials.map((testimonial, index) => {
 

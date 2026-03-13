@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, Fragment } from "react";
+
 import { useTranslation } from "react-i18next";
 import { ChevronDown, Filter, X } from "lucide-react";
 import SocialCard from "../components/SocialCard";
@@ -230,7 +231,7 @@ export default function Marketplace() {
   return (
     <>
       {/* =================HERO ================= */}
-      <div className="relative w-full h-68 overflow-hidden mb-8">
+      <div className="relative w-full h-68 overflow-hidden mb-4">
 
         {/* Background Image */}
         <img src={heromarketImg} alt="Marketplace"
@@ -285,27 +286,28 @@ export default function Marketplace() {
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:flex-1">
 
                   {/* MOBILE → Filter + Sort */}
-                  <div className="flex items-center justify-between gap-4 lg:hidden">
+                  <div className="grid grid-cols-2 gap-3 lg:hidden">
 
-                    {/* Filter Button */}
+                    {/* FILTER BUTTON */}
                     <button
                       onClick={() => setShowMobileFilters(true)}
-                      className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-semibold"
+                      className="flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold shadow-sm"
                     >
-                      <Filter size={16} /> Filters
+                      <Filter size={16} />
+                      Filters
                     </button>
 
-                    {/* Sort Dropdown */}
-                    <div className="relative w-40">
+                    {/* SORT DROPDOWN */}
+                    <div className="relative">
                       <select
                         title="sort"
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value as any)}
-                        className="w-full appearance-none bg-white border border-gray-200 rounded-xl px-4 py-2 pr-10 text-sm font-medium focus:ring-2 focus:ring-blue-500 outline-none"
+                        className="w-full appearance-none bg-white border border-gray-200 rounded-xl px-4 py-2.5 pr-10 text-sm font-semibold focus:ring-2 focus:ring-blue-500 outline-none"
                       >
-                        <option value="price">Price</option>
-                        <option value="followers">Followers</option>
-                        <option value="engagement">Engagement</option>
+                        <option value="price">Sort: Price</option>
+                        <option value="followers">Sort: Followers</option>
+                        <option value="engagement">Sort: Engagement</option>
                       </select>
 
                       <ChevronDown
@@ -313,6 +315,7 @@ export default function Marketplace() {
                         className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
                       />
                     </div>
+
                   </div>
 
                   {/* PLATFORM TABS */}
@@ -372,10 +375,9 @@ export default function Marketplace() {
             {/* Listings */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {filteredListings.map((listing, index) => (
-                <>
+                <Fragment key={listing.$id}>
 
                   <SocialCard
-                    key={listing.$id}
                     $id={listing.$id}
                     handle={listing.handle}
                     platform={listing.platform}
@@ -393,12 +395,13 @@ export default function Marketplace() {
 
                   {(index + 1) % 6 === 0 && (
                     <TrendingSection
+                      key={`trending-${index}`}
                       listings={listings}
                       calculatePrice={calculatePrice}
                     />
                   )}
 
-                </>
+                </Fragment>
               ))}
 
               {filteredListings.length === 0 && (

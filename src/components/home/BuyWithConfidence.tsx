@@ -24,7 +24,7 @@ export default function BuyWithConfidence() {
       </div>
 
       {/* CARDS GRID */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         
         {/* CARD 1 */}
         <Card
@@ -116,28 +116,38 @@ function Card({
   barColor: string;
 }) {
   return (
-    <div className="bg-white rounded shadow-md hover:shadow-xl transition p-6 sm:p-8 relative border border-gray-100 flex flex-col justify-between">
+    <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition p-4 sm:p-6 relative border border-gray-100 flex flex-col">
 
-      <div className={`absolute top-0 left-0 w-full h-1 ${barColor} rounded-t-3xl`} />
+      {/* top color bar */}
+      <div className={`absolute top-0 left-0 w-full h-1 ${barColor} rounded-t-xl`} />
 
-      <Icon className={`${iconColor} text-3xl sm:text-4xl mb-4 sm:mb-6`} />
+      {/* icon */}
+      <Icon className={`${iconColor} text-2xl sm:text-3xl mb-3 sm:mb-4`} />
 
-      <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3">{title}</h3>
+      {/* title */}
+      <h3 className="text-base sm:text-lg font-semibold mb-1 sm:mb-2">
+        {title}
+      </h3>
 
-      <p className="text-gray-600 text-xs sm:text-sm mb-4 sm:mb-6">{description}</p>
+      {/* description */}
+      <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4">
+        {description}
+      </p>
 
-      <ul className="space-y-2 sm:space-y-3 text-sm mb-4 sm:mb-6">
+      {/* features */}
+      <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm mb-3 sm:mb-4">
         {features.map((feat, i) => (
           <li key={i} className="flex items-center gap-2">
-            <feat.icon size={16} className={feat.color} />
+            <feat.icon size={14} className={feat.color} />
             {feat.text}
           </li>
         ))}
       </ul>
 
+      {/* button */}
       <Link
         to={link}
-        className="mt-auto block text-center bg-blue-600 hover:bg-blue-700 text-white py-2.5 sm:py-3 rounded-xl font-medium text-sm sm:text-base transition"
+        className="mt-auto block text-center bg-blue-600 hover:bg-blue-700 text-white py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-medium transition"
       >
         {linkText}
       </Link>

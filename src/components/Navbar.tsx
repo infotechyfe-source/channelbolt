@@ -185,7 +185,7 @@ export default function Navbar() {
 
                 <button
                   onClick={() => setOpenLang(!openLang)}
-                  className="border border-gray-600 px-3 py-1.5 rounded-md text-sm hover:bg-gray-700 transition flex items-center gap-2"
+                  className="border border-gray-600 px-3 py-1.5 rounded-md text-sm hover:bg-gray-700 transition flex items-center gap-2 cursor-pointer"
                 >
                   {i18n.language === "en" ? "🇬🇧 EN" : "🇮🇳 HI"}
                 </button>
@@ -216,7 +216,7 @@ export default function Navbar() {
               {!loading && !user && (
                 <Link
                   to="/login"
-                  className="bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-md font-medium transition shadow-md hover:shadow-blue-500/30"
+                  className="bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-md font-medium transition shadow-md hover:shadow-blue-500/30 cursor-pointer"
                 >
                   Login
                 </Link>
@@ -225,7 +225,7 @@ export default function Navbar() {
               {!loading && user && (
                 <button
                   onClick={handleLogout}
-                  className="bg-red-600 hover:bg-red-700 px-5 py-2 rounded-md font-medium transition shadow-md hover:shadow-red-500/30"
+                  className="bg-red-600 hover:bg-red-700 px-5 py-2 rounded-md font-medium transition shadow-md hover:shadow-red-500/30 cursor-pointer"
                 >
                   Logout
                 </button>
